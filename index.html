@@ -1,117 +1,108 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RPG - Lista de Personagens</title>
+<meta charset="UTF-8">
+<title>Fichas RPG</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .btn {
-      background: #4a90e2;
-      padding: 10px 16px;
-      border-radius: 6px;
-      color: white;
-      text-decoration: none;
-      display: inline-block;
-      margin-bottom: 20px;
-    }
-    .char-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .char-card {
-      background: #1b1b1b;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 15px;
-      text-align: center;
-      transition: 0.2s;
-    }
-    .char-card:hover {
-      transform: scale(1.02);
-      border-color: #4a90e2;
-    }
-    .char-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-    .btn-view {
-      background: #6cdd7f;
-      padding: 8px 12px;
-      color: #000;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-    }
-  </style>
+<style>
+body {
+  background: #0d0d0d;
+  color: white;
+  font-family: Arial;
+  padding: 20px;
+}
+.card {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.ficha {
+  background: #222;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+button {
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+</style>
 </head>
+
 <body>
+<h1>📜 Fichas dos Personagens</h1>
 
-  <h1>📜 Personagens</h1>
+<div id="loginBox" class="card">
+  <h2>Login</h2>
+  <input id="user" placeholder="Usuário"><br><br>
+  <input id="pass" placeholder="Senha" type="password"><br><br>
+  <button onclick="login()">Entrar</button>
+  <button onclick="criarConta()">Criar Conta</button>
+</div>
 
-  <a class="btn" href="create.html">+ Criar Novo Personagem</a>
+<div id="userArea" class="card" style="display:none;">
+  Logado como: <span id="userEmail"></span><br>
+  <button onclick="logout()">Sair</button>
+  <a href="create.html"><button>Criar Personagem</button></a>
+</div>
 
-  <div id="listaPersonagens" class="char-list"></div>
+<div id="lista"></div>
 
-  <script>
-    const firebaseConfig = {
-		apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
-		authDomain: "ficharpg-edc5c.firebaseapp.com",
-		projectId: "ficharpg-edc5c",
-		storageBucket: "ficharpg-edc5c.firebasestorage.app",
-		messagingSenderId: "522630132698",
-		appId: "1:522630132698:web:30d3dc6f103916d70246e3",
-		measurementId: "G-6PJKQYBRRC"
-    };
+<script type="module">
+import {
+  db, auth,
+  collection, query, where, onSnapshot,
+  onAuthStateChanged, signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, signOut
+} from "./firebase.js";
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("userArea").style.display = "none";
+    return;
+  }
 
-    function carregarPersonagens() {
-      db.collection("fichas").orderBy("dataCriacao", "desc").onSnapshot(snapshot => {
-        const lista = document.getElementById("listaPersonagens");
-        lista.innerHTML = "";
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("userArea").style.display = "block";
+  document.getElementById("userEmail").innerText = user.email;
 
-        snapshot.forEach(doc => {
-          const f = doc.data();
-          const id = doc.id;
+  const q = query(collection(db, "fichas"), where("uid", "==", user.uid));
+  onSnapshot(q, snapshot => {
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
 
-          const card = document.createElement("div");
-          card.className = "char-card";
+    snapshot.forEach(doc => {
+      const f = doc.data();
+      lista.innerHTML += `
+        <div class="ficha">
+          <h3>${f.nome}</h3>
+          <img src="${f.imagem || ''}" width="150"><br>
+          <a href="ficha.html?id=${doc.id}">
+            <button>Abrir Ficha</button>
+          </a>
+        </div>
+      `;
+    });
+  });
+});
 
-          card.innerHTML = `
-            <img src="${f.imagem || 'https://via.placeholder.com/250'}" class="char-img">
-            <h2>${f.nome}</h2>
-            <a class="btn-view" href="ficha.html?id=${id}">Abrir Ficha</a>
-          `;
+window.login = function() {
+  signInWithEmailAndPassword(auth, user.value + "@fake.com", pass.value)
+  .catch(e => alert(e.message));
+}
 
-          lista.appendChild(card);
-        });
-      });
-    }
+window.criarConta = function() {
+  createUserWithEmailAndPassword(auth, user.value + "@fake.com", pass.value)
+  .catch(e => alert(e.message));
+}
 
-    carregarPersonagens();
-  </script>
+window.logout = function() {
+  signOut(auth);
+}
+</script>
 </body>
 </html>
