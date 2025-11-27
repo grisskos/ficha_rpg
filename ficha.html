@@ -42,6 +42,12 @@
     width: 80px; text-align: center; outline: none;
   }
 
+  /* Math Input (Calculadora Inline) */
+  .math-input {
+    width: 40px; background: #fff; color: #000; border: none; 
+    border-radius: 3px; text-align: center; font-weight: bold; outline: none;
+  }
+
   /* Atributos */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
@@ -65,7 +71,7 @@
   .btn-mini:hover { border-color: white; color: white; background: #333; }
   
   /* Botão de Calculadora */
-  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; }
+  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
   /* Perícias */
@@ -220,7 +226,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // Stats (Barras) - AGORA COM BOTÃO MATH 🔢
+  // Stats (Barras)
   const areaStats = document.getElementById('statsArea');
   areaStats.innerHTML = "";
   const statsMap = [
@@ -243,7 +249,7 @@ function renderFicha() {
         </div>
         <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
         <div class="stat-ctrl">
-          <div class="btn-calc" onclick="mathStat('${s.k}', '${s.l}')" title="Calcular Dano/Cura">🔢</div>
+          <div class="btn-calc" onclick="mathStat(this, '${s.k}')" title="Calcular">🔢</div>
           <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
           <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
         </div>
@@ -285,23 +291,39 @@ function renderFicha() {
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
-// === CÁLCULO DE DANO/CURA (MATH) ===
-window.mathStat = async (key, nomeDisplay) => {
-  // Pede o valor ao usuário
-  const input = prompt(`ALTERAR ${nomeDisplay.toUpperCase()}\nDigite o valor para SOMAR.\n(Use negativo para dano, ex: -12)`);
+// === CÁLCULO DE DANO/CURA INLINE ===
+window.mathStat = (el, key) => {
+  if(el.querySelector('input')) return; // Já aberto
+
+  const originalHtml = el.innerHTML;
+  el.innerHTML = '';
   
-  if (!input) return; // Cancelou
-  
-  const valor = Number(input);
-  if (isNaN(valor)) return alert("Por favor, digite um número válido.");
+  const input = document.createElement('input');
+  input.placeholder = "+/-";
+  input.className = 'math-input';
+  input.type = 'text'; // Usar text permite digitar "-" mais facil no mobile
+  el.appendChild(input);
+  input.focus();
 
-  const st = ficha[key];
-  let novo = Number(st.atual) + valor;
+  const executar = async () => {
+    const val = input.value.trim();
+    if(!val) { el.innerHTML = originalHtml; return; }
+    
+    const num = Number(val);
+    if(isNaN(num)) { el.innerHTML = originalHtml; return; }
 
-  // Trava nos limites (0 e Máximo)
-  novo = Math.max(0, Math.min(st.max, novo));
+    const st = ficha[key];
+    let novo = Number(st.atual) + num;
+    novo = Math.max(0, Math.min(st.max, novo));
+    
+    await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
+    el.innerHTML = originalHtml;
+  };
 
-  await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
+  input.addEventListener('blur', executar);
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') { input.blur(); }
+  });
 };
 
 // === EDIÇÃO INLINE ===
