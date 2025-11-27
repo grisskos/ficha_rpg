@@ -1,31 +1,16 @@
-<script type="module">
-// NÃO COLOQUE API KEY NO CHAT — isto é um exemplo.
-// Use sua API KEY real do Firebase.
-
+// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  getDocs,
-  onSnapshot,
-  orderBy
+  getFirestore, collection, addDoc, doc, getDoc, updateDoc, deleteDoc,
+  query, where, onSnapshot, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+  createUserWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-export const firebaseConfig = {
+// SUBSTITUA "SUA_API_KEY" PELOS SEUS DADOS REAIS DO FIREBASE CONSOLE
+const firebaseConfig = {
 	apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
 	authDomain: "ficharpg-edc5c.firebaseapp.com",
 	projectId: "ficharpg-edc5c",
@@ -35,27 +20,12 @@ export const firebaseConfig = {
 	measurementId: "G-6PJKQYBRRC
 };
 
-// Inicializa
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Exporta funções úteis
 export {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  getDocs,
-  onSnapshot,
-  orderBy,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut
+  db, auth, collection, addDoc, doc, getDoc, updateDoc, deleteDoc,
+  query, where, onSnapshot, orderBy, onAuthStateChanged,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
 };
-</script>
