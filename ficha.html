@@ -7,10 +7,10 @@
 <style>
   :root { 
     --bg: #0f0f0f; --card: #1c1c1c; --primary: #e63946; 
-    --energy: #58E8DA; --vigor: #69E858; --sanity: #D073FA; --text: #f1f1f1; 
+    --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; --text: #f1f1f1; 
   }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; justify-content: center; }
-  .container { width: 100%; max-width: 500px; padding-bottom: 50px; }
+  .container { width: 100%; max-width: 500px; padding-bottom: 80px; }
   
   /* Header */
   .char-header { text-align: center; margin-bottom: 20px; position: relative; }
@@ -40,7 +40,7 @@
   .bar-vida .bar-fill { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
   .bar-energia .bar-fill { background: var(--energy); box-shadow: 0 0 10px var(--energy); }
   .bar-vigor .bar-fill { background: var(--vigor); box-shadow: 0 0 10px var(--vigor); }
-  .bar-integridade .bar-fill { background: var(--sanity); box-shadow: 0 0 10px var(--sanity); }
+  .bar-integridade .bar-fill { background: var(--integridade); box-shadow: 0 0 10px var(--integridade); }
 
   .controls { display: flex; gap: 5px; margin-top: 10px; justify-content: flex-end; }
   .btn-stat { width: 35px; height: 35px; background: #2a2a2a; color: white; border: 1px solid #444; border-radius: 5px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
@@ -52,26 +52,32 @@
   li { margin-bottom: 5px; }
 
   /* Botão Flutuante de Edição */
-  .fab-edit { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 100; }
-  .fab-edit:hover { background: var(--primary); border-color: var(--primary); }
+  .fab-edit { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; border: 2px solid #555; width: 60px; height: 60px; border-radius: 50%; font-size: 1.8rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 100; transition: 0.3s; }
+  .fab-edit:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
 
   /* MODAL DE EDIÇÃO */
   .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; border: 1px solid #444; }
-  .modal h2 { margin-top: 0; color: var(--primary); }
+  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; border: 1px solid #444; position: relative; }
+  .modal h2 { margin-top: 0; color: var(--primary); border-bottom: 1px solid #333; padding-bottom: 10px; }
+  
   .form-group { margin-bottom: 15px; }
-  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.9rem; }
-  .form-group input, .form-group textarea { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 5px; box-sizing: border-box; }
-  .form-group textarea { height: 100px; resize: vertical; font-family: sans-serif; }
+  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.9rem; font-weight: bold; }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 5px; box-sizing: border-box; font-family: sans-serif; }
+  .form-group textarea { height: 100px; resize: vertical; }
+  
   .grid-edit { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .close-btn { background: #333; margin-top: 10px; width: 100%; padding: 10px; color: white; border: none; cursor: pointer; border-radius: 5px; }
-  .save-btn { background: var(--primary); width: 100%; padding: 10px; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; margin-top: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  
+  .close-btn { background: #333; margin-top: 10px; width: 100%; padding: 12px; color: white; border: none; cursor: pointer; border-radius: 5px; }
+  .save-btn { background: var(--primary); width: 100%; padding: 12px; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; margin-top: 20px; font-size: 1rem; }
+  .delete-btn { background: transparent; border: 1px solid #d00000; color: #d00000; width: 100%; padding: 10px; margin-top: 30px; cursor: pointer; border-radius: 5px; }
+  .delete-btn:hover { background: #d00000; color: white; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <button class="fab-edit" onclick="abrirEditor()">⚙️</button>
+  <button class="fab-edit" onclick="abrirEditor()">✎</button>
 
   <div class="char-header">
     <img id="charImg" class="char-img" src="">
@@ -92,17 +98,35 @@
     <ul id="habsList"></ul>
   </div>
   
-  <button class="close-btn" onclick="window.location='index.html'">Voltar</button>
+  <button class="close-btn" onclick="window.location='index.html'">Voltar para Lista</button>
 </div>
 
 <div id="editorModal" class="modal">
   <div class="modal-content">
-    <h2>Editar Personagem</h2>
+    <h2>Editar Ficha</h2>
     
-    <div class="form-group"><label>Nível</label><input type="number" id="editNivel"></div>
+    <div class="form-group"><label>Nome</label><input type="text" id="editNome"></div>
+    <div class="form-group"><label>Imagem (URL)</label><input type="text" id="editImg"></div>
+    
+    <div class="grid-edit">
+      <div class="form-group"><label>Nível</label><input type="number" id="editNivel"></div>
+      <div class="form-group"><label>Origem</label><input type="text" id="editOrigem"></div>
+    </div>
+    
+    <div class="form-group">
+      <label>Classe</label>
+      <select id="editClasse">
+        <option value="Lutador">Lutador</option>
+        <option value="Especialista em Combate">Especialista em Combate</option>
+        <option value="Especialista em Técnica">Especialista em Técnica</option>
+        <option value="Suporte">Suporte</option>
+        <option value="Controlador">Controlador</option>
+        <option value="Restringido">Restringido</option>
+      </select>
+    </div>
     
     <h3>Atributos</h3>
-    <div class="grid-edit">
+    <div class="grid-3">
       <div class="form-group"><label>FOR</label><input type="number" id="editFor"></div>
       <div class="form-group"><label>DES</label><input type="number" id="editDes"></div>
       <div class="form-group"><label>CON</label><input type="number" id="editCon"></div>
@@ -116,7 +140,7 @@
       <div class="form-group"><label>Vida Máx</label><input type="number" id="editVidaMax"></div>
       <div class="form-group"><label>Energia Máx</label><input type="number" id="editEnergiaMax"></div>
       <div class="form-group"><label>Vigor Máx</label><input type="number" id="editVigorMax"></div>
-      <div class="form-group"><label>Integridade Máx</label><input type="number" id="editIntegridadeMax"></div>
+      <div class="form-group"><label>Integ. Máx</label><input type="number" id="editIntegridadeMax"></div>
     </div>
 
     <h3>Listas (1 item por linha)</h3>
@@ -130,31 +154,36 @@
     </div>
 
     <button class="save-btn" onclick="salvarEdicao()">SALVAR ALTERAÇÕES</button>
+    <button class="delete-btn" onclick="excluirPersonagem()">☠ EXCLUIR PERSONAGEM</button>
     <button class="close-btn" onclick="fecharEditor()">Cancelar</button>
   </div>
 </div>
 
 <script type="module">
-import { db, doc, updateDoc, onSnapshot } from "./firebase.js";
+import { db, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-let fichaData = {}; // Guarda os dados atuais
+let fichaData = {}; 
 
 // Monitoramento Real-time
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) {
     fichaData = docSnap.data();
     renderFicha(fichaData);
+  } else {
+    alert("Personagem não encontrado (talvez tenha sido excluído).");
+    window.location = "index.html";
   }
 });
 
 function renderFicha(f) {
   document.getElementById('charNome').innerText = f.nome;
   const imgEl = document.getElementById('charImg');
-  if(f.imagem) imgEl.src = f.imagem; else imgEl.style.display = 'none';
+  if(f.imagem) { imgEl.src = f.imagem; imgEl.style.display = 'block'; } 
+  else { imgEl.style.display = 'none'; }
 
-  // Badges (Agora com Nível)
+  // Badges
   const classe = f.classe || "Aventureiro";
   const origem = f.origem || "Desconhecido";
   const nivel = f.nivel || 1;
@@ -185,9 +214,11 @@ function renderFicha(f) {
   // Barras
   const statsArea = document.getElementById('statsArea');
   statsArea.innerHTML = "";
-  ['vida', 'energia', 'vigor', 'integridade'].forEach(stat => {
-    if(f[stat]) createStatBox(stat, f[stat], statsArea);
-  });
+  // Ordem de renderização das barras
+  if(f.vida) createStatBox('vida', f.vida, statsArea);
+  if(f.energia) createStatBox('energia', f.energia, statsArea);
+  if(f.vigor) createStatBox('vigor', f.vigor, statsArea);
+  if(f.integridade) createStatBox('integridade', f.integridade, statsArea);
 
   // Listas
   document.getElementById('ataquesList').innerHTML = (f.ataques || []).map(i => `<li>${i}</li>`).join('');
@@ -210,14 +241,18 @@ function createStatBox(key, data, container) {
     </div>`;
 }
 
-// LOGICA DE EDIÇÃO
+// === FUNÇÕES GLOBAIS ===
+
 window.abrirEditor = () => {
   document.getElementById('editorModal').style.display = 'block';
   
-  // Preencher campos com valores atuais
+  // Preencher campos
+  document.getElementById('editNome').value = fichaData.nome || "";
+  document.getElementById('editImg').value = fichaData.imagem || "";
   document.getElementById('editNivel').value = fichaData.nivel || 1;
+  document.getElementById('editClasse').value = fichaData.classe || "Lutador";
+  document.getElementById('editOrigem').value = fichaData.origem || "";
   
-  // Atributos
   if(fichaData.atributos) {
     document.getElementById('editFor').value = fichaData.atributos.forca;
     document.getElementById('editDes').value = fichaData.atributos.destreza;
@@ -227,13 +262,11 @@ window.abrirEditor = () => {
     document.getElementById('editPre').value = fichaData.atributos.presenca;
   }
 
-  // Maximos
   document.getElementById('editVidaMax').value = fichaData.vida.max;
   document.getElementById('editEnergiaMax').value = fichaData.energia.max;
   document.getElementById('editVigorMax').value = fichaData.vigor.max;
   document.getElementById('editIntegridadeMax').value = fichaData.integridade.max;
 
-  // Listas (Transforma Array em Texto com quebra de linha)
   document.getElementById('editAtaques').value = (fichaData.ataques || []).join('\n');
   document.getElementById('editHabs').value = (fichaData.habilidades || []).join('\n');
 };
@@ -244,34 +277,5 @@ window.fecharEditor = () => {
 
 window.salvarEdicao = async () => {
   const getNum = (id) => Number(document.getElementById(id).value);
+  const getVal = (id) => document.getElementById(id).value;
   const getTextList = (id) => document.getElementById(id).value.split('\n').filter(i => i.trim() !== "");
-
-  try {
-    await updateDoc(doc(db, "fichas", id), {
-      nivel: getNum('editNivel'),
-      atributos: {
-        forca: getNum('editFor'), destreza: getNum('editDes'), constituicao: getNum('editCon'),
-        inteligencia: getNum('editInt'), sabedoria: getNum('editSab'), presenca: getNum('editPre')
-      },
-      "vida.max": getNum('editVidaMax'),
-      "energia.max": getNum('editEnergiaMax'),
-      "vigor.max": getNum('editVigorMax'),
-      "integridade.max": getNum('editIntegridadeMax'),
-      ataques: getTextList('editAtaques'),
-      habilidades: getTextList('editHabs')
-    });
-    alert("Ficha atualizada!");
-    fecharEditor();
-  } catch(e) {
-    alert("Erro ao salvar: " + e.message);
-  }
-};
-
-window.updateStat = async (stat, delta) => {
-  if (!fichaData[stat]) return;
-  const novoAtual = Math.max(0, Math.min(fichaData[stat].max, Number(fichaData[stat].atual) + delta));
-  await updateDoc(doc(db, "fichas", id), { [`${stat}.atual`]: novoAtual });
-};
-</script>
-</body>
-</html>
