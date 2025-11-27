@@ -29,28 +29,29 @@
   .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
   .b-lvl { color: white; border-color: white; font-weight: bold; }
 
-  /* EDIÇÃO INLINE (O SEGREDO) */
-  .editable { cursor: pointer; border-bottom: 1px dashed #444; transition: 0.2s; }
-  .editable:hover { color: var(--primary); border-color: var(--primary); }
+  /* EDIÇÃO INLINE */
+  .editable { 
+    cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; 
+    display: inline-block; min-width: 20px; text-align: center;
+  }
+  .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   
   .inline-input { 
-    background: #000; color: white; border: 1px solid var(--primary); 
-    border-radius: 4px; padding: 2px 5px; font-family: inherit; font-size: inherit; 
-    width: 60px; text-align: center; outline: none;
+    background: #000; color: white; border: 2px solid var(--primary); 
+    border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; 
+    width: 80px; text-align: center; outline: none;
   }
-  /* Ajuste para input de nome ser maior */
-  h2 .inline-input { width: 200px; font-size: 1.2rem; }
 
   /* Atributos */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
-  .attr-raw { font-size: 0.7rem; color: #555; background: #111; padding: 1px 4px; border-radius: 3px; }
+  .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
 
   /* Barras */
   .stat-row { margin-bottom: 12px; }
-  .stat-head { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
+  .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
   .bar-fill { height: 100%; transition: width 0.3s; }
   
@@ -60,19 +61,34 @@
   .c-inte { background: var(--integridade); box-shadow: 0 0 8px var(--integridade); }
 
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
-  .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  .btn-mini:hover { border-color: white; color: white; }
+  .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .btn-mini:hover { border-color: white; color: white; background: #333; }
 
   /* Perícias */
   .skills-card { padding: 0; overflow: hidden; }
   .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
   .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
-  .skill-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
-  .sk-name { flex-grow: 1; color: #eee; }
-  .sk-attr { font-size: 0.7rem; color: #666; width: 40px; text-transform: uppercase; font-weight: bold; }
-  .sk-total { font-weight: bold; color: white; width: 30px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
+  .skill-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
+  .skill-row:hover { background: #1b1b1b; }
   
-  /* Modal de Listas (Ataques/Habilidades ainda precisam de modal pois são listas grandes) */
+  .sk-name { flex-grow: 1; color: #eee; }
+  .sk-attr { font-size: 0.7rem; color: #555; width: 40px; text-transform: uppercase; font-weight: bold; }
+  .sk-total { font-weight: bold; color: white; width: 35px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
+  
+  /* Botões de Perícia T/M */
+  .sk-btn-group { display: flex; gap: 5px; }
+  .sk-btn { 
+    width: 25px; height: 25px; border-radius: 4px; border: 1px solid #444; background: #111; 
+    color: #555; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+  }
+  .sk-btn:hover { border-color: #777; color: #aaa; }
+  
+  /* Estados Ativos */
+  .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
+  .sk-btn.active-m { background: rgba(230, 57, 70, 0.2); border-color: var(--primary); color: var(--primary); }
+
+  /* FAB e MODAL */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
 
@@ -88,7 +104,7 @@
   <div class="sidebar">
     <div class="card char-header">
       <img id="charImg" class="char-img" src="">
-      <h2 class="char-name"><span class="editable" onclick="editInline(this, 'nome', 'text')">...</span></h2>
+      <h2 class="char-name"><span class="editable" id="nomeDisplay" onclick="editarCampo(this, 'nome', 'text')">...</span></h2>
       <div id="badges" class="badges"></div>
     </div>
 
@@ -101,7 +117,7 @@
       <div id="statsArea"></div>
     </div>
     
-    <button class="btn-mini" style="width:100%; padding:10px;" onclick="window.location='index.html'">Voltar</button>
+    <button class="btn-mini" style="width:100%; padding:10px; font-size:1rem;" onclick="window.location='index.html'">Voltar</button>
   </div>
 
   <div class="content-area">
@@ -155,87 +171,84 @@ import { db, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let ficha = {}; 
+let editandoId = null; // Impede renderização se estiver editando
 
 const PERICIAS_DEF = [
   { n: "Atletismo", a: "forca" }, { n: "Acrobacia", a: "destreza" }, { n: "Furtividade", a: "destreza" },
   { n: "Prestidigitação", a: "destreza" }, { n: "Feitiçaria", a: "inteligencia" }, { n: "História", a: "inteligencia" },
-  { n: "Investigação", a: "inteligencia" }, { n: "Tecnologia", a: "inteligencia" }, { n: "Teologia", a: "inteligencia" },
-  { n: "Direção", a: "sabedoria" }, { n: "Intuição", a: "sabedoria" }, { n: "Medicina", a: "sabedoria" },
-  { n: "Ocultismo", a: "sabedoria" }, { n: "Percepção", a: "sabedoria" }, { n: "Sobrevivência", a: "sabedoria" },
-  { n: "Enganação", a: "presenca" }, { n: "Intimidação", a: "presenca" }, { n: "Performance", a: "presenca" }, { n: "Persuasão", a: "presenca" }
+  { n: "Investigação", a: "inteligencia" }, { n: "Ofício 1", a: "inteligencia" }, { n: "Tecnologia", a: "inteligencia" },
+  { n: "Teologia", a: "inteligencia" }, { n: "Direção", a: "sabedoria" }, { n: "Intuição", a: "sabedoria" },
+  { n: "Medicina", a: "sabedoria" }, { n: "Ocultismo", a: "sabedoria" }, { n: "Percepção", a: "sabedoria" },
+  { n: "Sobrevivência", a: "sabedoria" }, { n: "Enganação", a: "presenca" }, { n: "Intimidação", a: "presenca" },
+  { n: "Performance", a: "presenca" }, { n: "Persuasão", a: "presenca" }
 ];
 const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligencia:"INT", sabedoria:"SAB", presenca:"PRE" };
 
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
-  if (docSnap.exists()) { ficha = docSnap.data(); renderFicha(); }
+  if (docSnap.exists()) { 
+    ficha = docSnap.data(); 
+    if(!editandoId) renderFicha(); 
+  }
 });
 
 function renderFicha() {
   const f = ficha;
   
-  // Nome Inline (Se não estiver editando, atualiza)
-  const nomeEl = document.querySelector('.char-name span');
-  if (nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome;
+  // Nome
+  document.getElementById('nomeDisplay').innerText = f.nome;
   
+  // Imagem
   const imgEl = document.getElementById('charImg');
   if(f.imagem) imgEl.src = f.imagem;
 
   // Badges (Nivel editável)
   document.getElementById('badges').innerHTML = `
-    <span class="badge b-lvl">NVL <span class="editable" onclick="editInline(this, 'nivel', 'number')">${f.nivel||1}</span></span>
+    <span class="badge b-lvl">NVL <span class="editable" onclick="editarCampo(this, 'nivel', 'number')">${f.nivel||1}</span></span>
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
   `;
 
   // Atributos
   const areaAttr = document.getElementById('atributosArea');
-  // Só redesenha se não tiver inputs ativos para não perder foco
-  if(!areaAttr.querySelector('input')) {
-    areaAttr.innerHTML = "";
-    Object.keys(ATR_SHORT).forEach(key => {
-      const val = f.atributos[key] || 10;
-      const mod = Math.floor((val - 10) / 2);
-      // Aqui o "val" (o número pequeno) é editável
-      areaAttr.innerHTML += `
-        <div class="attr-box">
-          <span class="attr-lbl">${ATR_SHORT[key]}</span>
-          <span class="attr-val">${mod>=0?'+':''}${mod}</span>
-          <span class="attr-raw editable" onclick="editInline(this, 'atributos.${key}', 'number')">${val}</span>
-        </div>`;
-    });
-  }
+  areaAttr.innerHTML = "";
+  Object.keys(ATR_SHORT).forEach(key => {
+    const val = f.atributos[key] || 10;
+    const mod = Math.floor((val - 10) / 2);
+    areaAttr.innerHTML += `
+      <div class="attr-box">
+        <span class="attr-lbl">${ATR_SHORT[key]}</span>
+        <span class="attr-val">${mod>=0?'+':''}${mod}</span>
+        <span class="attr-raw editable" onclick="editarCampo(this, 'atributos.${key}', 'number')">${val}</span>
+      </div>`;
+  });
 
   // Stats (Barras)
   const areaStats = document.getElementById('statsArea');
-  // Se estiver editando algo aqui, não redesenha tudo brutalmente
-  if(!areaStats.querySelector('input')) {
-    areaStats.innerHTML = "";
-    const statsMap = [
-      {k:'vida', l:'Vida', c:'c-vida'}, {k:'energia', l:'Energia', c:'c-ener'},
-      {k:'vigor', l:'Vigor', c:'c-vigo'}, {k:'integridade', l:'Integ.', c:'c-inte'}
-    ];
-    statsMap.forEach(s => {
-      const st = f[s.k];
-      if(!st) return;
-      const pct = Math.min(100, (st.atual/st.max)*100);
-      
-      // Aqui tornamos o Atual e o Máximo editáveis
-      areaStats.innerHTML += `
-        <div class="stat-row">
-          <div class="stat-head">
-            <span>${s.l}</span> 
-            <div>
-              <span class="editable" onclick="editInline(this, '${s.k}.atual', 'number')">${st.atual}</span> / 
-              <span class="editable" onclick="editInline(this, '${s.k}.max', 'number')">${st.max}</span>
-            </div>
+  areaStats.innerHTML = "";
+  const statsMap = [
+    {k:'vida', l:'Vida', c:'c-vida'}, {k:'energia', l:'Energia', c:'c-ener'},
+    {k:'vigor', l:'Vigor', c:'c-vigo'}, {k:'integridade', l:'Integ.', c:'c-inte'}
+  ];
+  statsMap.forEach(s => {
+    const st = f[s.k];
+    if(!st) return;
+    const pct = Math.min(100, (st.atual/st.max)*100);
+    
+    areaStats.innerHTML += `
+      <div class="stat-row">
+        <div class="stat-head">
+          <span>${s.l}</span> 
+          <div>
+            <span class="editable" onclick="editarCampo(this, '${s.k}.atual', 'number')">${st.atual}</span> / 
+            <span class="editable" onclick="editarCampo(this, '${s.k}.max', 'number')">${st.max}</span>
           </div>
-          <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
-          <div class="stat-ctrl">
-            <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
-            <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
-          </div>
-        </div>`;
-    });
-  }
+        </div>
+        <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
+        <div class="stat-ctrl">
+          <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
+          <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
+        </div>
+      </div>`;
+  });
 
   // Perícias
   const nivel = f.nivel || 1;
@@ -256,15 +269,15 @@ function renderFicha() {
     if (saved.t) total += bonusTreino;
     if (saved.m) total += 1;
 
-    // Checkbox clicável direto na lista
+    // BOTÕES T e M
     listaSkills.innerHTML += `
       <div class="skill-row">
         <span class="sk-name">${p.n}</span>
         <span class="sk-attr">${ATR_SHORT[p.a]}</span>
         <span class="sk-total">${total>=0?'+':''}${total}</span>
-        <div style="display:flex; gap:5px;">
-           <input type="checkbox" ${saved.t?'checked':''} onchange="togglePericia('${p.n}', 't', this.checked)">
-           <input type="checkbox" ${saved.m?'checked':''} onchange="togglePericia('${p.n}', 'm', this.checked)" title="Mestre">
+        <div class="sk-btn-group">
+           <div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div>
+           <div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div>
         </div>
       </div>`;
   });
@@ -273,56 +286,48 @@ function renderFicha() {
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
-// === LÓGICA DE EDIÇÃO INLINE ===
-window.editInline = (element, field, type) => {
-  // Evita criar input dentro de input
-  if(element.querySelector('input')) return;
+// === EDIÇÃO INLINE ===
+window.editarCampo = (el, field, type) => {
+  if (el.querySelector('input')) return; // Já está editando
 
-  const currentVal = element.innerText;
+  editandoId = field; // Pausa renderização externa
+  const valorAtual = el.innerText;
   
-  // Cria o input
-  const input = document.createElement('input');
-  input.type = type;
-  input.value = currentVal;
-  input.className = 'inline-input';
-  
-  // Salva ao perder foco (blur) ou Enter
-  const save = async () => {
-    let newVal = input.value;
-    if (type === 'number') newVal = Number(newVal);
-    
-    // Atualiza o HTML visualmente primeiro para feedback rápido
-    element.innerHTML = newVal; 
-    
-    // Salva no banco
+  el.innerHTML = `<input id="inputEdit" class="inline-input" type="${type}" value="${valorAtual}">`;
+  const input = document.getElementById('inputEdit');
+  input.focus();
+
+  const salvar = async () => {
+    let novoValor = input.value;
+    if (type === 'number') novoValor = Number(novoValor);
+
+    // Atualiza localmente para feedback instantâneo
+    el.innerHTML = novoValor;
+    editandoId = null;
+
     try {
-      await updateDoc(doc(db, "fichas", id), { [field]: newVal });
-    } catch(e) {
+      await updateDoc(doc(db, "fichas", id), { [field]: novoValor });
+    } catch (e) {
       console.error(e);
-      element.innerHTML = currentVal; // Reverte se der erro
+      el.innerText = valorAtual; // Reverte erro
     }
   };
 
-  input.onblur = save;
-  input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
-
-  // Limpa o elemento e coloca o input
-  element.innerHTML = '';
-  element.appendChild(input);
-  input.focus();
+  input.addEventListener('blur', salvar);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
 };
 
-window.togglePericia = async (skillName, tipo, isChecked) => {
-  // Precisamos ler o objeto inteiro, modificar e salvar de volta
-  // No Firestore, para mudar campo aninhado específico num Map, usamos notação de ponto
-  // Mas como a chave tem espaço/acento (ex: "Ofício 1"), é mais seguro ler e regravar o objeto skills
+// === TOGGLE PERICIA (T/M) ===
+window.togglePericia = async (skillName, tipo) => {
+  // Lê o estado atual
+  const pericias = ficha.pericias || {};
+  if (!pericias[skillName]) pericias[skillName] = { t: false, m: false };
   
-  const currentSkills = ficha.pericias || {};
-  if(!currentSkills[skillName]) currentSkills[skillName] = { t: false, m: false };
+  // Inverte o valor
+  pericias[skillName][tipo] = !pericias[skillName][tipo];
   
-  currentSkills[skillName][tipo] = isChecked;
-  
-  await updateDoc(doc(db, "fichas", id), { pericias: currentSkills });
+  // Salva tudo
+  await updateDoc(doc(db, "fichas", id), { pericias: pericias });
 };
 
 window.upStat = async (key, val) => {
@@ -331,7 +336,7 @@ window.upStat = async (key, val) => {
   await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
 };
 
-// Configurações e Listas
+// Configurações
 window.abrirConfig = () => {
   document.getElementById('configModal').style.display = 'block';
   document.getElementById('editImgUrl').value = ficha.imagem || "";
