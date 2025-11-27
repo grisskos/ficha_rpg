@@ -1,141 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema Vanguarda RPG</title>
-
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-
-  <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; padding: 20px; margin: 0; }
-    
-    /* Layout */
-    .container { max-width: 800px; margin: 0 auto; }
-    h1, h2 { color: #ff5252; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
-    
-    /* Inputs e Cards */
-    .card { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
-    input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #444; background: #2c2c2c; color: white; box-sizing: border-box; }
-    input:focus, textarea:focus { border-color: #ff5252; outline: none; }
-    
-    /* Botões Gerais */
-    button { padding: 12px; width: 100%; border: none; border-radius: 4px; background: #c62828; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
-    button:hover { background: #b71c1c; }
-    button.secondary { background: #444; margin-top: 10px; }
-
-    /* ESTILO DA FICHA DE PERSONAGEM */
-    .ficha-container { 
-        display: grid; 
-        grid-template-columns: 120px 1fr; /* Imagem na esquerda, resto na direita */
-        gap: 20px; 
-        background: #252525; 
-        padding: 20px; 
-        border-radius: 8px; 
-        border-left: 5px solid #ff5252; 
-        margin-bottom: 20px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-
-    /* Imagem do Personagem */
-    .char-img { 
-        width: 100%; 
-        height: 120px; 
-        object-fit: cover; 
-        border-radius: 8px; 
-        border: 2px solid #444;
-        background: #000;
-    }
-
-    /* Barras de Status */
-    .status-group { margin-bottom: 5px; }
-    .status-label { display: flex; justify-content: space-between; font-size: 0.85em; color: #bbb; margin-bottom: 2px; }
-    
-    .bar-bg { background: #444; height: 16px; border-radius: 8px; overflow: hidden; position: relative; }
-    .bar-fill { height: 100%; transition: width 0.3s ease; }
-    .bar-text { position: absolute; width: 100%; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; text-shadow: 1px 1px 2px black; top:0; left:0;}
-
-    /* Cores das Barras */
-    .hp-bar { background: linear-gradient(90deg, #d32f2f, #f44336); } /* Vida Vermelha */
-    .ep-bar { background: linear-gradient(90deg, #1976d2, #2196f3); } /* Energia Azul */
-    .vp-bar { background: linear-gradient(90deg, #388e3c, #4caf50); } /* Vigor Verde */
-    .ip-bar { background: linear-gradient(90deg, #7b1fa2, #9c27b0); } /* Integridade Roxa */
-
-    /* Botões de Dano/Cura Pequenos */
-    .ctrl-btn { 
-        background: #333; color: white; border: 1px solid #555; 
-        width: 25px; height: 25px; border-radius: 50%; 
-        font-size: 14px; cursor: pointer; display: inline-flex; 
-        align-items: center; justify-content: center; margin-left: 5px;
-    }
-    .ctrl-btn:hover { background: #555; }
-
-    /* Abas de Detalhes (Ataques/Itens) */
-    .details-box { margin-top: 15px; grid-column: span 2; background: #1e1e1e; padding: 10px; border-radius: 5px; }
-    .details-title { font-size: 0.9em; color: #ff5252; border-bottom: 1px solid #444; margin-bottom: 5px; padding-bottom: 2px; }
-    .details-content { font-size: 0.85em; color: #ccc; white-space: pre-wrap; }
-
-    /* Responsivo para celular */
-    @media (max-width: 600px) {
-        .ficha-container { grid-template-columns: 1fr; }
-        .char-img { height: 200px; margin: 0 auto; display: block; }
-        .details-box { grid-column: span 1; }
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <h1>Vanguarda RPG</h1>
-
-  <div class="card" id="loginCard">
-    <h2>Acesso</h2>
-    <input id="emailInput" type="email" placeholder="Email" />
-    <input id="passInput" type="password" placeholder="Senha" />
-    <button onclick="fazerLogin()">Entrar</button>
-    <button class="secondary" onclick="criarConta()">Criar Nova Conta</button>
-  </div>
-
-  <div id="userArea" style="display:none;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <span id="userInfo" style="color:#888;"></span>
-        <button onclick="fazerLogout()" style="width:auto; padding: 5px 15px; background: #333;">Sair</button>
-    </div>
-
-    <div id="mestrePanel" class="card" style="display:none; border-color: #ffd700;">
-      <h2 style="color:#ffd700">Painel do Mestre</h2>
-      <textarea id="mestreNotes" rows="5" placeholder="Anotações da campanha..."></textarea>
-      <button onclick="salvarNotasMestre()" style="background:#b8860b">Salvar Notas</button>
-    </div>
-
-    <div class="card">
-      <h2>Criar Personagem</h2>
-      <div style="display:flex; gap:10px;">
-          <input id="nomeChar" placeholder="Nome do Personagem" style="flex:2" />
-          <input id="imgChar" placeholder="URL da Imagem (Link direto jpg/png)" style="flex:3" />
-      </div>
-      
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-          <input id="vidaMax" type="number" placeholder="Vida Máxima" />
-          <input id="energiaMax" type="number" placeholder="Energia Máxima" />
-          <input id="vigorMax" type="number" placeholder="Vigor Máximo" />
-          <input id="integridadeMax" type="number" placeholder="Integridade Máxima" />
-      </div>
-
-      <textarea id="ataques" placeholder="Lista de Ataques" rows="2"></textarea>
-      <textarea id="habilidades" placeholder="Habilidades / Magias" rows="2"></textarea>
-      <textarea id="itens" placeholder="Inventário / Itens" rows="2"></textarea>
-      
-      <button onclick="criarFicha()">Criar Ficha</button>
-    </div>
-
-    <h2>Personagens em Jogo</h2>
-    <div id="listaFichas"></div>
-  </div>
-</div>
-
 <script>
   // --------------------------
   // CONFIGURAÇÃO DO FIREBASE
@@ -150,11 +12,13 @@
     measurementId: "G-6PJKQYBRRC"
   };
 
-  firebase.initializeApp(firebaseConfig);
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
   const db = firebase.firestore();
   const auth = firebase.auth();
 
-  const EMAIL_DO_MESTRE = "mestre@rpg.com";
+  const EMAIL_DO_MESTRE = "christian.bueno17@gmail.com";
 
   // --------------------------
   // AUTENTICAÇÃO
@@ -168,10 +32,10 @@
       if (user.email === EMAIL_DO_MESTRE) {
         document.getElementById('mestrePanel').style.display = 'block';
         carregarNotasMestre();
-        carregarTodasFichas(); // Mestre vê tudo
+        carregarTodasFichas(); 
       } else {
         document.getElementById('mestrePanel').style.display = 'none';
-        carregarMinhasFichas(user.uid); // Jogador vê só as dele
+        carregarMinhasFichas(user.uid); 
       }
     } else {
       document.getElementById('loginCard').style.display = 'block';
@@ -182,14 +46,17 @@
   function fazerLogin() {
     const e = document.getElementById('emailInput').value;
     const p = document.getElementById('passInput').value;
-    auth.signInWithEmailAndPassword(e, p).catch(err => alert(err.message));
+    auth.signInWithEmailAndPassword(e, p).catch(err => alert("Erro no Login: " + err.message));
   }
 
   function criarConta() {
     const e = document.getElementById('emailInput').value;
     const p = document.getElementById('passInput').value;
-    auth.createUserWithEmailAndPassword(e, p).then(()=>alert("Criado!")).catch(err=>alert(err.message));
+    auth.createUserWithEmailAndPassword(e, p)
+      .then(() => alert("Conta Criada com Sucesso!"))
+      .catch(err => alert("Erro ao Criar Conta: " + err.message));
   }
+  
   function fazerLogout() { auth.signOut(); }
 
   // --------------------------
@@ -198,24 +65,36 @@
 
   function criarFicha() {
     const user = auth.currentUser;
-    if (!user) return;
+    
+    // Verificação de segurança
+    if (!user) {
+        alert("Erro: Você não está logado!");
+        return;
+    }
 
-    // Pega os valores máximos
-    const vMax = Number(document.getElementById('vidaMax').value);
-    const eMax = Number(document.getElementById('energiaMax').value);
-    const viMax = Number(document.getElementById('vigorMax').value);
-    const iMax = Number(document.getElementById('integridadeMax').value);
+    // Pega os valores e garante que são números (se estiver vazio, vira 0)
+    const vMax = Number(document.getElementById('vidaMax').value) || 10;
+    const eMax = Number(document.getElementById('energiaMax').value) || 10;
+    const viMax = Number(document.getElementById('vigorMax').value) || 10;
+    const iMax = Number(document.getElementById('integridadeMax').value) || 10;
+    const nome = document.getElementById('nomeChar').value;
+
+    if (!nome) {
+        alert("Por favor, coloque um nome no personagem.");
+        return;
+    }
+
+    console.log("Tentando criar ficha para:", user.email);
 
     db.collection('fichas').add({
         uid: user.uid,
         dono: user.email,
-        nome: document.getElementById('nomeChar').value,
-        imagem: document.getElementById('imgChar').value || "https://via.placeholder.com/150",
+        nome: nome,
+        imagem: document.getElementById('imgChar').value || "",
         
-        // Salvamos Atual e Máximo separados
         vida: { atual: vMax, max: vMax },
         energia: { atual: eMax, max: eMax },
-        vigor: { atual: viMax, max: viMax },
+        vigor: { atual: viMax, max: viMax }, 
         integridade: { atual: iMax, max: iMax },
 
         ataques: document.getElementById('ataques').value,
@@ -223,16 +102,22 @@
         itens: document.getElementById('itens').value,
         
         dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        alert("Personagem Criado!");
-        // Limpa inputs básicos
-        document.getElementById('nomeChar').value = "";
+    })
+    .then(() => {
+        alert("Personagem Criado com Sucesso!");
+        document.getElementById('nomeChar').value = ""; // Limpa nome
+    })
+    .catch((error) => {
+        console.error("Erro ao gravar:", error);
+        alert("Erro ao criar ficha: " + error.message);
     });
   }
 
   function carregarMinhasFichas(uid) {
     db.collection('fichas').where('uid', '==', uid).orderBy('dataCriacao', 'desc')
-      .onSnapshot(renderizarFichas);
+      .onSnapshot(renderizarFichas, (error) => {
+          console.log("Erro ao carregar fichas:", error);
+      });
   }
 
   function carregarTodasFichas() {
@@ -240,9 +125,10 @@
       .onSnapshot(renderizarFichas);
   }
 
-  // Essa função gera o HTML de cada barra
   function gerarBarra(docId, label, corClasse, objDados, campoDb) {
-      // Calcula %
+      // Proteção contra dados corrompidos antigos
+      if (!objDados || objDados.atual === undefined) return `<div style='color:red'>Erro nos dados de ${label}</div>`;
+
       const pct = Math.max(0, Math.min(100, (objDados.atual / objDados.max) * 100));
       
       return `
@@ -266,15 +152,21 @@
     const lista = document.getElementById('listaFichas');
     lista.innerHTML = '';
 
+    if (snapshot.empty) {
+        lista.innerHTML = '<p style="color:#666; text-align:center">Nenhuma ficha encontrada.</p>';
+        return;
+    }
+
     snapshot.forEach(doc => {
         const f = doc.data();
         const id = doc.id;
         
-        // Tratamento de erro caso a imagem esteja quebrada ou vazia
         const imgUrl = f.imagem ? f.imagem : "https://via.placeholder.com/150?text=Sem+Foto";
 
         const div = document.createElement('div');
         div.className = 'ficha-container';
+        
+        // CORREÇÃO AQUI: f.vigor (antes estava f.vp-bar que é inválido)
         div.innerHTML = `
             <div>
                 <img src="${imgUrl}" class="char-img" onerror="this.src='https://via.placeholder.com/150?text=Erro'">
@@ -287,7 +179,8 @@
 
                 ${gerarBarra(id, "Vida", "hp-bar", f.vida, "vida")}
                 ${gerarBarra(id, "Energia", "ep-bar", f.energia, "energia")}
-                ${gerarBarra(id, "Vigor", "vp-bar", f.vp-bar, "vigor")} ${gerarBarra(id, "Integridade", "ip-bar", f.integridade, "integridade")}
+                ${gerarBarra(id, "Vigor", "vp-bar", f.vigor, "vigor")} 
+                ${gerarBarra(id, "Integridade", "ip-bar", f.integridade, "integridade")}
             </div>
 
             <div class="details-box">
@@ -307,7 +200,6 @@
     });
   }
 
-  // Função para dar dano ou curar (atualiza o banco)
   window.alterarStat = function(docId, campo, valor) {
     const docRef = db.collection('fichas').doc(docId);
     
@@ -315,14 +207,12 @@
         return transaction.get(docRef).then(doc => {
             if (!doc.exists) return;
             const dados = doc.data();
-            const stat = dados[campo]; // Ex: dados['vida']
+            const stat = dados[campo]; 
 
             let novoAtual = stat.atual + valor;
-            // Garante que não passa do Máximo nem fica menor que 0
             if (novoAtual > stat.max) novoAtual = stat.max;
             if (novoAtual < 0) novoAtual = 0;
 
-            // Atualiza apenas o campo específico (ex: vida.atual)
             const updateObj = {};
             updateObj[`${campo}.atual`] = novoAtual;
             
@@ -331,14 +221,10 @@
     }).catch(err => console.error("Erro ao atualizar:", err));
   };
 
-  // Mestre
   function salvarNotasMestre() {
     db.collection('mestre').doc('painel').set({ anotacoes: document.getElementById('mestreNotes').value });
   }
   function carregarNotasMestre() {
     db.collection('mestre').doc('painel').onSnapshot(doc => { if (doc.exists) document.getElementById('mestreNotes').value = doc.data().anotacoes; });
   }
-
 </script>
-</body>
-</html>
