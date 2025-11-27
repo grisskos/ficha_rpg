@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Grimório de Invocações</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@300..800&display=swap" rel="stylesheet">
+<style>
+  :root { 
+    --bg: #0f0f0f; --card: #141414; --primary: #e63946; --text: #f1f1f1; --border: #333;
+    --input-bg: #000;
+  }
+  
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Funnel Sans', sans-serif; padding: 20px; margin: 0; display:flex; height: 100vh; overflow: hidden; }
+
+  /* LAYOUT */
+  .layout { display: grid; grid-template-columns: 250px 1fr; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; height: 100%; }
+  
+  /* SIDEBAR (Lista de Shikigamis) */
+  .sidebar { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--border); padding-right: 20px; overflow-y: auto; }
+  .shikigami-item { 
+    background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; position: relative;
+  }
+  .shikigami-item:hover, .shikigami-item.active { border-color: var(--primary); background: #1a1a1a; }
+  .shikigami-item h3 { margin: 0; font-size: 1rem; }
+  .shikigami-item small { color: #888; }
+  
+  .btn-new { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+  .btn-back { background: transparent; border: 1px solid #555; color: #888; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: auto; }
+
+  /* AREA PRINCIPAL (Calculadora) */
+  .main-area { overflow-y: auto; padding-right: 10px; display: none; /* Escondido até selecionar */ }
+  .main-area.visible { display: block; }
+
+  /* TABELAS E INPUTS (Adaptado do seu código) */
+  .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  input.name-input { background: transparent; border: none; border-bottom: 2px solid var(--primary); color: white; font-size: 1.5rem; font-weight: bold; width: 300px; outline: none; }
+  
+  .grid-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } .sidebar.mobile-show { display: flex; position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:100; padding:20px; } }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
+  th { background: #222; color: var(--primary); padding: 10px; text-align: center; }
+  td { border: 1px solid var(--border); padding: 8px; text-align: center; }
+  
+  input[type="number"], select { 
+    background: var(--input-bg); border: 1px solid var(--border); color: white; 
+    padding: 5px; width: 100%; text-align: center; font-family: inherit; font-size: 1rem; border-radius: 4px;
+  }
+
+  /* Checkboxes Customizados */
+  .check-wrapper { display: flex; justify-content: center; height: 100%; align-items: center; }
+  input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); }
+
+  .stat-highlight { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+  
+  .btn-save { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+  .btn-delete { background: transparent; color: #d00000; border: 1px solid #d00000; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <div id="sidebar" class="sidebar">
+    <h2 style="margin-top:0; color:var(--primary);">Shikigamis</h2>
+    <button class="btn-new" onclick="novoShikigami()">+ Nova Invocação</button>
+    <div id="listaShikigamis">Carregando...</div>
+    <button class="btn-back" onclick="voltarFicha()">Voltar para Personagem</button>
+  </div>
+
+  <div id="editorArea" class="main-area">
+    <div class="header-actions">
+      <input type="text" id="shikigamiNome" class="name-input" placeholder="Nome da Invocação" oninput="atualizarTitulo()">
+      <div>
+        <button class="btn-save" onclick="salvarShikigami()">Salvar Invocação</button>
+        <button class="btn-delete" onclick="excluirShikigami()">Excluir</button>
+      </div>
+    </div>
+
+    <div class="grid-cols">
+      <div>
+        <table class="tabelaParametros">
+          <thead><tr><th colspan="2">Configuração Básica</th></tr></thead>
+          <tbody>
+            <tr><td>Nível do Invocador</td><td><select id="invocadorNivel"></select></td></tr>
+            <tr><td>Grau da Invocação</td>
+              <td>
+                <select id="seletorGrau">
+                  <option value="4">Grau 4</option>
+                  <option value="3">Grau 3</option>
+                  <option value="2">Grau 2</option>
+                  <option value="1">Grau 1</option>
+                  <option value="0">Grau Especial</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="tabelaAtributos">
+          <thead><tr><th>Atributo</th><th>Valor</th><th>Mod</th></tr></thead>
+          <tbody>
+            <tr><td>Força</td><td><input type="number" value="8" id="a1" class="calc-trigger"></td><td id="m1">-1</td></tr>
+            <tr><td>Destreza</td><td><input type="number" value="8" id="a2" class="calc-trigger"></td><td id="m2">-1</td></tr>
+            <tr><td>Constituição</td><td><input type="number" value="8" id="a3" class="calc-trigger"></td><td id="m3">-1</td></tr>
+            <tr><td>Inteligência</td><td><input type="number" value="8" id="a4" class="calc-trigger"></td><td id="m4">-1</td></tr>
+            <tr><td>Sabedoria</td><td><input type="number" value="8" id="a5" class="calc-trigger"></td><td id="m5">-1</td></tr>
+            <tr><td>Carisma</td><td><input type="number" value="8" id="a6" class="calc-trigger"></td><td id="m6">-1</td></tr>
+            <tr><td colspan="2">Pontos Restantes</td><td><span id="pointView" style="color:var(--primary)">10</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <table class="tabelaParametros">
+          <thead><tr><th colspan="2">Estatísticas Finais</th></tr></thead>
+          <tbody>
+            <tr><td>Pontos de Vida</td><td><span id="pvValue" class="stat-highlight">8</span></td></tr>
+            <tr><td>Classe de Armadura</td><td><span id="caValue" class="stat-highlight">15</span></td></tr>
+            <tr><td>Deslocamento</td><td><span id="dValue" class="stat-highlight">4.5m</span></td></tr>
+            <tr><td>CD Resistência</td><td><span id="cdValue">11</span></td></tr>
+          </tbody>
+        </table>
+
+        <table class="tabelaPericias">
+          <thead><tr><th colspan="2">Perícias & Combate</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Atributo Base</td>
+              <td>
+                <select id="seletorAtributoPericia" class="calc-trigger">
+                  <option value="1">Força</option><option value="2">Destreza</option>
+                  <option value="3">Constituição</option><option value="4">Intelecto</option>
+                  <option value="5">Sabedoria</option><option value="6">Carisma</option>
+                </select>
+              </td>
+            </tr>
+            <tr><td>Perícia (Com Maestria)</td><td id="pmValue">0</td></tr>
+            <tr><td>Perícia (Sem Maestria)</td><td id="pdValue">2</td></tr>
+          </tbody>
+        </table>
+
+        <table class="tabelaInvocador">
+          <thead><tr><th>Habilidade / Poder</th><th>Ativar</th></tr></thead>
+          <tbody>
+            <tr><td>Invocações Móveis?</td><td class="check-wrapper"><input type="checkbox" name="moveis" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Invocações Resistentes?</td><td class="check-wrapper"><input type="checkbox" name="resistentes" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Controlador - Mobilidade</td><td class="check-wrapper"><input type="checkbox" name="mobilidade" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Controlador - Resistência</td><td class="check-wrapper"><input type="checkbox" name="resistencia" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Controlador - Precisão</td><td class="check-wrapper"><input type="checkbox" name="precisao" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Fantoche Supremo</td><td class="check-wrapper"><input type="checkbox" name="supremo" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Concentrar Poder</td><td class="check-wrapper"><input type="checkbox" name="concentrar" class="habInvocador calc-trigger"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { db, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "./firebase.js";
+
+const params = new URLSearchParams(location.search);
+const charId = params.get("charId");
+let currentData = null; // Dados completos do personagem
+let currentShikiIndex = -1; // -1 = Criando novo
+
+// Inicialização
+window.onload = async () => {
+  if (!charId) return alert("Erro: ID do personagem não fornecido.");
+  
+  // Preenche Select de Nível (1 a 30) - Mantendo sua lógica
+  const levelSelect = document.getElementById('invocadorNivel');
+  for (let lv = 1; lv <= 30; lv++) {
+    const opt = document.createElement('option');
+    opt.value = lv; opt.innerText = `Nível ${lv}`;
+    levelSelect.appendChild(opt);
+  }
+  
+  // Event Listeners para Calculo Automático
+  document.querySelectorAll('.calc-trigger').forEach(el => el.addEventListener('input', calcAtributos));
+  document.getElementById('invocadorNivel').addEventListener('change', calcAtributos);
+  document.getElementById('seletorGrau').addEventListener('change', calcAtributos);
+
+  await carregarDados();
+};
+
+async function carregarDados() {
+  const docSnap = await getDoc(doc(db, "fichas", charId));
+  if (docSnap.exists()) {
+    currentData = docSnap.data();
+    if (!currentData.shikigamis) currentData.shikigamis = []; // Garante array
+    renderLista();
+  }
+}
+
+function renderLista() {
+  const lista = document.getElementById('listaShikigamis');
+  lista.innerHTML = "";
+  
+  currentData.shikigamis.forEach((shiki, index) => {
+    lista.innerHTML += `
+      <div class="shikigami-item ${index === currentShikiIndex ? 'active' : ''}" onclick="abrirShikigami(${index})">
+        <h3>${shiki.nome || 'Sem Nome'}</h3>
+        <small>Grau ${['Especial','1','2','3','4'][shiki.grau] || '?'}</small>
+      </div>`;
+  });
+}
+
+window.novoShikigami = () => {
+  if (currentData.shikigamis.length >= 20) return alert("Limite de 20 invocações atingido!");
+  currentShikiIndex = -1;
+  limparFormulario();
+  document.getElementById('editorArea').classList.add('visible');
+  calcAtributos();
+};
+
+window.abrirShikigami = (index) => {
+  currentShikiIndex = index;
+  renderLista(); // Atualiza highlight
+  
+  const s = currentData.shikigamis[index];
+  document.getElementById('editorArea').classList.add('visible');
+  
+  // Preenche Campos
+  document.getElementById('shikigamiNome').value = s.nome;
+  document.getElementById('invocadorNivel').value = s.nivelInv || 1;
+  document.getElementById('seletorGrau').value = s.grau;
+  document.getElementById('seletorAtributoPericia').value = s.atrPericia || 1;
+  
+  // Atributos
+  for(let i=1; i<=6; i++) document.getElementById(`a${i}`).value = s.atributos[`a${i}`] || 8;
+  
+  // Habilidades (Checkboxes)
+  document.querySelectorAll('.habInvocador').forEach(chk => {
+    chk.checked = s.habilidades && s.habilidades[chk.name];
+  });
+
+  calcAtributos();
+};
+
+window.salvarShikigami = async () => {
+  const nome = document.getElementById('shikigamiNome').value || "Invocação Sem Nome";
+  
+  // Coleta Atributos
+  const atributos = {};
+  for(let i=1; i<=6; i++) atributos[`a${i}`] = Number(document.getElementById(`a${i}`).value);
+  
+  // Coleta Habilidades
+  const habilidades = {};
+  document.querySelectorAll('.habInvocador').forEach(chk => habilidades[chk.name] = chk.checked);
+
+  const novoShiki = {
+    nome: nome,
+    nivelInv: Number(document.getElementById('invocadorNivel').value),
+    grau: document.getElementById('seletorGrau').value,
+    atrPericia: document.getElementById('seletorAtributoPericia').value,
+    atributos: atributos,
+    habilidades: habilidades
+  };
+
+  // Atualiza Array Local
+  if (currentShikiIndex === -1) {
+    currentData.shikigamis.push(novoShiki);
+    currentShikiIndex = currentData.shikigamis.length - 1;
+  } else {
+    currentData.shikigamis[currentShikiIndex] = novoShiki;
+  }
+
+  // Salva no Firebase (Substitui o array todo para garantir ordem/edição)
+  await updateDoc(doc(db, "fichas", charId), { shikigamis: currentData.shikigamis });
+  
+  alert("Salvo com sucesso!");
+  renderLista();
+};
+
+window.excluirShikigami = async () => {
+  if(currentShikiIndex === -1) return;
+  if(!confirm("Tem certeza que deseja apagar esta invocação?")) return;
+
+  currentData.shikigamis.splice(currentShikiIndex, 1);
+  await updateDoc(doc(db, "fichas", charId), { shikigamis: currentData.shikigamis });
+  
+  document.getElementById('editorArea').classList.remove('visible');
+  renderLista();
+};
+
+window.voltarFicha = () => {
+  window.location = `ficha.html?id=${charId}`;
+};
+
+window.atualizarTitulo = () => {
+  // Atualização visual live do nome na lista seria aqui, mas requer rerender
+};
+
+// ==========================================
+// SUA LÓGICA DE CÁLCULO (INTEGRADA)
+// ==========================================
+window.calcAtributos = () => {
+    const grauInvocacao = document.getElementById('seletorGrau').value;
+    const multiplicadorInvocacao = [6, 4, 2, 1, 0][grauInvocacao];
+    const maxPoints = 10 + 5 * multiplicadorInvocacao;
+    let usedPoints = 0;
+    let maxAtribute = [30, 26, 24, 20, 16][grauInvocacao];
+
+    for (let i = 1; i <= 6; i++) {
+        let atributeElement = document.getElementById(`a${i}`);
+        let atribute = Number(atributeElement.value);
+        if (atribute > maxAtribute) {
+            atribute = maxAtribute;
+            atributeElement.value = maxAtribute;
+        }
+
+        let modifierElement = document.getElementById(`m${i}`);
+        let atributeModifier = getAtributeModifier(atribute);
+        modifierElement.innerText = `${atributeModifier < 0 ? "" : "+"}${atributeModifier}`;
+        usedPoints += atribute - 8;
+    }
+
+    const constAtribute = document.getElementById('a3').value;
+    const destAtribute = document.getElementById('a2').value;
+    const destModifier = getAtributeModifier(destAtribute);
+    const periciaModifier = getAtributeModifier(document.getElementById(`a${document.getElementById('seletorAtributoPericia').value}`).value);
+    const nivelinvocador = Number(document.getElementById('invocadorNivel').value);
+    const maestriaInvocador = Math.ceil(1 + nivelinvocador / 4);
+    
+    let statsModifiers = { pv: 0, ca: 0, des: 0, cd: 0 };
+
+    // Verifica checkboxes marcados
+    document.querySelectorAll('.habInvocador:checked').forEach(hab => {
+        switch (hab.name) {
+            case "moveis": statsModifiers.des += 1.5 + 1.5 * Math.floor(nivelinvocador / 5); break;
+            case "resistentes": statsModifiers.pv += maestriaInvocador * 5; break;
+            case "mobilidade": statsModifiers.des += 3 + 1.5 * Math.min(4, Math.floor(nivelinvocador / 4)); break;
+            case "resistencia": statsModifiers.ca += 2 + Math.min(Math.floor(nivelinvocador / 8), 1) + Math.min(Math.floor(nivelinvocador / 18), 2); break;
+            case "supremo": 
+                statsModifiers.pv += maestriaInvocador * 5; 
+                statsModifiers.ca += maestriaInvocador * 2; 
+                statsModifiers.des += 4.5; 
+                break;
+            case "concentrar": 
+                statsModifiers.pv += [10, 15, 30, 50].slice(0, Math.floor(nivelinvocador / 6) + 1).reduce((total, modifier) => total + modifier);
+                statsModifiers.ca += [2, 2, 4, 6].slice(0, Math.floor(nivelinvocador / 6) + 1).reduce((total, modifier) => total + modifier);
+                break;
+            case "precisao": 
+                statsModifiers.cd += 2+(nivelinvocador>=8?+1:+0)+(nivelinvocador>=18?+2:+0); 
+                break;
+        }
+    });
+
+    const pontosRestantes = maxPoints - usedPoints;
+    const elPoints = document.getElementById('pointView');
+    elPoints.innerText = pontosRestantes;
+    elPoints.style.color = pontosRestantes < 0 ? '#ff4444' : 'var(--primary)';
+
+    document.getElementById('pvValue').innerText = Math.round((5 + 5 * multiplicadorInvocacao + constAtribute * (grauInvocacao - 6) * -1) / 5) * 5 + statsModifiers.pv;
+    document.getElementById('dValue').innerText = `${6 + (destModifier * 1.5) + statsModifiers.des}m`;
+    document.getElementById('caValue').innerText = 10 + Math.floor(destAtribute / 2) + (grauInvocacao - 5) * -1 + statsModifiers.ca;
+    
+    document.getElementById('pmValue').innerText = periciaModifier + maestriaInvocador + Math.floor(nivelinvocador / 2);
+    document.getElementById('pdValue').innerText = periciaModifier + Math.floor(nivelinvocador / 2);
+    document.getElementById('cdValue').innerText = 10 + Math.floor(nivelinvocador / 2) + periciaModifier + (grauInvocacao - 5) * -1 + statsModifiers.cd;
+};
+
+function getAtributeModifier(atribute) {
+    return atribute >= 10 ? Math.floor((atribute - 10) / 2) : Math.ceil((atribute - 10) / 2);
+}
+
+function limparFormulario() {
+  document.getElementById('shikigamiNome').value = "";
+  for(let i=1; i<=6; i++) document.getElementById(`a${i}`).value = 8;
+  document.querySelectorAll('.habInvocador').forEach(c => c.checked = false);
+  calcAtributos();
+}
+
+</script>
+</body>
+</html>
