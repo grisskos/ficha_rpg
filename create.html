@@ -5,88 +5,125 @@
 <title>Criar Personagem</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body { background:#111; color:white; font-family:Arial; padding:20px; }
-input, textarea { width:100%; padding:10px; margin-top:10px; }
-button { padding:10px; margin-top:10px; }
+  :root { --bg: #0f0f0f; --card: #1c1c1c; --primary: #e63946; --text: #f1f1f1; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; justify-content: center; }
+  
+  .container { width: 100%; max-width: 600px; }
+  h1 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; color: var(--primary); }
+  
+  .card { background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; }
+  
+  input { width: 100%; padding: 12px; margin: 5px 0 15px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; }
+  input:focus { border-color: var(--primary); outline: none; }
+  
+  label { font-size: 0.9rem; color: #aaa; text-transform: uppercase; font-weight: bold; }
+  
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  
+  button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+  button:hover { background: #d62828; }
+  button.secondary { background: #333; }
+  button.secondary:hover { background: #444; }
+
+  .add-group { display: flex; gap: 10px; }
+  .add-group button { width: auto; white-space: nowrap; }
+  
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+  .tag { background: #333; padding: 5px 10px; border-radius: 4px; font-size: 0.9rem; border: 1px solid #444; }
 </style>
 </head>
-
 <body>
-<h1>✨ Criar Personagem</h1>
 
-<input id="nome" placeholder="Nome do personagem">
-<input id="img" placeholder="URL da imagem">
+<div class="container">
+  <h1>✨ Novo Personagem</h1>
+  
+  <div class="card">
+    <label>Nome do Herói</label>
+    <input id="nome" placeholder="Ex: Gandalf, o Cinzento">
+    
+    <label>Imagem (URL)</label>
+    <input id="img" placeholder="https://...">
 
-<h3>Atributos</h3>
-<input id="vida" type="number" placeholder="Vida Máx">
-<input id="energia" type="number" placeholder="Energia Máx">
-<input id="vigor" type="number" placeholder="Vigor Máx">
-<input id="integridade" type="number" placeholder="Integridade Máx">
+    <label>Classe / Arquétipo</label>
+    <input id="classe" placeholder="Ex: Mago, Guerreiro">
+  </div>
 
-<h3>Ataques</h3>
-<div id="ataques"></div>
-<button onclick="addAtaque()">+ Adicionar Ataque</button>
+  <div class="card">
+    <h3>Atributos Base</h3>
+    <div class="grid-2">
+      <div><label>Vida Máx</label><input id="vida" type="number" value="10"></div>
+      <div><label>Energia Máx</label><input id="energia" type="number" value="10"></div>
+      <div><label>Vigor</label><input id="vigor" type="number" value="5"></div>
+      <div><label>Integridade</label><input id="integridade" type="number" value="100"></div>
+    </div>
+  </div>
 
-<h3>Habilidades & Talentos</h3>
-<div id="habilidades"></div>
-<button onclick="addHabilidade()">+ Adicionar Habilidade</button>
+  <div class="card">
+    <h3>Inventário & Habilidades</h3>
+    
+    <label>Ataques</label>
+    <div id="listaAtaques" class="tags"></div>
+    <div class="add-group">
+      <input id="novoAtaque" placeholder="Novo ataque">
+      <button onclick="addToList('ataques', 'novoAtaque', 'listaAtaques')">Adicionar</button>
+    </div>
+    
+    <label style="margin-top:15px; display:block;">Habilidades</label>
+    <div id="listaHabs" class="tags"></div>
+    <div class="add-group">
+      <input id="novaHab" placeholder="Nova habilidade">
+      <button onclick="addToList('habilidades', 'novaHab', 'listaHabs')">Adicionar</button>
+    </div>
+  </div>
 
-<h3>Feitiços</h3>
-<div id="feiticos"></div>
-<button onclick="addFeitico()">+ Adicionar Feitiço</button>
-
-<button onclick="salvar()">Salvar Personagem</button>
-
-<a href="index.html"><button>Voltar</button></a>
+  <button onclick="salvar()" style="margin-bottom: 10px;">💾 Salvar Ficha</button>
+  <a href="index.html"><button class="secondary">Cancelar</button></a>
+</div>
 
 <script type="module">
-import {
-  db, auth,
-  addDoc, collection, onAuthStateChanged
-} from "./firebase.js";
+import { db, auth, addDoc, collection, onAuthStateChanged } from "./firebase.js";
 
-const ataques = [];
-const habilidades = [];
-const feiticos = [];
+const dados = { ataques: [], habilidades: [] };
 
-window.addAtaque = () => {
-  const nome = prompt("Nome do ataque:");
-  if (nome) { ataques.push(nome); render(); }
-};
-window.addHabilidade = () => {
-  const nome = prompt("Habilidade/Talento:");
-  if (nome) { habilidades.push(nome); render(); }
-};
-window.addFeitico = () => {
-  const nome = prompt("Feitiço:");
-  if (nome) { feiticos.push(nome); render(); }
+// Função global para adicionar itens nas listas visuais
+window.addToList = (arrayName, inputId, divId) => {
+  const input = document.getElementById(inputId);
+  if (!input.value) return;
+  
+  dados[arrayName].push(input.value);
+  input.value = "";
+  renderTags(arrayName, divId);
 };
 
-function render() {
-  ataquesDiv.innerHTML = ataques.map(a => "- " + a).join("<br>");
-  habilidadesDiv.innerHTML = habilidades.map(h => "- " + h).join("<br>");
-  feiticosDiv.innerHTML = feiticos.map(f => "- " + f).join("<br>");
+function renderTags(arrayName, divId) {
+  const container = document.getElementById(divId);
+  container.innerHTML = dados[arrayName].map(item => `<span class="tag">${item}</span>`).join("");
 }
 
 window.salvar = async function() {
   const user = auth.currentUser;
-  if (!user) return alert("Você não está logado.");
+  if (!user) return alert("Você precisa estar logado!");
+  
+  const getVal = (id) => Number(document.getElementById(id).value);
 
-  await addDoc(collection(db, "fichas"), {
-    uid: user.uid,
-    nome: nome.value,
-    imagem: img.value,
-    vida: { atual: vida.value, max: vida.value },
-    energia: { atual: energia.value, max: energia.value },
-    vigor: { atual: vigor.value, max: vigor.value },
-    integridade: { atual: integridade.value, max: integridade.value },
-    ataques,
-    habilidades,
-    feiticos
-  });
-
-  alert("Criado!");
-  window.location = "index.html";
+  try {
+    await addDoc(collection(db, "fichas"), {
+      uid: user.uid,
+      nome: document.getElementById('nome').value,
+      imagem: document.getElementById('img').value,
+      classe: document.getElementById('classe').value,
+      vida: { atual: getVal('vida'), max: getVal('vida') },
+      energia: { atual: getVal('energia'), max: getVal('energia') },
+      vigor: { atual: getVal('vigor'), max: getVal('vigor') },
+      integridade: { atual: getVal('integridade'), max: getVal('integridade') },
+      ataques: dados.ataques,
+      habilidades: dados.habilidades
+    });
+    alert("Personagem criado com sucesso!");
+    window.location = "index.html";
+  } catch (e) {
+    alert("Erro ao salvar: " + e.message);
+  }
 };
 </script>
 </body>
