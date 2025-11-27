@@ -2,107 +2,106 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Fichas RPG</title>
+<title>Portal RPG</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-body {
-  background: #0d0d0d;
-  color: white;
-  font-family: Arial;
-  padding: 20px;
-}
-.card {
-  background: #1a1a1a;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-.ficha {
-  background: #222;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 8px;
-}
-button {
-  padding: 10px;
-  margin-top: 10px;
-  cursor: pointer;
-}
+  :root { --bg: #0f0f0f; --card: #1c1c1c; --primary: #e63946; --text: #f1f1f1; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+  
+  h1 { color: var(--primary); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(230, 57, 70, 0.5); }
+  
+  .container { width: 100%; max-width: 500px; }
+  .card { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #333; }
+  
+  input { width: 100%; padding: 12px; margin: 10px 0; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; }
+  input:focus { outline: none; border-color: var(--primary); }
+
+  button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+  button:hover { background: #d62828; box-shadow: 0 0 15px var(--primary); }
+  button.outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+  button.outline:hover { background: var(--primary); color: white; }
+
+  .ficha-item { display: flex; align-items: center; background: #252525; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid var(--primary); transition: transform 0.2s; }
+  .ficha-item:hover { transform: translateX(5px); background: #2a2a2a; }
+  .ficha-item img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid var(--primary); }
+  .ficha-info { flex-grow: 1; }
+  .ficha-info h3 { margin: 0; font-size: 1.2rem; }
+  
+  .hidden { display: none; }
 </style>
 </head>
-
 <body>
-<h1>📜 Fichas dos Personagens</h1>
 
-<div id="loginBox" class="card">
-  <h2>Login</h2>
-  <input id="user" placeholder="Usuário"><br><br>
-  <input id="pass" placeholder="Senha" type="password"><br><br>
-  <button onclick="login()">Entrar</button>
-  <button onclick="criarConta()">Criar Conta</button>
+<div class="container">
+  <h1>⚔️ Grimório de Fichas</h1>
+
+  <div id="loginBox" class="card">
+    <h2 style="margin-top:0">Acesso</h2>
+    <input id="emailInput" placeholder="Usuário (Login simples)">
+    <input id="passInput" placeholder="Senha" type="password">
+    <button id="btnLogin">Entrar</button>
+    <button id="btnCreate" class="outline">Criar Nova Conta</button>
+  </div>
+
+  <div id="userArea" class="card hidden">
+    <p>Conectado como: <strong id="userEmail" style="color:var(--primary)"></strong></p>
+    <a href="create.html"><button>+ Novo Personagem</button></a>
+    <button id="btnLogout" class="outline">Sair</button>
+  </div>
+
+  <div id="lista"></div>
 </div>
-
-<div id="userArea" class="card" style="display:none;">
-  Logado como: <span id="userEmail"></span><br>
-  <button onclick="logout()">Sair</button>
-  <a href="create.html"><button>Criar Personagem</button></a>
-</div>
-
-<div id="lista"></div>
 
 <script type="module">
-import {
-  db, auth,
-  collection, query, where, onSnapshot,
-  onAuthStateChanged, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, signOut
-} from "./firebase.js";
+import { db, auth, collection, query, where, onSnapshot, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "./firebase.js";
 
+const emailInput = document.getElementById('emailInput');
+const passInput = document.getElementById('passInput');
+
+// Autenticação
 onAuthStateChanged(auth, user => {
-  if (!user) {
-    document.getElementById("loginBox").style.display = "block";
-    document.getElementById("userArea").style.display = "none";
-    return;
+  if (user) {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("userArea").classList.remove("hidden");
+    document.getElementById("userEmail").innerText = user.email.replace("@fake.com", "");
+    carregarFichas(user.uid);
+  } else {
+    document.getElementById("loginBox").classList.remove("hidden");
+    document.getElementById("userArea").classList.add("hidden");
+    document.getElementById("lista").innerHTML = "";
   }
+});
 
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("userArea").style.display = "block";
-  document.getElementById("userEmail").innerText = user.email;
-
-  const q = query(collection(db, "fichas"), where("uid", "==", user.uid));
+function carregarFichas(uid) {
+  const q = query(collection(db, "fichas"), where("uid", "==", uid));
   onSnapshot(q, snapshot => {
     const lista = document.getElementById("lista");
     lista.innerHTML = "";
-
     snapshot.forEach(doc => {
       const f = doc.data();
       lista.innerHTML += `
-        <div class="ficha">
-          <h3>${f.nome}</h3>
-          <img src="${f.imagem || ''}" width="150"><br>
-          <a href="ficha.html?id=${doc.id}">
-            <button>Abrir Ficha</button>
-          </a>
-        </div>
-      `;
+        <div class="ficha-item" onclick="window.location='ficha.html?id=${doc.id}'" style="cursor:pointer">
+          <img src="${f.imagem || 'https://via.placeholder.com/150/e63946/FFFFFF?text=RPG'}">
+          <div class="ficha-info">
+            <h3>${f.nome}</h3>
+            <small style="color:#888">Nível 1 • ${f.classe || 'Aventureiro'}</small>
+          </div>
+          <span style="color:var(--primary)">➤</span>
+        </div>`;
     });
   });
+}
+
+// Botões
+document.getElementById('btnLogin').addEventListener('click', () => {
+  signInWithEmailAndPassword(auth, emailInput.value + "@fake.com", passInput.value).catch(e => alert("Erro: " + e.message));
 });
 
-window.login = function() {
-  signInWithEmailAndPassword(auth, user.value + "@fake.com", pass.value)
-  .catch(e => alert(e.message));
-}
+document.getElementById('btnCreate').addEventListener('click', () => {
+  createUserWithEmailAndPassword(auth, emailInput.value + "@fake.com", passInput.value).catch(e => alert("Erro: " + e.message));
+});
 
-window.criarConta = function() {
-  createUserWithEmailAndPassword(auth, user.value + "@fake.com", pass.value)
-  .catch(e => alert(e.message));
-}
-
-window.logout = function() {
-  signOut(auth);
-}
+document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
 </script>
 </body>
 </html>
