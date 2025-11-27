@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema RPG - Ataque Cardíaco</title>
+
+  <!-- Firebase compat (funciona com seu código atual) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: #e0e0e0; padding: 20px; }
+    h1, h2 { color: #ff4d4d; text-transform: uppercase; letter-spacing: 2px; }
+    .container { max-width: 600px; margin: 0 auto; }
+    
+    .card { background: #1a1a1a; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+    
+    input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: white; box-sizing: border-box; }
+    input:focus, textarea:focus { outline: none; border-color: #ff4d4d; }
+    
+    button { padding: 12px; width: 100%; border: none; border-radius: 4px; background: #b91c1c; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #991b1b; }
+    button.secondary { background: #444; margin-top: 5px; }
+    button.secondary:hover { background: #333; }
+
+    .ficha-item { background: #252525; padding: 15px; margin-bottom: 10px; border-left: 4px solid #ff4d4d; border-radius: 4px; }
+    .stat-row { display: flex; justify-content:space-between; margin-bottom: 5px; color:#aaa; font-size:0.9em; }
+
+    #mestrePanel { border: 1px solid #ffd700; background: #1a1a00; }
+    #mestrePanel h2 { color: #ffd700; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Vanguarda - RPG</h1>
+
+  <!-- LOGIN -->
+  <div class="card" id="loginCard">
+    <h2>Acesso</h2>
+    <input id="emailInput" type="email" placeholder="Email" />
+    <input id="passInput" type="password" placeholder="Senha" />
+    <button onclick="fazerLogin()">Entrar</button>
+    <button class="secondary" onclick="criarConta()">Criar Nova Conta</button>
+  </div>
+
+  <!-- ÁREA DO USUÁRIO -->
+  <div id="userArea" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <span id="userInfo" style="color:#888;"></span>
+        <button onclick="fazerLogout()" style="width:auto; padding: 5px 15px; background: #333;">Sair</button>
+    </div>
+
+    <!-- ESCUDO DO MESTRE -->
+    <div id="mestrePanel" class="card" style="display:none;">
+      <h2>Escudo do Mestre</h2>
+      <p>Anotações Secretas:</p>
+      <textarea id="mestreNotes" rows="5"></textarea>
+      <button onclick="salvarNotasMestre()">Salvar Notas</button>
+    </div>
+
+    <!-- CRIAÇÃO DE FICHA -->
+    <div class="card">
+      <h2>Nova Ficha</h2>
+      <input id="nomeChar" placeholder="Nome do Personagem" />
+      <div style="display:flex; gap:10px;">
+          <input id="vida" type="number" placeholder="Vida" />
+          <input id="energia" type="number" placeholder="Energia" />
+      </div>
+      <div style="display:flex; gap:10px;">
+          <input id="vigor" type="number" placeholder="Vigor" />
+          <input id="integridade" type="number" placeholder="Integridade" />
+      </div>
+      <input id="ataques" placeholder="Ataques/Habilidades" />
+      <button onclick="criarFicha()">Criar Personagem</button>
+    </div>
+
+    <h2>Personagens</h2>
+    <div id="listaFichas"></div>
+  </div>
+</div>
+
+<script>
+  // --------------------------
+  // 🔥 FIREBASE CONFIG REAL
+  // --------------------------
+  const firebaseConfig = {
+    apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
+    authDomain: "ficharpg-edc5c.firebaseapp.com",
+    projectId: "ficharpg-edc5c",
+    storageBucket: "ficharpg-edc5c.appspot.com",
+    messagingSenderId: "522630132698",
+    appId: "1:522630132698:web:30d3dc6f103916d70246e3",
+    measurementId: "G-6PJKQYBRRC"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+
+  // --------------------------
+  // CONFIGURAÇÃO DO MESTRE
+  // --------------------------
+  const EMAIL_DO_MESTRE = "mestre@rpg.com"; // altere se quiser
+
+  // --------------------------
+  // LOGIN AUTOMÁTICO
+  // --------------------------
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('loginCard').style.display = 'none';
+      document.getElementById('userArea').style.display = 'block';
+      document.getElementById('userInfo').innerText = user.email;
+
+      if (user.email === EMAIL_DO_MESTRE) {
+        document.getElementById('mestrePanel').style.display = 'block';
+        carregarNotasMestre();
+        carregarTodasFichasEmTempoReal();
+      } else {
+        document.getElementById('mestrePanel').style.display = 'none';
+        carregarMinhasFichasEmTempoReal(user.uid);
+      }
+    } else {
+      document.getElementById('loginCard').style.display = 'block';
+      document.getElementById('userArea').style.display = 'none';
+    }
+  });
+
+  function fazerLogin() {
+    const email = document.getElementById('emailInput').value;
+    const pass = document.getElementById('passInput').value;
+    auth.signInWithEmailAndPassword(email, pass).catch(e => alert(e.message));
+  }
+
+  function criarConta() {
+    const email = document.getElementById('emailInput').value;
+    const pass = document.getElementById('passInput').value;
+    auth.createUserWithEmailAndPassword(email, pass)
+        .then(() => alert("Conta criada!"))
+        .catch(e => alert(e.message));
+  }
+
+  function fazerLogout() {
+    auth.signOut();
+  }
+
+  // --------------------------
+  // BANCO DE DADOS
+  // --------------------------
+
+  function criarFicha() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    db.collection('fichas').add({
+        uid: user.uid,
+        dono: user.email,
+        nome: document.getElementById('nomeChar').value,
+        vida: Number(document.getElementById('vida').value),
+        energia: Number(document.getElementById('energia').value),
+        vigor: Number(document.getElementById('vigor').value),
+        integridade: Number(document.getElementById('integridade').value),
+        ataques: document.getElementById('ataques').value,
+        dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => alert("Ficha criada!"));
+  }
+
+  function carregarMinhasFichasEmTempoReal(uid) {
+    db.collection('fichas')
+      .where('uid', '==', uid)
+      .orderBy('dataCriacao', 'desc')
+      .onSnapshot(renderizarFichas);
+  }
+
+  function carregarTodasFichasEmTempoReal() {
+    db.collection('fichas')
+      .orderBy('dataCriacao', 'desc')
+      .onSnapshot(renderizarFichas);
+  }
+
+  function renderizarFichas(snapshot) {
+    const lista = document.getElementById('listaFichas');
+    lista.innerHTML = '';
+
+    snapshot.forEach(doc => {
+      const f = doc.data();
+      const div = document.createElement('div');
+      div.className = 'ficha-item';
+      div.innerHTML = `
+          <div style="display:flex; justify-content:space-between;">
+              <strong style="font-size:1.2em;">${f.nome}</strong>
+              <span style="font-size:0.8em; color:#666">${f.dono}</span>
+          </div>
+          <div class="stat-row">
+              <span>Vida: <b style="color:#ff4d4d">${f.vida}</b></span>
+              <span>Energia: <b style="color:#4d79ff">${f.energia}</b></span>
+          </div>
+          <div class="stat-row">
+              <span>Vigor: <b>${f.vigor}</b></span>
+              <span>Integridade: <b>${f.integridade}</b></span>
+          </div>
+          <p style="font-size:0.9em; color:#ccc; margin-top:10px;">⚔️ ${f.ataques}</p>
+      `;
+      lista.appendChild(div);
+    });
+  }
+
+  // --------------------------
+  // MESTRE
+  // --------------------------
+  function salvarNotasMestre() {
+    db.collection('mestre').doc('painel').set({
+      anotacoes: document.getElementById('mestreNotes').value
+    });
+  }
+
+  function carregarNotasMestre() {
+    db.collection('mestre').doc('painel').onSnapshot(doc => {
+      if (doc.exists) {
+        document.getElementById('mestreNotes').value = doc.data().anotacoes;
+      }
+    });
+  }
+
+</script>
+</body>
+</html>
