@@ -35,9 +35,7 @@
     <input id="img" placeholder="https://...">
 
     <div class="grid-3">
-      <div>
-        <label>Nível</label>
-        <input id="nivel" type="number" value="1"> </div>
+      <div><label>Nível</label><input id="nivel" type="number" value="1"></div>
       <div style="grid-column: span 2">
         <label>Classe</label>
         <select id="classe">
@@ -120,13 +118,18 @@ window.salvar = async function() {
   const getVal = (id) => Number(document.getElementById(id).value);
 
   try {
+    // Cria o objeto inicial de perícias vazio (tudo destreinado)
+    const periciasBase = {}; 
+    // A lista será gerada automaticamente na ficha.html se não existir, 
+    // mas é bom salvar um objeto vazio para garantir.
+
     await addDoc(collection(db, "fichas"), {
       uid: user.uid,
       nome: document.getElementById('nome').value,
       imagem: document.getElementById('img').value,
       classe: document.getElementById('classe').value,
       origem: document.getElementById('origem').value,
-      nivel: getVal('nivel'), // SALVANDO NÍVEL
+      nivel: getVal('nivel'),
       
       vida: { atual: getVal('vida'), max: getVal('vida') },
       energia: { atual: getVal('energia'), max: getVal('energia') },
@@ -137,7 +140,8 @@ window.salvar = async function() {
         forca: getVal('forca'), destreza: getVal('destreza'), constituicao: getVal('constituicao'),
         inteligencia: getVal('inteligencia'), sabedoria: getVal('sabedoria'), presenca: getVal('presenca')
       },
-      ataques: dados.ataques, habilidades: dados.habilidades
+      ataques: dados.ataques, habilidades: dados.habilidades,
+      pericias: {} // Salva vazio por enquanto
     });
     alert("Criado!");
     window.location = "index.html";
