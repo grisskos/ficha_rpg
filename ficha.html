@@ -28,6 +28,7 @@
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
   .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
   .b-lvl { color: white; border-color: white; font-weight: bold; }
+  .b-cls { color: var(--primary); border-color: var(--primary); }
 
   /* EDIÇÃO INLINE */
   .editable { 
@@ -42,7 +43,7 @@
     width: 80px; text-align: center; outline: none;
   }
 
-  /* Math Input (Calculadora Inline) */
+  /* Math Input */
   .math-input {
     width: 40px; background: #fff; color: #000; border: none; 
     border-radius: 3px; text-align: center; font-weight: bold; outline: none;
@@ -95,6 +96,14 @@
   .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
   .sk-btn.active-m { background: rgba(230, 57, 70, 0.2); border-color: var(--primary); color: var(--primary); }
 
+  /* Botão Invocações */
+  .btn-summon {
+    background: transparent; border: 1px solid var(--integridade); color: var(--integridade);
+    width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px;
+    font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .btn-summon:hover { background: var(--integridade); color: #000; }
+
   /* FAB e MODAL */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
@@ -124,7 +133,8 @@
       <div id="statsArea"></div>
     </div>
     
-    <button class="btn-mini" style="width:100%; padding:10px; font-size:1rem;" onclick="window.location='index.html'">Voltar</button>
+    <button class="btn-summon" onclick="irParaShikigamis()">🐺 Invocações</button>
+    <button class="btn-mini" style="width:100%; padding:10px; font-size:1rem; margin-top:10px;" onclick="window.location='index.html'">Voltar</button>
   </div>
 
   <div class="content-area">
@@ -293,7 +303,7 @@ function renderFicha() {
 
 // === CÁLCULO DE DANO/CURA INLINE ===
 window.mathStat = (el, key) => {
-  if(el.querySelector('input')) return; // Já aberto
+  if(el.querySelector('input')) return; 
 
   const originalHtml = el.innerHTML;
   el.innerHTML = '';
@@ -301,7 +311,7 @@ window.mathStat = (el, key) => {
   const input = document.createElement('input');
   input.placeholder = "+/-";
   input.className = 'math-input';
-  input.type = 'text'; // Usar text permite digitar "-" mais facil no mobile
+  input.type = 'text'; 
   el.appendChild(input);
   input.focus();
 
@@ -357,6 +367,12 @@ window.upStat = async (key, val) => {
   const st = ficha[key];
   const novo = Math.max(0, Math.min(st.max, Number(st.atual)+val));
   await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
+};
+
+// Navegação para Shikigamis
+window.irParaShikigamis = () => {
+  // Passa o ID do personagem principal
+  window.location = `shikigamis.html?charId=${id}`;
 };
 
 // Configurações e Listas
