@@ -21,11 +21,23 @@
   button.outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
   button.outline:hover { background: var(--primary); color: white; }
 
-  .ficha-item { display: flex; align-items: center; background: #252525; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid var(--primary); transition: transform 0.2s; }
+  /* ITEM DA LISTA ATUALIZADO */
+  .ficha-item { display: flex; align-items: center; background: #252525; padding: 10px 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid var(--primary); transition: transform 0.2s; position: relative; }
   .ficha-item:hover { transform: translateX(5px); background: #2a2a2a; }
+  
+  /* Área clicável que abre a ficha */
+  .ficha-content { display: flex; align-items: center; flex-grow: 1; cursor: pointer; }
+  
   .ficha-item img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid var(--primary); }
   .ficha-info { flex-grow: 1; }
-  .ficha-info h3 { margin: 0; font-size: 1.2rem; }
+  .ficha-info h3 { margin: 0; font-size: 1.1rem; }
+  
+  /* Botão de Lixeira */
+  .btn-trash { 
+    background: transparent; border: none; padding: 10px; width: auto; margin: 0 0 0 10px; 
+    color: #555; font-size: 1.2rem; cursor: pointer; z-index: 10;
+  }
+  .btn-trash:hover { color: #e63946; background: transparent; box-shadow: none; transform: scale(1.1); }
   
   .hidden { display: none; }
 </style>
@@ -33,7 +45,7 @@
 <body>
 
 <div class="container">
-  <h1>Criação de Fichas</h1>
+  <h1>⚔️ Grimório de Fichas</h1>
 
   <div id="loginBox" class="card">
     <h2 style="margin-top:0">Acesso</h2>
@@ -46,14 +58,18 @@
   <div id="userArea" class="card hidden">
     <p>Conectado como: <strong id="userEmail" style="color:var(--primary)"></strong></p>
     <a href="create.html"><button>+ Novo Personagem</button></a>
-    <button id="btnLogout" class="outline">Sair</button>
+    <a href="mestre.html"><button class="outline" style="margin-top:10px;">🛡️ Escudo do Mestre</button></a>
+    <button id="btnLogout" class="outline" style="border-color:#555; color:#888;">Sair</button>
   </div>
 
   <div id="lista"></div>
 </div>
 
 <script type="module">
-import { db, auth, collection, query, where, onSnapshot, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "./firebase.js";
+import { 
+  db, auth, collection, query, where, onSnapshot, doc, deleteDoc,
+  onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut 
+} from "./firebase.js";
 
 const emailInput = document.getElementById('emailInput');
 const passInput = document.getElementById('passInput');
@@ -73,31 +89,53 @@ onAuthStateChanged(auth, user => {
 });
 
 function carregarFichas(uid) {
-const q = query(collection(db, "fichas"), where("uid", "==", uid));
+  const q = query(collection(db, "fichas"), where("uid", "==", uid));
   onSnapshot(q, snapshot => {
     const lista = document.getElementById("lista");
     lista.innerHTML = "";
-    snapshot.forEach(doc => {
-      const f = doc.data();
-      
-      // Lógica Nova: Pega a origem e o Nível
+    
+    if (snapshot.empty) {
+      lista.innerHTML = "<p style='text-align:center; color:#666;'>Nenhum personagem encontrado.</p>";
+      return;
+    }
+
+    snapshot.forEach(docSnap => {
+      const f = docSnap.data();
       const origemTxt = f.origem ? `• ${f.origem}` : "";
-      const nivel = f.nivel || 1; // Se não tiver nível, assume 1
+      const nivel = f.nivel || 1;
 
       lista.innerHTML += `
-        <div class="ficha-item" onclick="window.location='ficha.html?id=${doc.id}'" style="cursor:pointer">
-          <img src="${f.imagem || 'https://via.placeholder.com/150/e63946/FFFFFF?text=RPG'}">
-          <div class="ficha-info">
-            <h3>${f.nome} <span style="font-size:0.8rem; background:#333; padding:2px 6px; border-radius:4px; color:white;">Lvl ${nivel}</span></h3>
-            <small style="color:#888">${f.classe || 'Aventureiro'} ${origemTxt}</small>
+        <div class="ficha-item">
+          <div class="ficha-content" onclick="window.location='ficha.html?id=${docSnap.id}'">
+            <img src="${f.imagem || 'https://via.placeholder.com/150/e63946/FFFFFF?text=RPG'}">
+            <div class="ficha-info">
+              <h3>${f.nome} <span style="font-size:0.8rem; background:#333; padding:2px 6px; border-radius:4px; color:white;">Lvl ${nivel}</span></h3>
+              <small style="color:#888">${f.classe || 'Aventureiro'} ${origemTxt}</small>
+            </div>
           </div>
-          <span style="color:var(--primary)">➤</span>
+          
+          <button class="btn-trash" onclick="deletar(event, '${docSnap.id}', '${f.nome}')" title="Excluir">🗑️</button>
         </div>`;
     });
   });
 }
 
-// Botões
+// Função Global de Deletar
+window.deletar = async (event, id, nome) => {
+  event.stopPropagation(); // IMPEDE QUE O CLIQUE ABRA A FICHA
+  
+  const confirmacao = prompt(`Para apagar ${nome} permanentemente, digite 'DELETAR':`);
+  if (confirmacao === "DELETAR") {
+    try {
+      await deleteDoc(doc(db, "fichas", id));
+      // Não precisa de alert nem reload, o onSnapshot atualiza a lista sozinho!
+    } catch(e) {
+      alert("Erro ao deletar: " + e.message);
+    }
+  }
+};
+
+// Botões de Login
 document.getElementById('btnLogin').addEventListener('click', () => {
   signInWithEmailAndPassword(auth, emailInput.value + "@fake.com", passInput.value).catch(e => alert("Erro: " + e.message));
 });
@@ -110,4 +148,3 @@ document.getElementById('btnLogout').addEventListener('click', () => signOut(aut
 </script>
 </body>
 </html>
-
