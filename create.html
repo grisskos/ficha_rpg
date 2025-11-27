@@ -1,133 +1,93 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Criar Personagem</title>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .form-box {
-      max-width: 600px;
-      margin: auto;
-      background: #1b1b1b;
-      padding: 20px;
-      border-radius: 10px;
-      border: 1px solid #333;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      background: #222;
-      color: #fff;
-    }
-    .btn {
-      width: 100%;
-      background: #4a90e2;
-      padding: 12px;
-      border-radius: 6px;
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: center;
-      display: inline-block;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Criar Personagem</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { background:#111; color:white; font-family:Arial; padding:20px; }
+input, textarea { width:100%; padding:10px; margin-top:10px; }
+button { padding:10px; margin-top:10px; }
+</style>
 </head>
+
 <body>
+<h1>✨ Criar Personagem</h1>
 
-  <h1>✨ Criar Novo Personagem ✨</h1>
+<input id="nome" placeholder="Nome do personagem">
+<input id="img" placeholder="URL da imagem">
 
-  <div class="form-box">
-    <label>Nome do Personagem</label>
-    <input id="nomeChar" placeholder="Ex: Aramil, Rook, Seline..." />
+<h3>Atributos</h3>
+<input id="vida" type="number" placeholder="Vida Máx">
+<input id="energia" type="number" placeholder="Energia Máx">
+<input id="vigor" type="number" placeholder="Vigor Máx">
+<input id="integridade" type="number" placeholder="Integridade Máx">
 
-    <label>URL da Imagem</label>
-    <input id="imgChar" placeholder="Cole aqui o link da imagem" />
+<h3>Ataques</h3>
+<div id="ataques"></div>
+<button onclick="addAtaque()">+ Adicionar Ataque</button>
 
-    <label>Vida Máxima</label>
-    <input id="vidaMax" type="number" value="10" />
+<h3>Habilidades & Talentos</h3>
+<div id="habilidades"></div>
+<button onclick="addHabilidade()">+ Adicionar Habilidade</button>
 
-    <label>Energia Máxima</label>
-    <input id="energiaMax" type="number" value="10" />
+<h3>Feitiços</h3>
+<div id="feiticos"></div>
+<button onclick="addFeitico()">+ Adicionar Feitiço</button>
 
-    <label>Vigor Máximo</label>
-    <input id="vigorMax" type="number" value="10" />
+<button onclick="salvar()">Salvar Personagem</button>
 
-    <label>Integridade Máxima</label>
-    <input id="integridadeMax" type="number" value="10" />
+<a href="index.html"><button>Voltar</button></a>
 
-    <br><br>
-    <button class="btn" onclick="criarFicha()">Salvar Personagem</button>
-  </div>
+<script type="module">
+import {
+  db, auth,
+  addDoc, collection, onAuthStateChanged
+} from "./firebase.js";
 
-  <script>
-    const firebaseConfig = {
-		apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
-		authDomain: "ficharpg-edc5c.firebaseapp.com",
-		projectId: "ficharpg-edc5c",
-		storageBucket: "ficharpg-edc5c.firebasestorage.app",
-		messagingSenderId: "522630132698",
-		appId: "1:522630132698:web:30d3dc6f103916d70246e3",
-		measurementId: "G-6PJKQYBRRC"
-    };
+const ataques = [];
+const habilidades = [];
+const feiticos = [];
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+window.addAtaque = () => {
+  const nome = prompt("Nome do ataque:");
+  if (nome) { ataques.push(nome); render(); }
+};
+window.addHabilidade = () => {
+  const nome = prompt("Habilidade/Talento:");
+  if (nome) { habilidades.push(nome); render(); }
+};
+window.addFeitico = () => {
+  const nome = prompt("Feitiço:");
+  if (nome) { feiticos.push(nome); render(); }
+};
 
-    function criarFicha() {
-      const nome = document.getElementById("nomeChar").value;
-      const img = document.getElementById("imgChar").value;
-      const vida = Number(document.getElementById("vidaMax").value);
-      const energia = Number(document.getElementById("energiaMax").value);
-      const vigor = Number(document.getElementById("vigorMax").value);
-      const integridade = Number(document.getElementById("integridadeMax").value);
+function render() {
+  ataquesDiv.innerHTML = ataques.map(a => "- " + a).join("<br>");
+  habilidadesDiv.innerHTML = habilidades.map(h => "- " + h).join("<br>");
+  feiticosDiv.innerHTML = feiticos.map(f => "- " + f).join("<br>");
+}
 
-      if (!nome) {
-        alert("O personagem precisa de um nome!");
-        return;
-      }
+window.salvar = async function() {
+  const user = auth.currentUser;
+  if (!user) return alert("Você não está logado.");
 
-      db.collection("fichas").add({
-        nome: nome,
-        imagem: img,
-        vida: { atual: vida, max: vida },
-        energia: { atual: energia, max: energia },
-        vigor: { atual: vigor, max: vigor },
-        integridade: { atual: integridade, max: integridade },
-        ataques: [],
-        habilidades: [],
-        feiticos: [],
-        dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(() => {
-        alert("Personagem criado com sucesso!");
-        window.location.href = "index.html";
-      });
-    }
-  </script>
+  await addDoc(collection(db, "fichas"), {
+    uid: user.uid,
+    nome: nome.value,
+    imagem: img.value,
+    vida: { atual: vida.value, max: vida.value },
+    energia: { atual: energia.value, max: energia.value },
+    vigor: { atual: vigor.value, max: vigor.value },
+    integridade: { atual: integridade.value, max: integridade.value },
+    ataques,
+    habilidades,
+    feiticos
+  });
 
+  alert("Criado!");
+  window.location = "index.html";
+};
+</script>
 </body>
 </html>
