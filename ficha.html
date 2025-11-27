@@ -279,3 +279,54 @@ window.salvarEdicao = async () => {
   const getNum = (id) => Number(document.getElementById(id).value);
   const getVal = (id) => document.getElementById(id).value;
   const getTextList = (id) => document.getElementById(id).value.split('\n').filter(i => i.trim() !== "");
+
+  try {
+    await updateDoc(doc(db, "fichas", id), {
+      nome: getVal('editNome'),
+      imagem: getVal('editImg'),
+      nivel: getNum('editNivel'),
+      classe: getVal('editClasse'),
+      origem: getVal('editOrigem'),
+      
+      atributos: {
+        forca: getNum('editFor'), destreza: getNum('editDes'), constituicao: getNum('editCon'),
+        inteligencia: getNum('editInt'), sabedoria: getNum('editSab'), presenca: getNum('editPre')
+      },
+      "vida.max": getNum('editVidaMax'),
+      "energia.max": getNum('editEnergiaMax'),
+      "vigor.max": getNum('editVigorMax'),
+      "integridade.max": getNum('editIntegridadeMax'),
+      
+      ataques: getTextList('editAtaques'),
+      habilidades: getTextList('editHabs')
+    });
+    alert("Ficha atualizada com sucesso!");
+    fecharEditor();
+  } catch(e) {
+    alert("Erro ao salvar: " + e.message);
+  }
+};
+
+window.excluirPersonagem = async () => {
+  const confirmacao = prompt("Para excluir, digite 'DELETAR' abaixo:");
+  if (confirmacao === "DELETAR") {
+    try {
+      await deleteDoc(doc(db, "fichas", id));
+      alert("Personagem apagado da existência.");
+      window.location = "index.html";
+    } catch(e) {
+      alert("Erro ao excluir: " + e.message);
+    }
+  } else {
+    alert("Ação cancelada.");
+  }
+};
+
+window.updateStat = async (stat, delta) => {
+  if (!fichaData[stat]) return;
+  const novoAtual = Math.max(0, Math.min(fichaData[stat].max, Number(fichaData[stat].atual) + delta));
+  await updateDoc(doc(db, "fichas", id), { [`${stat}.atual`]: novoAtual });
+};
+</script>
+</body>
+</html>
