@@ -79,12 +79,14 @@ function carregarFichas(uid) {
     lista.innerHTML = "";
     snapshot.forEach(doc => {
       const f = doc.data();
+      const origemTxt = f.origem ? `• ${f.origem}` : "";
+      
       lista.innerHTML += `
         <div class="ficha-item" onclick="window.location='ficha.html?id=${doc.id}'" style="cursor:pointer">
           <img src="${f.imagem || 'https://via.placeholder.com/150/e63946/FFFFFF?text=RPG'}">
           <div class="ficha-info">
             <h3>${f.nome}</h3>
-            <small style="color:#888">Nível 1 • ${f.classe || 'Aventureiro'}</small>
+            <small style="color:#888">${f.classe || 'Aventureiro'} ${origemTxt}</small>
           </div>
           <span style="color:var(--primary)">➤</span>
         </div>`;
