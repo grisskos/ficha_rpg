@@ -1,230 +1,113 @@
-<script>
-  // --------------------------
-  // CONFIGURAÇÃO DO FIREBASE
-  // --------------------------
-  const firebaseConfig = {
-    apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
-    authDomain: "ficharpg-edc5c.firebaseapp.com",
-    projectId: "ficharpg-edc5c",
-    storageBucket: "ficharpg-edc5c.appspot.com",
-    messagingSenderId: "522630132698",
-    appId: "1:522630132698:web:30d3dc6f103916d70246e3",
-    measurementId: "G-6PJKQYBRRC"
-  };
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPG - Lista de Personagens</title>
 
-  if (!firebase.apps.length) {
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background: #4a90e2;
+      padding: 10px 16px;
+      border-radius: 6px;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .char-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .char-card {
+      background: #1b1b1b;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .char-card:hover {
+      transform: scale(1.02);
+      border-color: #4a90e2;
+    }
+    .char-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .btn-view {
+      background: #6cdd7f;
+      padding: 8px 12px;
+      color: #000;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📜 Personagens</h1>
+
+  <a class="btn" href="create.html">+ Criar Novo Personagem</a>
+
+  <div id="listaPersonagens" class="char-list"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
+      authDomain: "seu-projeto.firebaseapp.com",
+      projectId: "seu-projeto",
+    };
+
     firebase.initializeApp(firebaseConfig);
-  }
-  const db = firebase.firestore();
-  const auth = firebase.auth();
+    const db = firebase.firestore();
 
-  const EMAIL_DO_MESTRE = "christian.bueno17@gmail.com";
+    function carregarPersonagens() {
+      db.collection("fichas").orderBy("dataCriacao", "desc").onSnapshot(snapshot => {
+        const lista = document.getElementById("listaPersonagens");
+        lista.innerHTML = "";
 
-  // --------------------------
-  // AUTENTICAÇÃO
-  // --------------------------
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      document.getElementById('loginCard').style.display = 'none';
-      document.getElementById('userArea').style.display = 'block';
-      document.getElementById('userInfo').innerText = user.email;
+        snapshot.forEach(doc => {
+          const f = doc.data();
+          const id = doc.id;
 
-      if (user.email === EMAIL_DO_MESTRE) {
-        document.getElementById('mestrePanel').style.display = 'block';
-        carregarNotasMestre();
-        carregarTodasFichas(); 
-      } else {
-        document.getElementById('mestrePanel').style.display = 'none';
-        carregarMinhasFichas(user.uid); 
-      }
-    } else {
-      document.getElementById('loginCard').style.display = 'block';
-      document.getElementById('userArea').style.display = 'none';
-    }
-  });
+          const card = document.createElement("div");
+          card.className = "char-card";
 
-  function fazerLogin() {
-    const e = document.getElementById('emailInput').value;
-    const p = document.getElementById('passInput').value;
-    auth.signInWithEmailAndPassword(e, p).catch(err => alert("Erro no Login: " + err.message));
-  }
+          card.innerHTML = `
+            <img src="${f.imagem || 'https://via.placeholder.com/250'}" class="char-img">
+            <h2>${f.nome}</h2>
+            <a class="btn-view" href="ficha.html?id=${id}">Abrir Ficha</a>
+          `;
 
-  function criarConta() {
-    const e = document.getElementById('emailInput').value;
-    const p = document.getElementById('passInput').value;
-    auth.createUserWithEmailAndPassword(e, p)
-      .then(() => alert("Conta Criada com Sucesso!"))
-      .catch(err => alert("Erro ao Criar Conta: " + err.message));
-  }
-  
-  function fazerLogout() { auth.signOut(); }
-
-  // --------------------------
-  // LÓGICA DE FICHAS (CRUD)
-  // --------------------------
-
-  function criarFicha() {
-    const user = auth.currentUser;
-    
-    // Verificação de segurança
-    if (!user) {
-        alert("Erro: Você não está logado!");
-        return;
-    }
-
-    // Pega os valores e garante que são números (se estiver vazio, vira 0)
-    const vMax = Number(document.getElementById('vidaMax').value) || 10;
-    const eMax = Number(document.getElementById('energiaMax').value) || 10;
-    const viMax = Number(document.getElementById('vigorMax').value) || 10;
-    const iMax = Number(document.getElementById('integridadeMax').value) || 10;
-    const nome = document.getElementById('nomeChar').value;
-
-    if (!nome) {
-        alert("Por favor, coloque um nome no personagem.");
-        return;
-    }
-
-    console.log("Tentando criar ficha para:", user.email);
-
-    db.collection('fichas').add({
-        uid: user.uid,
-        dono: user.email,
-        nome: nome,
-        imagem: document.getElementById('imgChar').value || "",
-        
-        vida: { atual: vMax, max: vMax },
-        energia: { atual: eMax, max: eMax },
-        vigor: { atual: viMax, max: viMax }, 
-        integridade: { atual: iMax, max: iMax },
-
-        ataques: document.getElementById('ataques').value,
-        habilidades: document.getElementById('habilidades').value,
-        itens: document.getElementById('itens').value,
-        
-        dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
-    })
-    .then(() => {
-        alert("Personagem Criado com Sucesso!");
-        document.getElementById('nomeChar').value = ""; // Limpa nome
-    })
-    .catch((error) => {
-        console.error("Erro ao gravar:", error);
-        alert("Erro ao criar ficha: " + error.message);
-    });
-  }
-
-  function carregarMinhasFichas(uid) {
-    db.collection('fichas').where('uid', '==', uid).orderBy('dataCriacao', 'desc')
-      .onSnapshot(renderizarFichas, (error) => {
-          console.log("Erro ao carregar fichas:", error);
-      });
-  }
-
-  function carregarTodasFichas() {
-    db.collection('fichas').orderBy('dataCriacao', 'desc')
-      .onSnapshot(renderizarFichas);
-  }
-
-  function gerarBarra(docId, label, corClasse, objDados, campoDb) {
-      // Proteção contra dados corrompidos antigos
-      if (!objDados || objDados.atual === undefined) return `<div style='color:red'>Erro nos dados de ${label}</div>`;
-
-      const pct = Math.max(0, Math.min(100, (objDados.atual / objDados.max) * 100));
-      
-      return `
-      <div class="status-group">
-          <div class="status-label">
-              <span>${label}</span>
-              <span>
-                  <button class="ctrl-btn" onclick="alterarStat('${docId}', '${campoDb}', -1)">-</button>
-                  ${objDados.atual} / ${objDados.max}
-                  <button class="ctrl-btn" onclick="alterarStat('${docId}', '${campoDb}', 1)">+</button>
-              </span>
-          </div>
-          <div class="bar-bg">
-              <div class="bar-fill ${corClasse}" style="width: ${pct}%"></div>
-              <div class="bar-text">${pct.toFixed(0)}%</div>
-          </div>
-      </div>`;
-  }
-
-  function renderizarFichas(snapshot) {
-    const lista = document.getElementById('listaFichas');
-    lista.innerHTML = '';
-
-    if (snapshot.empty) {
-        lista.innerHTML = '<p style="color:#666; text-align:center">Nenhuma ficha encontrada.</p>';
-        return;
-    }
-
-    snapshot.forEach(doc => {
-        const f = doc.data();
-        const id = doc.id;
-        
-        const imgUrl = f.imagem ? f.imagem : "https://via.placeholder.com/150?text=Sem+Foto";
-
-        const div = document.createElement('div');
-        div.className = 'ficha-container';
-        
-        // CORREÇÃO AQUI: f.vigor (antes estava f.vp-bar que é inválido)
-        div.innerHTML = `
-            <div>
-                <img src="${imgUrl}" class="char-img" onerror="this.src='https://via.placeholder.com/150?text=Erro'">
-                <div style="text-align:center; margin-top:5px; font-size:0.8em; color:#666;">${f.dono}</div>
-            </div>
-
-            <div>
-                <strong style="font-size:1.4em; color:white;">${f.nome}</strong>
-                <hr style="border-color:#333; margin: 10px 0;">
-
-                ${gerarBarra(id, "Vida", "hp-bar", f.vida, "vida")}
-                ${gerarBarra(id, "Energia", "ep-bar", f.energia, "energia")}
-                ${gerarBarra(id, "Vigor", "vp-bar", f.vigor, "vigor")} 
-                ${gerarBarra(id, "Integridade", "ip-bar", f.integridade, "integridade")}
-            </div>
-
-            <div class="details-box">
-                <div class="details-title">⚔️ Ataques</div>
-                <div class="details-content">${f.ataques || "Nenhum"}</div>
-            </div>
-            <div class="details-box">
-                <div class="details-title">✨ Habilidades</div>
-                <div class="details-content">${f.habilidades || "Nenhuma"}</div>
-            </div>
-            <div class="details-box">
-                <div class="details-title">🎒 Itens</div>
-                <div class="details-content">${f.itens || "Vazio"}</div>
-            </div>
-        `;
-        lista.appendChild(div);
-    });
-  }
-
-  window.alterarStat = function(docId, campo, valor) {
-    const docRef = db.collection('fichas').doc(docId);
-    
-    db.runTransaction(transaction => {
-        return transaction.get(docRef).then(doc => {
-            if (!doc.exists) return;
-            const dados = doc.data();
-            const stat = dados[campo]; 
-
-            let novoAtual = stat.atual + valor;
-            if (novoAtual > stat.max) novoAtual = stat.max;
-            if (novoAtual < 0) novoAtual = 0;
-
-            const updateObj = {};
-            updateObj[`${campo}.atual`] = novoAtual;
-            
-            transaction.update(docRef, updateObj);
+          lista.appendChild(card);
         });
-    }).catch(err => console.error("Erro ao atualizar:", err));
-  };
+      });
+    }
 
-  function salvarNotasMestre() {
-    db.collection('mestre').doc('painel').set({ anotacoes: document.getElementById('mestreNotes').value });
-  }
-  function carregarNotasMestre() {
-    db.collection('mestre').doc('painel').onSnapshot(doc => { if (doc.exists) document.getElementById('mestreNotes').value = doc.data().anotacoes; });
-  }
-</script>
+    carregarPersonagens();
+  </script>
+</body>
+</html>
