@@ -33,7 +33,7 @@
 <body>
 
 <div class="container">
-  <h1>⚔️ Grimório de Fichas</h1>
+  <h1>Criação de Fichas</h1>
 
   <div id="loginBox" class="card">
     <h2 style="margin-top:0">Acesso</h2>
@@ -73,19 +73,22 @@ onAuthStateChanged(auth, user => {
 });
 
 function carregarFichas(uid) {
-  const q = query(collection(db, "fichas"), where("uid", "==", uid));
+const q = query(collection(db, "fichas"), where("uid", "==", uid));
   onSnapshot(q, snapshot => {
     const lista = document.getElementById("lista");
     lista.innerHTML = "";
     snapshot.forEach(doc => {
       const f = doc.data();
-      const origemTxt = f.origem ? `• ${f.origem}` : "";
       
+      // Lógica Nova: Pega a origem e o Nível
+      const origemTxt = f.origem ? `• ${f.origem}` : "";
+      const nivel = f.nivel || 1; // Se não tiver nível, assume 1
+
       lista.innerHTML += `
         <div class="ficha-item" onclick="window.location='ficha.html?id=${doc.id}'" style="cursor:pointer">
           <img src="${f.imagem || 'https://via.placeholder.com/150/e63946/FFFFFF?text=RPG'}">
           <div class="ficha-info">
-            <h3>${f.nome}</h3>
+            <h3>${f.nome} <span style="font-size:0.8rem; background:#333; padding:2px 6px; border-radius:4px; color:white;">Lvl ${nivel}</span></h3>
             <small style="color:#888">${f.classe || 'Aventureiro'} ${origemTxt}</small>
           </div>
           <span style="color:var(--primary)">➤</span>
@@ -107,3 +110,4 @@ document.getElementById('btnLogout').addEventListener('click', () => signOut(aut
 </script>
 </body>
 </html>
+
