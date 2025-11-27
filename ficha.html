@@ -63,6 +63,10 @@
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
   .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
   .btn-mini:hover { border-color: white; color: white; background: #333; }
+  
+  /* Botão de Calculadora */
+  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; }
+  .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
   /* Perícias */
   .skills-card { padding: 0; overflow: hidden; }
@@ -75,7 +79,6 @@
   .sk-attr { font-size: 0.7rem; color: #555; width: 40px; text-transform: uppercase; font-weight: bold; }
   .sk-total { font-weight: bold; color: white; width: 35px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
   
-  /* Botões de Perícia T/M */
   .sk-btn-group { display: flex; gap: 5px; }
   .sk-btn { 
     width: 25px; height: 25px; border-radius: 4px; border: 1px solid #444; background: #111; 
@@ -83,8 +86,6 @@
     transition: 0.2s;
   }
   .sk-btn:hover { border-color: #777; color: #aaa; }
-  
-  /* Estados Ativos */
   .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
   .sk-btn.active-m { background: rgba(230, 57, 70, 0.2); border-color: var(--primary); color: var(--primary); }
 
@@ -171,7 +172,7 @@ import { db, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let ficha = {}; 
-let editandoId = null; // Impede renderização se estiver editando
+let editandoId = null;
 
 const PERICIAS_DEF = [
   { n: "Atletismo", a: "forca" }, { n: "Acrobacia", a: "destreza" }, { n: "Furtividade", a: "destreza" },
@@ -196,12 +197,10 @@ function renderFicha() {
   
   // Nome
   document.getElementById('nomeDisplay').innerText = f.nome;
-  
-  // Imagem
   const imgEl = document.getElementById('charImg');
   if(f.imagem) imgEl.src = f.imagem;
 
-  // Badges (Nivel editável)
+  // Badges
   document.getElementById('badges').innerHTML = `
     <span class="badge b-lvl">NVL <span class="editable" onclick="editarCampo(this, 'nivel', 'number')">${f.nivel||1}</span></span>
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
@@ -221,7 +220,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // Stats (Barras)
+  // Stats (Barras) - AGORA COM BOTÃO MATH 🔢
   const areaStats = document.getElementById('statsArea');
   areaStats.innerHTML = "";
   const statsMap = [
@@ -244,6 +243,7 @@ function renderFicha() {
         </div>
         <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
         <div class="stat-ctrl">
+          <div class="btn-calc" onclick="mathStat('${s.k}', '${s.l}')" title="Calcular Dano/Cura">🔢</div>
           <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
           <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
         </div>
@@ -269,7 +269,6 @@ function renderFicha() {
     if (saved.t) total += bonusTreino;
     if (saved.m) total += 1;
 
-    // BOTÕES T e M
     listaSkills.innerHTML += `
       <div class="skill-row">
         <span class="sk-name">${p.n}</span>
@@ -286,47 +285,49 @@ function renderFicha() {
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
+// === CÁLCULO DE DANO/CURA (MATH) ===
+window.mathStat = async (key, nomeDisplay) => {
+  // Pede o valor ao usuário
+  const input = prompt(`ALTERAR ${nomeDisplay.toUpperCase()}\nDigite o valor para SOMAR.\n(Use negativo para dano, ex: -12)`);
+  
+  if (!input) return; // Cancelou
+  
+  const valor = Number(input);
+  if (isNaN(valor)) return alert("Por favor, digite um número válido.");
+
+  const st = ficha[key];
+  let novo = Number(st.atual) + valor;
+
+  // Trava nos limites (0 e Máximo)
+  novo = Math.max(0, Math.min(st.max, novo));
+
+  await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
+};
+
 // === EDIÇÃO INLINE ===
 window.editarCampo = (el, field, type) => {
-  if (el.querySelector('input')) return; // Já está editando
-
-  editandoId = field; // Pausa renderização externa
+  if (el.querySelector('input')) return;
+  editandoId = field;
   const valorAtual = el.innerText;
-  
   el.innerHTML = `<input id="inputEdit" class="inline-input" type="${type}" value="${valorAtual}">`;
   const input = document.getElementById('inputEdit');
   input.focus();
-
   const salvar = async () => {
     let novoValor = input.value;
     if (type === 'number') novoValor = Number(novoValor);
-
-    // Atualiza localmente para feedback instantâneo
     el.innerHTML = novoValor;
     editandoId = null;
-
-    try {
-      await updateDoc(doc(db, "fichas", id), { [field]: novoValor });
-    } catch (e) {
-      console.error(e);
-      el.innerText = valorAtual; // Reverte erro
-    }
+    try { await updateDoc(doc(db, "fichas", id), { [field]: novoValor }); } 
+    catch (e) { console.error(e); el.innerText = valorAtual; }
   };
-
   input.addEventListener('blur', salvar);
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
 };
 
-// === TOGGLE PERICIA (T/M) ===
 window.togglePericia = async (skillName, tipo) => {
-  // Lê o estado atual
   const pericias = ficha.pericias || {};
   if (!pericias[skillName]) pericias[skillName] = { t: false, m: false };
-  
-  // Inverte o valor
   pericias[skillName][tipo] = !pericias[skillName][tipo];
-  
-  // Salva tudo
   await updateDoc(doc(db, "fichas", id), { pericias: pericias });
 };
 
@@ -336,7 +337,7 @@ window.upStat = async (key, val) => {
   await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
 };
 
-// Configurações
+// Configurações e Listas
 window.abrirConfig = () => {
   document.getElementById('configModal').style.display = 'block';
   document.getElementById('editImgUrl').value = ficha.imagem || "";
