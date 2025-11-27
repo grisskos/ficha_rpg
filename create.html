@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criar Personagem</title>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-box {
+      max-width: 600px;
+      margin: auto;
+      background: #1b1b1b;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #333;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      background: #222;
+      color: #fff;
+    }
+    .btn {
+      width: 100%;
+      background: #4a90e2;
+      padding: 12px;
+      border-radius: 6px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✨ Criar Novo Personagem ✨</h1>
+
+  <div class="form-box">
+    <label>Nome do Personagem</label>
+    <input id="nomeChar" placeholder="Ex: Aramil, Rook, Seline..." />
+
+    <label>URL da Imagem</label>
+    <input id="imgChar" placeholder="Cole aqui o link da imagem" />
+
+    <label>Vida Máxima</label>
+    <input id="vidaMax" type="number" value="10" />
+
+    <label>Energia Máxima</label>
+    <input id="energiaMax" type="number" value="10" />
+
+    <label>Vigor Máximo</label>
+    <input id="vigorMax" type="number" value="10" />
+
+    <label>Integridade Máxima</label>
+    <input id="integridadeMax" type="number" value="10" />
+
+    <br><br>
+    <button class="btn" onclick="criarFicha()">Salvar Personagem</button>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
+      authDomain: "seu-projeto.firebaseapp.com",
+      projectId: "seu-projeto",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function criarFicha() {
+      const nome = document.getElementById("nomeChar").value;
+      const img = document.getElementById("imgChar").value;
+      const vida = Number(document.getElementById("vidaMax").value);
+      const energia = Number(document.getElementById("energiaMax").value);
+      const vigor = Number(document.getElementById("vigorMax").value);
+      const integridade = Number(document.getElementById("integridadeMax").value);
+
+      if (!nome) {
+        alert("O personagem precisa de um nome!");
+        return;
+      }
+
+      db.collection("fichas").add({
+        nome: nome,
+        imagem: img,
+        vida: { atual: vida, max: vida },
+        energia: { atual: energia, max: energia },
+        vigor: { atual: vigor, max: vigor },
+        integridade: { atual: integridade, max: integridade },
+        ataques: [],
+        habilidades: [],
+        feiticos: [],
+        dataCriacao: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert("Personagem criado com sucesso!");
+        window.location.href = "index.html";
+      });
+    }
+  </script>
+
+</body>
+</html>

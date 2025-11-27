@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ficha do Personagem</title>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<style>
+    body {
+        background: #0d0d0d;
+        color: #eee;
+        font-family: 'Segoe UI', sans-serif;
+        padding: 20px;
+    }
+    .container {
+        max-width: 900px;
+        margin: auto;
+    }
+    h1 {
+        text-align: center;
+        color: #ff4040;
+        margin-bottom: 25px;
+    }
+
+    /* Ficha */
+    .ficha-box {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 20px;
+        box-shadow: 0 0 12px #000;
+    }
+
+    .foto-area img {
+        width: 100%;
+        border-radius: 10px;
+        border: 2px solid #333;
+    }
+
+    .section {
+        background: #141414;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        margin-bottom: 15px;
+    }
+
+    .section h2 {
+        margin: 0 0 10px;
+        color: #ff4d4d;
+        font-size: 1.2em;
+        letter-spacing: 1px;
+    }
+
+    /* Barras */
+    .stat-block { margin-bottom: 15px; }
+    .stat-label { display: flex; justify-content: space-between; margin-bottom: 5px; }
+
+    .bar-bg {
+        width: 100%;
+        height: 22px;
+        background: #333;
+        border-radius: 5px;
+        overflow: hidden;
+        position: relative;
+    }
+    .bar-fill {
+        height: 100%;
+        transition: width 0.3s;
+    }
+
+    .hp { background: #ff3333; }
+    .ep { background: #3366ff; }
+    .vp { background: #33cc33; }
+    .ip { background: #cc33cc; }
+
+    .bar-text {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 0; left: 0;
+        font-size: 0.8em;
+        color: #fff;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        background: #b11;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .btn:hover { background: #911; }
+
+    .list-item {
+        background: #222;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #333;
+        margin-bottom: 8px;
+    }
+
+    .add-box { display: flex; gap: 10px; }
+    .add-box input { flex: 1; padding: 8px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Ficha do Personagem</h1>
+
+    <div id="ficha" class="ficha-box"></div>
+</div>
+
+<script>
+// CONFIG FIREBASE ------------------------------------------------------
+const firebaseConfig = {
+    apiKey: "AIzaSyAANME6i8psLUlX13AAi3PBgnd0IIvaY5Y",
+    authDomain: "ficharpg-edc5c.firebaseapp.com",
+    projectId: "ficharpg-edc5c",
+    storageBucket: "ficharpg-edc5c.appspot.com",
+    messagingSenderId: "522630132698",
+    appId: "1:522630132698:web:30d3dc6f103916d70246e3"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// PEGAR ID DA URL ------------------------------------------------------
+const url = new URLSearchParams(window.location.search);
+const id = url.get("id");
+
+if (!id) {
+    document.getElementById("ficha").innerHTML = "<p style='color:red'>ID não encontrado.</p>";
+}
+
+// FUNÇÃO PARA GERAR BARRAS -------------------------------------------
+function gerarBarra(titulo, dados, classe) {
+    const pct = Math.max(0, Math.min(100, (dados.atual / dados.max) * 100));
+
+    return `
+        <div class="stat-block">
+            <div class="stat-label">
+                <span>${titulo}</span>
+                <span>${dados.atual} / ${dados.max}</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar-fill ${classe}" style="width:${pct}%"></div>
+                <div class="bar-text">${pct.toFixed(0)}%</div>
+            </div>
+        </div>
+    `;
+}
+
+// RENDERIZAÇÃO ---------------------------------------------------------
+db.collection("fichas").doc(id).onSnapshot(doc => {
+    if (!doc.exists) return;
+    const f = doc.data();
+
+    document.getElementById("ficha").innerHTML = `
+        <div class="foto-area">
+            <img src="${f.imagem || "https://via.placeholder.com/250"}" />
+        </div>
+
+        <div>
+            <div class="section">
+                <h2>${f.nome}</h2>
+                ${gerarBarra("Vida", f.vida, "hp")} 
+                ${gerarBarra("Energia", f.energia, "ep")} 
+                ${gerarBarra("Vigor", f.vigor, "vp")} 
+                ${gerarBarra("Integridade", f.integridade, "ip")} 
+            </div>
+
+            <div class="section">
+                <h2>Ataques</h2>
+                <div id="ataquesLista"></div>
+                <div class="add-box">
+                    <input id="novoAtaque" placeholder="Novo ataque..." />
+                    <button class="btn" onclick="addItem('ataques')">+</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Habilidades & Talentos</h2>
+                <div id="habLista"></div>
+                <div class="add-box">
+                    <input id="novaHab" placeholder="Nova habilidade/talento..." />
+                    <button class="btn" onclick="addItem('habilidades')">+</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Feitiços</h2>
+                <div id="feiticosLista"></div>
+                <div class="add-box">
+                    <input id="novoFeitico" placeholder="Novo feitiço..." />
+                    <button class="btn" onclick="addItem('feiticos')">+</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    renderList("ataquesLista", f.ataques);
+    renderList("habLista", f.habilidades);
+    renderList("feiticosLista", f.feiticos);
+});
+
+// LISTA ---------------------------------------------------------------
+function renderList(divId, lista) {
+    const box = document.getElementById(divId);
+    box.innerHTML = "";
+
+    if (!lista || lista.length === 0) {
+        box.innerHTML = `<p style='color:#555'>Nenhum item.</p>`;
+        return;
+    }
+
+    lista.forEach(item => {
+        const d = document.createElement("div");
+        d.className = "list-item";
+        d.innerText = item;
+        box.appendChild(d);
+    });
+}
+
+// ADICIONAR ITEM ------------------------------------------------------
+function addItem(campo) {
+    const inputs = {
+        ataques: document.getElementById("novoAtaque"),
+        habilidades: document.getElementById("novaHab"),
+        feiticos: document.getElementById("novoFeitico")
+    };
+
+    const inp = inputs[campo];
+    const valor = inp.value.trim();
+    if (!valor) return;
+
+    const ref = db.collection("fichas").doc(id);
+
+    ref.update({ [campo]: firebase.firestore.FieldValue.arrayUnion(valor) });
+
+    inp.value = "";
+}
+</script>
+</body>
+</html>
