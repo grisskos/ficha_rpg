@@ -6,33 +6,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   :root { 
-    --bg: #0f0f0f; --card: #141414; --panel: #1a1a1a;
+    --bg: #0f0f0f; --card: #141414; 
     --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; 
     --text: #f1f1f1; --dim: #888;
   }
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  /* LAYOUT PRINCIPAL (Duas Colunas) */
-  .main-layout {
-    display: grid;
-    grid-template-columns: 320px 1fr; /* Esquerda Fixa, Direita Expande */
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-bottom: 80px;
-  }
-  
-  /* No Celular: Um embaixo do outro */
-  @media (max-width: 768px) {
-    .main-layout { grid-template-columns: 1fr; }
-  }
+  /* Layout */
+  .main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; padding-bottom: 80px; }
+  @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
 
-  /* Painéis */
   .sidebar, .content-area { display: flex; flex-direction: column; gap: 20px; }
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; }
 
-  /* --- HEADER E SIDEBAR --- */
+  /* Header */
   .char-header { text-align: center; }
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
@@ -40,16 +28,27 @@
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
   .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
   .b-lvl { color: white; border-color: white; font-weight: bold; }
-  .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* Atributos (Sidebar) */
+  /* EDIÇÃO INLINE (O SEGREDO) */
+  .editable { cursor: pointer; border-bottom: 1px dashed #444; transition: 0.2s; }
+  .editable:hover { color: var(--primary); border-color: var(--primary); }
+  
+  .inline-input { 
+    background: #000; color: white; border: 1px solid var(--primary); 
+    border-radius: 4px; padding: 2px 5px; font-family: inherit; font-size: inherit; 
+    width: 60px; text-align: center; outline: none;
+  }
+  /* Ajuste para input de nome ser maior */
+  h2 .inline-input { width: 200px; font-size: 1.2rem; }
+
+  /* Atributos */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
-  .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; }
+  .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.7rem; color: #555; background: #111; padding: 1px 4px; border-radius: 3px; }
 
-  /* Barras (Sidebar) */
+  /* Barras */
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
@@ -64,80 +63,54 @@
   .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .btn-mini:hover { border-color: white; color: white; }
 
-  /* --- ÁREA DE PERÍCIAS (Direita) --- */
-  .skills-card { padding: 0; overflow: hidden; } /* Sem padding para a tabela encostar */
+  /* Perícias */
+  .skills-card { padding: 0; overflow: hidden; }
   .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
   .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
-  .bonus-display { font-size: 0.8rem; color: #aaa; background: #111; padding: 4px 8px; border-radius: 4px; border: 1px solid #333; }
-
-  .skill-list { display: flex; flex-direction: column; }
   .skill-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
-  .skill-row:last-child { border-bottom: none; }
-  .skill-row:hover { background: #1e1e1e; }
-  
   .sk-name { flex-grow: 1; color: #eee; }
   .sk-attr { font-size: 0.7rem; color: #666; width: 40px; text-transform: uppercase; font-weight: bold; }
   .sk-total { font-weight: bold; color: white; width: 30px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
   
-  .sk-badges { display: flex; gap: 4px; width: 60px; justify-content: flex-end; }
-  .sk-tag { font-size: 0.65rem; padding: 2px 4px; border-radius: 3px; border: 1px solid #333; color: #444; opacity: 0.3; }
-  .sk-tag.active { opacity: 1; font-weight: bold; border-color: currentColor; }
-  .t-train { color: var(--energy); background: rgba(88, 232, 218, 0.1); }
-  .t-master { color: var(--primary); background: rgba(230, 57, 70, 0.1); }
+  /* Modal de Listas (Ataques/Habilidades ainda precisam de modal pois são listas grandes) */
+  .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
+  .fab-config:hover { background: var(--primary); border-color: var(--primary); }
 
-  /* FAB e MODAL */
-  .fab-edit { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: transform 0.2s; }
-  .fab-edit:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
-
-  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto; border: 1px solid #444; }
-  .form-group { margin-bottom: 15px; }
-  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.8rem; font-weight: bold; }
-  .form-group input, select, textarea { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 5px; box-sizing: border-box; }
-  
-  /* Edit Skills Grid */
-  .edit-skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; max-height: 300px; overflow-y: auto; background: #111; padding: 10px; border-radius: 5px; }
-  .edit-skill-item { display: flex; align-items: center; justify-content: space-between; padding: 5px; border-bottom: 1px solid #222; }
-  .chk-group { display: flex; gap: 10px; }
-  .chk-lbl { font-size: 0.8rem; color: #666; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-  .chk-lbl input { width: auto; margin: 0; }
-
-  .save-btn { background: var(--primary); width: 100%; padding: 12px; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; margin-top: 20px; }
-  .close-btn { background: #333; margin-top: 10px; width: 100%; padding: 12px; color: white; border: none; cursor: pointer; border-radius: 5px; }
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; }
+  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; border: 1px solid #444; }
+  textarea { width: 100%; height: 100px; background: #111; color: white; border: 1px solid #333; margin-top: 5px; }
 </style>
 </head>
 <body>
-
-<button class="fab-edit" onclick="abrirEditor()">✎</button>
 
 <div class="main-layout">
   
   <div class="sidebar">
     <div class="card char-header">
       <img id="charImg" class="char-img" src="">
-      <h2 id="charNome" class="char-name">...</h2>
+      <h2 class="char-name"><span class="editable" onclick="editInline(this, 'nome', 'text')">...</span></h2>
       <div id="badges" class="badges"></div>
     </div>
 
     <div class="card">
       <div id="atributosArea" class="attr-grid"></div>
+      <p style="text-align:center; font-size:0.7rem; color:#666; margin-bottom:0;">Clique no número pequeno para editar</p>
     </div>
 
     <div class="card">
       <div id="statsArea"></div>
     </div>
     
-    <button class="close-btn" onclick="window.location='index.html'">Voltar para Menu</button>
+    <button class="btn-mini" style="width:100%; padding:10px;" onclick="window.location='index.html'">Voltar</button>
   </div>
 
   <div class="content-area">
-    
     <div class="card skills-card">
       <div class="skills-header">
         <h3>Perícias</h3>
-        <span id="treinoDisplay" class="bonus-display">Treino: +2</span>
+        <span id="treinoDisplay" style="font-size:0.8rem; color:#aaa;"></span>
       </div>
-      <div id="skillsList" class="skill-list"></div>
+      <div id="skillsList"></div>
     </div>
 
     <div class="card">
@@ -149,61 +122,30 @@
       <div class="skills-header"><h3>🔥 Habilidades</h3></div>
       <div style="padding:15px"><ul id="habsList" style="margin:0; padding-left:20px; color:#ccc;"></ul></div>
     </div>
-
   </div>
 </div>
 
-<div id="editorModal" class="modal">
+<button class="fab-config" onclick="abrirConfig()">⚙️</button>
+
+<div id="configModal" class="modal">
   <div class="modal-content">
-    <h2 style="color:var(--primary); margin-top:0;">Editar Ficha</h2>
+    <h2 style="color:var(--primary); margin-top:0;">Configurações</h2>
     
-    <div class="form-group"><label>Nome</label><input type="text" id="editNome"></div>
-    <div class="form-group"><label>Imagem</label><input type="text" id="editImg"></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
-      <div class="form-group"><label>Nível</label><input type="number" id="editNivel"></div>
-      <div class="form-group"><label>Classe</label>
-        <select id="editClasse">
-          <option value="Lutador">Lutador</option>
-          <option value="Especialista em Combate">Especialista em Combate</option>
-          <option value="Especialista em Técnica">Especialista em Técnica</option>
-          <option value="Suporte">Suporte</option>
-          <option value="Controlador">Controlador</option>
-          <option value="Restringido">Restringido</option>
-        </select>
-      </div>
-    </div>
+    <label style="display:block; color:#aaa; font-weight:bold;">Imagem (URL)</label>
+    <input id="editImgUrl" style="width:100%; background:#111; border:1px solid #333; color:white; padding:5px; margin-bottom:15px;">
+    <button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Atualizar Imagem</button>
 
-    <h3 style="border-bottom:1px solid #333; padding-bottom:5px;">Atributos</h3>
-    <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:5px; text-align:center;">
-      <div><label>FOR</label><input type="number" id="editFor"></div>
-      <div><label>DES</label><input type="number" id="editDes"></div>
-      <div><label>CON</label><input type="number" id="editCon"></div>
-      <div><label>INT</label><input type="number" id="editInt"></div>
-      <div><label>SAB</label><input type="number" id="editSab"></div>
-      <div><label>PRE</label><input type="number" id="editPre"></div>
-    </div>
+    <br><br>
+    <label style="display:block; color:#aaa; font-weight:bold;">Ataques (1 por linha)</label>
+    <textarea id="editAtaques"></textarea>
+    
+    <br><br>
+    <label style="display:block; color:#aaa; font-weight:bold;">Habilidades (1 por linha)</label>
+    <textarea id="editHabs"></textarea>
 
-    <h3 style="border-bottom:1px solid #333; padding-bottom:5px;">Perícias (Treinado / Mestre)</h3>
-    <div id="editSkillsArea" class="edit-skills-grid"></div>
-
-    <h3 style="border-bottom:1px solid #333; padding-bottom:5px; margin-top:15px;">Máximos</h3>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="form-group"><label>Vida Máx</label><input type="number" id="editVidaMax"></div>
-      <div class="form-group"><label>Energia Máx</label><input type="number" id="editEnergiaMax"></div>
-      <div class="form-group"><label>Vigor Máx</label><input type="number" id="editVigorMax"></div>
-      <div class="form-group"><label>Integ. Máx</label><input type="number" id="editIntegridadeMax"></div>
-    </div>
-
-    <div class="form-group">
-      <label>Ataques (1 por linha)</label><textarea id="editAtaques"></textarea>
-    </div>
-    <div class="form-group">
-      <label>Habilidades (1 por linha)</label><textarea id="editHabs"></textarea>
-    </div>
-
-    <button class="save-btn" onclick="salvarEdicao()">SALVAR TUDO</button>
-    <button class="close-btn" onclick="fecharEditor()">Cancelar</button>
-    <button style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;" onclick="excluirPersonagem()">Excluir Personagem</button>
+    <button onclick="salvarListas()" style="background:var(--primary); width:100%; padding:12px; color:white; border:none; cursor:pointer; border-radius:5px; font-weight:bold; margin-top:20px;">Salvar Listas</button>
+    <button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:12px; color:white; border:none; cursor:pointer; border-radius:5px; margin-top:10px;">Fechar</button>
+    <button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button>
   </div>
 </div>
 
@@ -214,141 +156,174 @@ const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let ficha = {}; 
 
-// LISTA DE PERÍCIAS (Definição do Sistema)
 const PERICIAS_DEF = [
-  { n: "Atletismo", a: "forca" },
-  { n: "Acrobacia", a: "destreza" },
-  { n: "Furtividade", a: "destreza" },
-  { n: "Prestidigitação", a: "destreza" },
-  { n: "Feitiçaria", a: "inteligencia" },
-  { n: "História", a: "inteligencia" },
-  { n: "Investigação", a: "inteligencia" },
-  { n: "Ofício 1", a: "inteligencia" },
-  { n: "Ofício 2", a: "inteligencia" },
-  { n: "Ofício 3", a: "inteligencia" },
-  { n: "Tecnologia", a: "inteligencia" },
-  { n: "Teologia", a: "inteligencia" },
-  { n: "Direção", a: "sabedoria" },
-  { n: "Intuição", a: "sabedoria" },
-  { n: "Medicina", a: "sabedoria" },
-  { n: "Ocultismo", a: "sabedoria" },
-  { n: "Percepção", a: "sabedoria" },
-  { n: "Sobrevivência", a: "sabedoria" },
-  { n: "Enganação", a: "presenca" },
-  { n: "Intimidação", a: "presenca" },
-  { n: "Performance", a: "presenca" },
-  { n: "Persuasão", a: "presenca" }
+  { n: "Atletismo", a: "forca" }, { n: "Acrobacia", a: "destreza" }, { n: "Furtividade", a: "destreza" },
+  { n: "Prestidigitação", a: "destreza" }, { n: "Feitiçaria", a: "inteligencia" }, { n: "História", a: "inteligencia" },
+  { n: "Investigação", a: "inteligencia" }, { n: "Tecnologia", a: "inteligencia" }, { n: "Teologia", a: "inteligencia" },
+  { n: "Direção", a: "sabedoria" }, { n: "Intuição", a: "sabedoria" }, { n: "Medicina", a: "sabedoria" },
+  { n: "Ocultismo", a: "sabedoria" }, { n: "Percepção", a: "sabedoria" }, { n: "Sobrevivência", a: "sabedoria" },
+  { n: "Enganação", a: "presenca" }, { n: "Intimidação", a: "presenca" }, { n: "Performance", a: "presenca" }, { n: "Persuasão", a: "presenca" }
 ];
-
 const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligencia:"INT", sabedoria:"SAB", presenca:"PRE" };
 
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
-  if (docSnap.exists()) {
-    ficha = docSnap.data();
-    renderFicha();
-  } else {
-    alert("Personagem não encontrado."); window.location="index.html";
-  }
+  if (docSnap.exists()) { ficha = docSnap.data(); renderFicha(); }
 });
 
 function renderFicha() {
   const f = ficha;
   
-  // Header e Sidebar
-  document.getElementById('charNome').innerText = f.nome;
-  const imgEl = document.getElementById('charImg');
-  if(f.imagem) { imgEl.src = f.imagem; imgEl.style.display='block'; } else { imgEl.style.display='none'; }
+  // Nome Inline (Se não estiver editando, atualiza)
+  const nomeEl = document.querySelector('.char-name span');
+  if (nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome;
   
-  const nivel = f.nivel || 1;
+  const imgEl = document.getElementById('charImg');
+  if(f.imagem) imgEl.src = f.imagem;
+
+  // Badges (Nivel editável)
   document.getElementById('badges').innerHTML = `
-    <span class="badge b-lvl">NVL ${nivel}</span>
+    <span class="badge b-lvl">NVL <span class="editable" onclick="editInline(this, 'nivel', 'number')">${f.nivel||1}</span></span>
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
-    <span class="badge">${f.origem || 'Origem'}</span>
   `;
 
-  // Renderiza Atributos
+  // Atributos
   const areaAttr = document.getElementById('atributosArea');
-  areaAttr.innerHTML = "";
-  Object.keys(ATR_SHORT).forEach(key => {
-    const val = f.atributos[key] || 10;
-    const mod = Math.floor((val - 10) / 2);
-    areaAttr.innerHTML += `
-      <div class="attr-box">
-        <span class="attr-lbl">${ATR_SHORT[key]}</span>
-        <span class="attr-val">${mod>=0?'+':''}${mod}</span>
-        <span class="attr-raw">${val}</span>
-      </div>`;
-  });
+  // Só redesenha se não tiver inputs ativos para não perder foco
+  if(!areaAttr.querySelector('input')) {
+    areaAttr.innerHTML = "";
+    Object.keys(ATR_SHORT).forEach(key => {
+      const val = f.atributos[key] || 10;
+      const mod = Math.floor((val - 10) / 2);
+      // Aqui o "val" (o número pequeno) é editável
+      areaAttr.innerHTML += `
+        <div class="attr-box">
+          <span class="attr-lbl">${ATR_SHORT[key]}</span>
+          <span class="attr-val">${mod>=0?'+':''}${mod}</span>
+          <span class="attr-raw editable" onclick="editInline(this, 'atributos.${key}', 'number')">${val}</span>
+        </div>`;
+    });
+  }
 
-  // Renderiza Stats
+  // Stats (Barras)
   const areaStats = document.getElementById('statsArea');
-  areaStats.innerHTML = "";
-  const statsMap = [
-    {k:'vida', l:'Vida', c:'c-vida'},
-    {k:'energia', l:'Energia', c:'c-ener'},
-    {k:'vigor', l:'Vigor', c:'c-vigo'},
-    {k:'integridade', l:'Integ.', c:'c-inte'}
-  ];
-  statsMap.forEach(s => {
-    const st = f[s.k];
-    if(!st) return;
-    const pct = Math.min(100, (st.atual/st.max)*100);
-    areaStats.innerHTML += `
-      <div class="stat-row">
-        <div class="stat-head"><span>${s.l}</span> <span>${st.atual}/${st.max}</span></div>
-        <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
-        <div class="stat-ctrl">
-          <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
-          <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
-        </div>
-      </div>`;
-  });
+  // Se estiver editando algo aqui, não redesenha tudo brutalmente
+  if(!areaStats.querySelector('input')) {
+    areaStats.innerHTML = "";
+    const statsMap = [
+      {k:'vida', l:'Vida', c:'c-vida'}, {k:'energia', l:'Energia', c:'c-ener'},
+      {k:'vigor', l:'Vigor', c:'c-vigo'}, {k:'integridade', l:'Integ.', c:'c-inte'}
+    ];
+    statsMap.forEach(s => {
+      const st = f[s.k];
+      if(!st) return;
+      const pct = Math.min(100, (st.atual/st.max)*100);
+      
+      // Aqui tornamos o Atual e o Máximo editáveis
+      areaStats.innerHTML += `
+        <div class="stat-row">
+          <div class="stat-head">
+            <span>${s.l}</span> 
+            <div>
+              <span class="editable" onclick="editInline(this, '${s.k}.atual', 'number')">${st.atual}</span> / 
+              <span class="editable" onclick="editInline(this, '${s.k}.max', 'number')">${st.max}</span>
+            </div>
+          </div>
+          <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
+          <div class="stat-ctrl">
+            <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
+            <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
+          </div>
+        </div>`;
+    });
+  }
 
-  // === CÁLCULO DE PERÍCIAS ===
-  // Bônus de Treinamento: começa com 2, +1 a cada 4 níveis (1, 5, 9...)
-  // Nvl 1-4: +2 | Nvl 5-8: +3 | Nvl 9-12: +4
+  // Perícias
+  const nivel = f.nivel || 1;
   const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
   document.getElementById('treinoDisplay').innerText = `Treino: +${bonusTreino}`;
 
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
-  
   const metadeNivel = Math.floor(nivel / 2);
-  const userPericias = f.pericias || {}; // Objeto salvo no banco
+  const userPericias = f.pericias || {}; 
 
   PERICIAS_DEF.forEach(p => {
-    // 1. Pega Modificador do Atributo
     const attrVal = f.atributos[p.a] || 10;
     const modAttr = Math.floor((attrVal - 10) / 2);
-
-    // 2. Verifica se é treinado/mestre (salvo no banco)
-    // A chave no banco será o nome "Sanitized" (ex: "Ofício 1" -> "Ofício 1")
     const saved = userPericias[p.n] || { t: false, m: false };
     
-    // 3. Calcula Total: Mod + MetadeNivel + (BonusTreino se T) + (1 se M)
     let total = modAttr + metadeNivel;
     if (saved.t) total += bonusTreino;
-    if (saved.m) total += 1; // Mestre adiciona +1 fixo
+    if (saved.m) total += 1;
 
+    // Checkbox clicável direto na lista
     listaSkills.innerHTML += `
       <div class="skill-row">
         <span class="sk-name">${p.n}</span>
         <span class="sk-attr">${ATR_SHORT[p.a]}</span>
         <span class="sk-total">${total>=0?'+':''}${total}</span>
-        <div class="sk-badges">
-          <span class="sk-tag ${saved.t ? 't-train active' : ''}">T</span>
-          <span class="sk-tag ${saved.m ? 't-master active' : ''}">M</span>
+        <div style="display:flex; gap:5px;">
+           <input type="checkbox" ${saved.t?'checked':''} onchange="togglePericia('${p.n}', 't', this.checked)">
+           <input type="checkbox" ${saved.m?'checked':''} onchange="togglePericia('${p.n}', 'm', this.checked)" title="Mestre">
         </div>
-      </div>
-    `;
+      </div>`;
   });
 
-  // Listas de texto
   document.getElementById('ataquesList').innerHTML = (f.ataques||[]).map(i=>`<li>${i}</li>`).join('');
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
-// === FUNÇÕES GLOBAIS ===
+// === LÓGICA DE EDIÇÃO INLINE ===
+window.editInline = (element, field, type) => {
+  // Evita criar input dentro de input
+  if(element.querySelector('input')) return;
+
+  const currentVal = element.innerText;
+  
+  // Cria o input
+  const input = document.createElement('input');
+  input.type = type;
+  input.value = currentVal;
+  input.className = 'inline-input';
+  
+  // Salva ao perder foco (blur) ou Enter
+  const save = async () => {
+    let newVal = input.value;
+    if (type === 'number') newVal = Number(newVal);
+    
+    // Atualiza o HTML visualmente primeiro para feedback rápido
+    element.innerHTML = newVal; 
+    
+    // Salva no banco
+    try {
+      await updateDoc(doc(db, "fichas", id), { [field]: newVal });
+    } catch(e) {
+      console.error(e);
+      element.innerHTML = currentVal; // Reverte se der erro
+    }
+  };
+
+  input.onblur = save;
+  input.onkeydown = (e) => { if(e.key === 'Enter') input.blur(); };
+
+  // Limpa o elemento e coloca o input
+  element.innerHTML = '';
+  element.appendChild(input);
+  input.focus();
+};
+
+window.togglePericia = async (skillName, tipo, isChecked) => {
+  // Precisamos ler o objeto inteiro, modificar e salvar de volta
+  // No Firestore, para mudar campo aninhado específico num Map, usamos notação de ponto
+  // Mas como a chave tem espaço/acento (ex: "Ofício 1"), é mais seguro ler e regravar o objeto skills
+  
+  const currentSkills = ficha.pericias || {};
+  if(!currentSkills[skillName]) currentSkills[skillName] = { t: false, m: false };
+  
+  currentSkills[skillName][tipo] = isChecked;
+  
+  await updateDoc(doc(db, "fichas", id), { pericias: currentSkills });
+};
 
 window.upStat = async (key, val) => {
   const st = ficha[key];
@@ -356,89 +331,28 @@ window.upStat = async (key, val) => {
   await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
 };
 
-window.abrirEditor = () => {
-  document.getElementById('editorModal').style.display = 'block';
-  // Preencher Campos Básicos
-  ['Nome','Img','Nivel','Origem'].forEach(k => 
-    document.getElementById('edit'+k).value = ficha[k.toLowerCase()] || (k==='Nivel'?1:'')
-  );
-  document.getElementById('editClasse').value = ficha.classe;
-
-  // Atributos
-  ['For','Des','Con','Int','Sab','Pre'].forEach(k => {
-    const fullKey = Object.keys(ATR_SHORT).find(key => ATR_SHORT[key] === k.toUpperCase());
-    document.getElementById('edit'+k).value = ficha.atributos[fullKey];
-  });
-
-  // Stats
-  ['Vida','Energia','Vigor','Integridade'].forEach(k => 
-    document.getElementById('edit'+k+'Max').value = ficha[k.toLowerCase()].max
-  );
-
-  // Listas
+// Configurações e Listas
+window.abrirConfig = () => {
+  document.getElementById('configModal').style.display = 'block';
+  document.getElementById('editImgUrl').value = ficha.imagem || "";
   document.getElementById('editAtaques').value = (ficha.ataques||[]).join('\n');
   document.getElementById('editHabs').value = (ficha.habilidades||[]).join('\n');
+}
 
-  // PERÍCIAS (Checkbox List)
-  const editSkillsArea = document.getElementById('editSkillsArea');
-  editSkillsArea.innerHTML = "";
-  const userPericias = ficha.pericias || {};
+window.salvarImg = async () => {
+  await updateDoc(doc(db, "fichas", id), { imagem: document.getElementById('editImgUrl').value });
+  alert("Imagem atualizada!");
+}
 
-  PERICIAS_DEF.forEach((p, index) => {
-    const saved = userPericias[p.n] || { t: false, m: false };
-    
-    // Checkbox IDs únicos
-    editSkillsArea.innerHTML += `
-      <div class="edit-skill-item">
-        <span style="font-size:0.8rem; color:#ccc;">${p.n}</span>
-        <div class="chk-group">
-          <label class="chk-lbl"><input type="checkbox" id="chk_t_${index}" ${saved.t?'checked':''}> T</label>
-          <label class="chk-lbl"><input type="checkbox" id="chk_m_${index}" ${saved.m?'checked':''}> M</label>
-        </div>
-      </div>`;
+window.salvarListas = async () => {
+  const getArr = (id) => document.getElementById(id).value.split('\n').filter(x=>x.trim());
+  await updateDoc(doc(db, "fichas", id), {
+    ataques: getArr('editAtaques'),
+    habilidades: getArr('editHabs')
   });
-};
-
-window.fecharEditor = () => document.getElementById('editorModal').style.display = 'none';
-
-window.salvarEdicao = async () => {
-  const getVal = (id) => document.getElementById(id).value;
-  const getNum = (id) => Number(getVal(id));
-  const getArr = (id) => getVal(id).split('\n').filter(x=>x.trim());
-
-  // Captura Perícias dos Checkboxes
-  const novasPericias = {};
-  PERICIAS_DEF.forEach((p, index) => {
-    novasPericias[p.n] = {
-      t: document.getElementById(`chk_t_${index}`).checked,
-      m: document.getElementById(`chk_m_${index}`).checked
-    };
-  });
-
-  try {
-    await updateDoc(doc(db, "fichas", id), {
-      nome: getVal('editNome'),
-      imagem: getVal('editImg'),
-      nivel: getNum('editNivel'),
-      classe: getVal('editClasse'),
-      // origem: getVal('editOrigem'), // Se quiser editar origem, adicione o input no modal
-      
-      atributos: {
-        forca: getNum('editFor'), destreza: getNum('editDes'), constituicao: getNum('editCon'),
-        inteligencia: getNum('editInt'), sabedoria: getNum('editSab'), presenca: getNum('editPre')
-      },
-      "vida.max": getNum('editVidaMax'),
-      "energia.max": getNum('editEnergiaMax'),
-      "vigor.max": getNum('editVigorMax'),
-      "integridade.max": getNum('editIntegridadeMax'),
-      ataques: getArr('editAtaques'),
-      habilidades: getArr('editHabs'),
-      pericias: novasPericias
-    });
-    alert("Salvo!");
-    fecharEditor();
-  } catch(e) { alert("Erro: "+e.message); }
-};
+  alert("Listas salvas!");
+  document.getElementById('configModal').style.display = 'none';
+}
 
 window.excluirPersonagem = async () => {
   if(prompt("Digite DELETAR para confirmar:")==="DELETAR") {
