@@ -8,10 +8,10 @@
   :root { 
     --bg: #0a0a0a; 
     --card: #141414; 
-    --primary: #e63946; /* Vermelho */
-    --energy: #58E8DA;  /* Ciano Novo */
-    --vigor: #69E858;   /* Verde Novo */
-    --sanity: #D073FA;  /* Roxo Novo */
+    --primary: #e63946;
+    --energy: #58E8DA;
+    --vigor: #69E858;
+    --integridade: #D073FA; /* Roxo */
     --text: #f1f1f1; 
   }
   
@@ -41,15 +41,7 @@
   .card-header h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
   .card-header small { color: #888; display: block; margin-top: 2px; }
 
-  /* Badge de Nível */
-  .lvl-badge {
-    font-size: 0.7rem;
-    background: #333;
-    color: #fff;
-    padding: 2px 6px;
-    border-radius: 4px;
-    border: 1px solid #555;
-  }
+  .lvl-badge { font-size: 0.7rem; background: #333; color: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #555; }
 
   .stat-row { margin-bottom: 8px; font-size: 0.9rem; font-family: monospace; }
   .stat-label { display: flex; justify-content: space-between; margin-bottom: 2px; color: #ccc; }
@@ -59,7 +51,7 @@
   
   .hp .bar-mini-fill { background: var(--primary); box-shadow: 0 0 5px var(--primary); }
   .en .bar-mini-fill { background: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  .san .bar-mini-fill { background: var(--sanity); box-shadow: 0 0 5px var(--sanity); }
+  .integ .bar-mini-fill { background: var(--integridade); box-shadow: 0 0 5px var(--integridade); }
 
   .btn-spy { 
     position: absolute; top: 15px; right: 15px; 
@@ -103,12 +95,11 @@ onSnapshot(q, (snapshot) => {
     const f = doc.data();
     const id = doc.id;
     
-    // Cálculos
     const pVida = calcPct(f.vida);
     const pEnergia = calcPct(f.energia);
-    const pSanidade = calcPct(f.integridade || f.vigor); 
+    // Garantindo que use integridade
+    const pIntegridade = calcPct(f.integridade || {atual:0, max:100}); 
     
-    // Dados Extras
     const nivel = f.nivel || 1;
     const origemTxt = f.origem ? `• ${f.origem}` : "";
 
@@ -134,9 +125,9 @@ onSnapshot(q, (snapshot) => {
           <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pEnergia}%"></div></div>
         </div>
 
-        <div class="stat-row san">
+        <div class="stat-row integ">
           <div class="stat-label"><span>INTEGRIDADE</span> <span>${f.integridade?.atual || 0}/${f.integridade?.max || 0}</span></div>
-          <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pSanidade}%"></div></div>
+          <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pIntegridade}%"></div></div>
         </div>
       </div>
     `;
@@ -151,4 +142,3 @@ function calcPct(stat) {
 
 </body>
 </html>
-
