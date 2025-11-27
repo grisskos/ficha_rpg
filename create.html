@@ -13,12 +13,14 @@
   
   .card { background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; }
   
-  input { width: 100%; padding: 12px; margin: 5px 0 15px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; }
-  input:focus { border-color: var(--primary); outline: none; }
+  /* Estilo para Inputs e Selects */
+  input, select { width: 100%; padding: 12px; margin: 5px 0 15px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+  input:focus, select:focus { border-color: var(--primary); outline: none; }
   
-  label { font-size: 0.9rem; color: #aaa; text-transform: uppercase; font-weight: bold; }
+  label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 5px; }
   
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   
   button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
   button:hover { background: #d62828; }
@@ -26,8 +28,6 @@
   button.secondary:hover { background: #444; }
 
   .add-group { display: flex; gap: 10px; }
-  .add-group button { width: auto; white-space: nowrap; }
-  
   .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
   .tag { background: #333; padding: 5px 10px; border-radius: 4px; font-size: 0.9rem; border: 1px solid #444; }
 </style>
@@ -39,40 +39,66 @@
   
   <div class="card">
     <label>Nome do Herói</label>
-    <input id="nome" placeholder="Ex: Gandalf, o Cinzento">
+    <input id="nome" placeholder="Nome do personagem">
     
     <label>Imagem (URL)</label>
     <input id="img" placeholder="https://...">
 
-    <label>Classe / Arquétipo</label>
-    <input id="classe" placeholder="Ex: Mago, Guerreiro">
+    <div class="grid-2">
+      <div>
+        <label>Classe</label>
+        <select id="classe">
+          <option value="Lutador">Lutador</option>
+          <option value="Especialista em Combate">Especialista em Combate</option>
+          <option value="Especialista em Técnica">Especialista em Técnica</option>
+          <option value="Suporte">Suporte</option>
+          <option value="Controlador">Controlador</option>
+          <option value="Restringido">Restringido</option>
+        </select>
+      </div>
+      <div>
+        <label>Origem</label>
+        <input id="origem" placeholder="Ex: Inato, Derivado...">
+      </div>
+    </div>
   </div>
 
   <div class="card">
-    <h3>Atributos Base</h3>
+    <h3>Atributos Principais (1-30)</h3>
+    <div class="grid-3">
+      <div><label>Força</label><input id="forca" type="number" value="10"></div>
+      <div><label>Destreza</label><input id="destreza" type="number" value="10"></div>
+      <div><label>Constituição</label><input id="constituicao" type="number" value="10"></div>
+      <div><label>Inteligência</label><input id="inteligencia" type="number" value="10"></div>
+      <div><label>Sabedoria</label><input id="sabedoria" type="number" value="10"></div>
+      <div><label>Presença</label><input id="presenca" type="number" value="10"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Barras de Status</h3>
     <div class="grid-2">
-      <div><label>Vida Máx</label><input id="vida" type="number" value="10"></div>
+      <div><label>Vida Máx</label><input id="vida" type="number" value="20"></div>
       <div><label>Energia Máx</label><input id="energia" type="number" value="10"></div>
-      <div><label>Vigor</label><input id="vigor" type="number" value="5"></div>
-      <div><label>Integridade</label><input id="integridade" type="number" value="100"></div>
+      <div><label>Vigor Máx</label><input id="vigor" type="number" value="5"></div>
+      <div><label>Integridade Máx</label><input id="integridade" type="number" value="100"></div>
     </div>
   </div>
 
   <div class="card">
     <h3>Inventário & Habilidades</h3>
-    
     <label>Ataques</label>
     <div id="listaAtaques" class="tags"></div>
     <div class="add-group">
       <input id="novoAtaque" placeholder="Novo ataque">
-      <button onclick="addToList('ataques', 'novoAtaque', 'listaAtaques')">Adicionar</button>
+      <button onclick="addToList('ataques', 'novoAtaque', 'listaAtaques')">Add</button>
     </div>
     
-    <label style="margin-top:15px; display:block;">Habilidades</label>
+    <label style="margin-top:15px;">Habilidades</label>
     <div id="listaHabs" class="tags"></div>
     <div class="add-group">
       <input id="novaHab" placeholder="Nova habilidade">
-      <button onclick="addToList('habilidades', 'novaHab', 'listaHabs')">Adicionar</button>
+      <button onclick="addToList('habilidades', 'novaHab', 'listaHabs')">Add</button>
     </div>
   </div>
 
@@ -81,23 +107,20 @@
 </div>
 
 <script type="module">
-import { db, auth, addDoc, collection, onAuthStateChanged } from "./firebase.js";
+import { db, auth, addDoc, collection } from "./firebase.js";
 
 const dados = { ataques: [], habilidades: [] };
 
-// Função global para adicionar itens nas listas visuais
 window.addToList = (arrayName, inputId, divId) => {
   const input = document.getElementById(inputId);
   if (!input.value) return;
-  
   dados[arrayName].push(input.value);
   input.value = "";
   renderTags(arrayName, divId);
 };
 
 function renderTags(arrayName, divId) {
-  const container = document.getElementById(divId);
-  container.innerHTML = dados[arrayName].map(item => `<span class="tag">${item}</span>`).join("");
+  document.getElementById(divId).innerHTML = dados[arrayName].map(item => `<span class="tag">${item}</span>`).join("");
 }
 
 window.salvar = async function() {
@@ -111,11 +134,23 @@ window.salvar = async function() {
       uid: user.uid,
       nome: document.getElementById('nome').value,
       imagem: document.getElementById('img').value,
-      classe: document.getElementById('classe').value,
+      classe: document.getElementById('classe').value, // Agora pega do Select
+      origem: document.getElementById('origem').value, // Novo campo
+      
       vida: { atual: getVal('vida'), max: getVal('vida') },
       energia: { atual: getVal('energia'), max: getVal('energia') },
       vigor: { atual: getVal('vigor'), max: getVal('vigor') },
       integridade: { atual: getVal('integridade'), max: getVal('integridade') },
+      
+      atributos: {
+        forca: getVal('forca'),
+        destreza: getVal('destreza'),
+        constituicao: getVal('constituicao'),
+        inteligencia: getVal('inteligencia'),
+        sabedoria: getVal('sabedoria'),
+        presenca: getVal('presenca')
+      },
+      
       ataques: dados.ataques,
       habilidades: dados.habilidades
     });
