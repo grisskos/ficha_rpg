@@ -5,22 +5,27 @@
 <title>Escudo do Mestre</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  :root { --bg: #0a0a0a; --card: #141414; --primary: #e63946; --energy: #4cc9f0; --sanity: #8ac926; --text: #f1f1f1; }
+  :root { 
+    --bg: #0a0a0a; 
+    --card: #141414; 
+    --primary: #e63946; /* Vermelho */
+    --energy: #58E8DA;  /* Ciano Novo */
+    --vigor: #69E858;   /* Verde Novo */
+    --sanity: #D073FA;  /* Roxo Novo */
+    --text: #f1f1f1; 
+  }
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; }
   
-  /* Cabeçalho do Escudo */
   header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
   h1 { margin: 0; color: var(--primary); text-transform: uppercase; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
   
-  /* Grid de Jogadores */
   .gm-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
     gap: 20px; 
   }
   
-  /* Cartão do Personagem (Mini Ficha) */
   .char-card { 
     background: var(--card); 
     border: 1px solid #333; 
@@ -36,19 +41,16 @@
   .card-header h3 { margin: 0; font-size: 1.1rem; }
   .card-header small { color: #888; display: block; }
 
-  /* Barras Compactas */
   .stat-row { margin-bottom: 8px; font-size: 0.9rem; font-family: monospace; }
   .stat-label { display: flex; justify-content: space-between; margin-bottom: 2px; color: #ccc; }
   
   .bar-mini-bg { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
   .bar-mini-fill { height: 100%; width: 0%; transition: width 0.5s ease; }
   
-  /* Cores das barras */
   .hp .bar-mini-fill { background: var(--primary); box-shadow: 0 0 5px var(--primary); }
   .en .bar-mini-fill { background: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  .san .bar-mini-fill { background: var(--sanity); }
+  .san .bar-mini-fill { background: var(--sanity); box-shadow: 0 0 5px var(--sanity); }
 
-  /* Botão Espiar */
   .btn-spy { 
     position: absolute; top: 15px; right: 15px; 
     background: transparent; border: 1px solid #444; color: #666; 
@@ -57,7 +59,6 @@
   }
   .btn-spy:hover { color: white; border-color: white; background: #333; }
 
-  /* Botão Voltar */
   .btn-back { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
   .btn-back:hover { background: #444; }
 </style>
@@ -76,8 +77,6 @@
 <script type="module">
 import { db, collection, query, onSnapshot, orderBy } from "./firebase.js";
 
-// Busca TODAS as fichas, independente do dono
-// Ordena por nome para ficar organizado no grid
 const q = query(collection(db, "fichas"), orderBy("nome"));
 
 onSnapshot(q, (snapshot) => {
@@ -88,16 +87,15 @@ onSnapshot(q, (snapshot) => {
     return;
   }
 
-  grid.innerHTML = ""; // Limpa a tela para atualizar
+  grid.innerHTML = ""; 
 
   snapshot.forEach((doc) => {
     const f = doc.data();
     const id = doc.id;
     
-    // Cálculos de porcentagem
     const pVida = calcPct(f.vida);
     const pEnergia = calcPct(f.energia);
-    const pSanidade = calcPct(f.integridade || f.vigor); // Fallback se não tiver integridade
+    const pSanidade = calcPct(f.integridade || f.vigor); 
 
     grid.innerHTML += `
       <div class="char-card">
