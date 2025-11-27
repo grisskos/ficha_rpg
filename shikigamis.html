@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@300..800&display=swap" rel="stylesheet">
 <style>
   :root { 
-    --bg: #0f0f0f; --card: #141414; --primary: #e63946; --text: #f1f1f1; --border: #333;
+    --bg: #0f0f0f; --card: #141414; --primary: #e63946; --energy: #58E8DA; --text: #f1f1f1; --border: #333;
     --input-bg: #000;
   }
   
@@ -15,33 +15,50 @@
   body { background: var(--bg); color: var(--text); font-family: 'Funnel Sans', sans-serif; padding: 20px; margin: 0; display:flex; height: 100vh; overflow: hidden; }
 
   /* LAYOUT */
-  .layout { display: grid; grid-template-columns: 250px 1fr; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; height: 100%; }
+  .layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; height: 100%; }
   
   /* SIDEBAR (Lista de Shikigamis) */
   .sidebar { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--border); padding-right: 20px; overflow-y: auto; }
-  .shikigami-item { 
-    background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; position: relative;
-  }
-  .shikigami-item:hover, .shikigami-item.active { border-color: var(--primary); background: #1a1a1a; }
-  .shikigami-item h3 { margin: 0; font-size: 1rem; }
-  .shikigami-item small { color: #888; }
   
-  .btn-new { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+  /* Item da lista com imagem */
+  .shikigami-item { 
+    background: var(--card); border: 1px solid var(--border); padding: 10px; border-radius: 8px; 
+    cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+  }
+  .shikigami-item:hover, .shikigami-item.active { border-color: var(--energy); background: #1a1a1a; }
+  
+  .sidebar-thumb { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--energy); flex-shrink: 0; background: #222; }
+  .shiki-info h3 { margin: 0; font-size: 1rem; }
+  .shiki-info small { color: #888; }
+  
+  .btn-new { background: var(--energy); color: #000; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
   .btn-back { background: transparent; border: 1px solid #555; color: #888; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: auto; }
 
   /* AREA PRINCIPAL (Calculadora) */
-  .main-area { overflow-y: auto; padding-right: 10px; display: none; /* Escondido até selecionar */ }
+  .main-area { overflow-y: auto; padding-right: 10px; display: none; }
   .main-area.visible { display: block; }
 
-  /* TABELAS E INPUTS (Adaptado do seu código) */
-  .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-  input.name-input { background: transparent; border: none; border-bottom: 2px solid var(--primary); color: white; font-size: 1.5rem; font-weight: bold; width: 300px; outline: none; }
+  /* Header do Editor (Imagem e Nome) */
+  .editor-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+  .shiki-preview-img { 
+      width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--energy); margin-bottom: 10px; background: #222;
+      display: none; /* Esconde se não tiver src */
+  }
+  /* Mostra a imagem se o src for válido */
+  .shiki-preview-img[src*="http"] { display: inline-block; }
+
+  input.name-input { background: transparent; border: none; border-bottom: 2px solid var(--energy); color: white; font-size: 1.5rem; font-weight: bold; width: 300px; outline: none; text-align: center; }
+  input.url-input { background: transparent; border: none; border-bottom: 1px solid #555; color: #aaa; font-size: 0.9rem; width: 300px; outline: none; text-align: center; display: block; margin: 5px auto 15px auto; }
   
+  .header-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+
+  /* Grids e Tabelas */
   .grid-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } .sidebar.mobile-show { display: flex; position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:100; padding:20px; } }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
 
   table { width: 100%; border-collapse: collapse; margin-bottom: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
-  th { background: #222; color: var(--primary); padding: 10px; text-align: center; }
+  th { background: #222; color: var(--energy); padding: 10px; text-align: center; }
   td { border: 1px solid var(--border); padding: 8px; text-align: center; }
   
   input[type="number"], select { 
@@ -49,14 +66,13 @@
     padding: 5px; width: 100%; text-align: center; font-family: inherit; font-size: 1rem; border-radius: 4px;
   }
 
-  /* Checkboxes Customizados */
   .check-wrapper { display: flex; justify-content: center; height: 100%; align-items: center; }
-  input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); }
+  input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--energy); }
 
-  .stat-highlight { color: var(--primary); font-weight: bold; font-size: 1.2rem; }
+  .stat-highlight { color: var(--energy); font-weight: bold; font-size: 1.2rem; }
   
-  .btn-save { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-  .btn-delete { background: transparent; color: #d00000; border: 1px solid #d00000; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+  .btn-save { background: var(--energy); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+  .btn-delete { background: transparent; color: #d00000; border: 1px solid #d00000; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
 
 </style>
 </head>
@@ -64,19 +80,23 @@
 
 <div class="layout">
   <div id="sidebar" class="sidebar">
-    <h2 style="margin-top:0; color:var(--primary);">Shikigamis</h2>
+    <h2 style="margin-top:0; color:var(--energy);">Grimório</h2>
     <button class="btn-new" onclick="novoShikigami()">+ Nova Invocação</button>
-    <div id="listaShikigamis">Carregando...</div>
+    <div id="listaShikigamis" style="display:flex; flex-direction:column; gap:10px;">Carregando...</div>
     <button class="btn-back" onclick="voltarFicha()">Voltar para Personagem</button>
   </div>
 
   <div id="editorArea" class="main-area">
-    <div class="header-actions">
-      <input type="text" id="shikigamiNome" class="name-input" placeholder="Nome da Invocação" oninput="atualizarTitulo()">
-      <div>
-        <button class="btn-save" onclick="salvarShikigami()">Salvar Invocação</button>
-        <button class="btn-delete" onclick="excluirShikigami()">Excluir</button>
-      </div>
+    
+    <div class="editor-header">
+        <img id="shikiPreview" class="shiki-preview-img" src="" onerror="this.style.display='none'">
+        <input type="text" id="shikigamiNome" class="name-input" placeholder="Nome da Invocação">
+        <input type="text" id="shikigamiImgUrl" class="url-input" placeholder="URL da Imagem (opcional)" oninput="document.getElementById('shikiPreview').src=this.value">
+        
+        <div class="header-buttons">
+            <button class="btn-save" onclick="salvarShikigami()">Salvar Invocação</button>
+            <button class="btn-delete" onclick="excluirShikigami()">Excluir</button>
+        </div>
     </div>
 
     <div class="grid-cols">
@@ -108,7 +128,7 @@
             <tr><td>Inteligência</td><td><input type="number" value="8" id="a4" class="calc-trigger"></td><td id="m4">-1</td></tr>
             <tr><td>Sabedoria</td><td><input type="number" value="8" id="a5" class="calc-trigger"></td><td id="m5">-1</td></tr>
             <tr><td>Carisma</td><td><input type="number" value="8" id="a6" class="calc-trigger"></td><td id="m6">-1</td></tr>
-            <tr><td colspan="2">Pontos Restantes</td><td><span id="pointView" style="color:var(--primary)">10</span></td></tr>
+            <tr><td colspan="2">Pontos Restantes</td><td><span id="pointView" style="color:var(--energy)">10</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -160,18 +180,17 @@
 </div>
 
 <script type="module">
-import { db, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "./firebase.js";
+// Usando a importação simples que funciona com o seu firebase.js atual
+import { db, doc, getDoc, updateDoc } from "./firebase.js";
 
 const params = new URLSearchParams(location.search);
 const charId = params.get("charId");
-let currentData = null; // Dados completos do personagem
-let currentShikiIndex = -1; // -1 = Criando novo
+let currentData = null;
+let currentShikiIndex = -1;
 
-// Inicialização
 window.onload = async () => {
   if (!charId) return alert("Erro: ID do personagem não fornecido.");
   
-  // Preenche Select de Nível (1 a 30) - Mantendo sua lógica
   const levelSelect = document.getElementById('invocadorNivel');
   for (let lv = 1; lv <= 30; lv++) {
     const opt = document.createElement('option');
@@ -179,7 +198,6 @@ window.onload = async () => {
     levelSelect.appendChild(opt);
   }
   
-  // Event Listeners para Calculo Automático
   document.querySelectorAll('.calc-trigger').forEach(el => el.addEventListener('input', calcAtributos));
   document.getElementById('invocadorNivel').addEventListener('change', calcAtributos);
   document.getElementById('seletorGrau').addEventListener('change', calcAtributos);
@@ -191,7 +209,7 @@ async function carregarDados() {
   const docSnap = await getDoc(doc(db, "fichas", charId));
   if (docSnap.exists()) {
     currentData = docSnap.data();
-    if (!currentData.shikigamis) currentData.shikigamis = []; // Garante array
+    if (!currentData.shikigamis) currentData.shikigamis = [];
     renderLista();
   }
 }
@@ -201,10 +219,16 @@ function renderLista() {
   lista.innerHTML = "";
   
   currentData.shikigamis.forEach((shiki, index) => {
+    // Verifica se tem imagem para mostrar a miniatura
+    const imgHtml = shiki.imagem ? `<img src="${shiki.imagem}" class="sidebar-thumb" onerror="this.src='https://via.placeholder.com/50/222/58E8DA?text=Wolf'">` : `<div class="sidebar-thumb"></div>`;
+    
     lista.innerHTML += `
       <div class="shikigami-item ${index === currentShikiIndex ? 'active' : ''}" onclick="abrirShikigami(${index})">
-        <h3>${shiki.nome || 'Sem Nome'}</h3>
-        <small>Grau ${['Especial','1','2','3','4'][shiki.grau] || '?'}</small>
+        ${imgHtml}
+        <div class="shiki-info">
+            <h3>${shiki.nome || 'Sem Nome'}</h3>
+            <small>Grau ${['Especial','1','2','3','4'][shiki.grau] || '?'}</small>
+        </div>
       </div>`;
   });
 }
@@ -219,21 +243,21 @@ window.novoShikigami = () => {
 
 window.abrirShikigami = (index) => {
   currentShikiIndex = index;
-  renderLista(); // Atualiza highlight
-  
+  renderLista();
   const s = currentData.shikigamis[index];
   document.getElementById('editorArea').classList.add('visible');
   
-  // Preenche Campos
+  // Preenche Campos Básicos e Imagem
   document.getElementById('shikigamiNome').value = s.nome;
+  document.getElementById('shikigamiImgUrl').value = s.imagem || "";
+  document.getElementById('shikiPreview').src = s.imagem || "";
+
   document.getElementById('invocadorNivel').value = s.nivelInv || 1;
   document.getElementById('seletorGrau').value = s.grau;
   document.getElementById('seletorAtributoPericia').value = s.atrPericia || 1;
   
-  // Atributos
   for(let i=1; i<=6; i++) document.getElementById(`a${i}`).value = s.atributos[`a${i}`] || 8;
   
-  // Habilidades (Checkboxes)
   document.querySelectorAll('.habInvocador').forEach(chk => {
     chk.checked = s.habilidades && s.habilidades[chk.name];
   });
@@ -243,17 +267,17 @@ window.abrirShikigami = (index) => {
 
 window.salvarShikigami = async () => {
   const nome = document.getElementById('shikigamiNome').value || "Invocação Sem Nome";
-  
-  // Coleta Atributos
+  const imagem = document.getElementById('shikigamiImgUrl').value;
+
   const atributos = {};
   for(let i=1; i<=6; i++) atributos[`a${i}`] = Number(document.getElementById(`a${i}`).value);
   
-  // Coleta Habilidades
   const habilidades = {};
   document.querySelectorAll('.habInvocador').forEach(chk => habilidades[chk.name] = chk.checked);
 
   const novoShiki = {
     nome: nome,
+    imagem: imagem, // Salva a URL da imagem
     nivelInv: Number(document.getElementById('invocadorNivel').value),
     grau: document.getElementById('seletorGrau').value,
     atrPericia: document.getElementById('seletorAtributoPericia').value,
@@ -261,7 +285,6 @@ window.salvarShikigami = async () => {
     habilidades: habilidades
   };
 
-  // Atualiza Array Local
   if (currentShikiIndex === -1) {
     currentData.shikigamis.push(novoShiki);
     currentShikiIndex = currentData.shikigamis.length - 1;
@@ -269,9 +292,7 @@ window.salvarShikigami = async () => {
     currentData.shikigamis[currentShikiIndex] = novoShiki;
   }
 
-  // Salva no Firebase (Substitui o array todo para garantir ordem/edição)
   await updateDoc(doc(db, "fichas", charId), { shikigamis: currentData.shikigamis });
-  
   alert("Salvo com sucesso!");
   renderLista();
 };
@@ -284,6 +305,7 @@ window.excluirShikigami = async () => {
   await updateDoc(doc(db, "fichas", charId), { shikigamis: currentData.shikigamis });
   
   document.getElementById('editorArea').classList.remove('visible');
+  currentShikiIndex = -1;
   renderLista();
 };
 
@@ -291,13 +313,16 @@ window.voltarFicha = () => {
   window.location = `ficha.html?id=${charId}`;
 };
 
-window.atualizarTitulo = () => {
-  // Atualização visual live do nome na lista seria aqui, mas requer rerender
-};
+function limparFormulario() {
+  document.getElementById('shikigamiNome').value = "";
+  document.getElementById('shikigamiImgUrl').value = "";
+  document.getElementById('shikiPreview').src = "";
+  for(let i=1; i<=6; i++) document.getElementById(`a${i}`).value = 8;
+  document.querySelectorAll('.habInvocador').forEach(c => c.checked = false);
+  calcAtributos();
+}
 
-// ==========================================
-// SUA LÓGICA DE CÁLCULO (INTEGRADA)
-// ==========================================
+// LÓGICA DE CÁLCULO (Mantida a sua original)
 window.calcAtributos = () => {
     const grauInvocacao = document.getElementById('seletorGrau').value;
     const multiplicadorInvocacao = [6, 4, 2, 1, 0][grauInvocacao];
@@ -312,7 +337,6 @@ window.calcAtributos = () => {
             atribute = maxAtribute;
             atributeElement.value = maxAtribute;
         }
-
         let modifierElement = document.getElementById(`m${i}`);
         let atributeModifier = getAtributeModifier(atribute);
         modifierElement.innerText = `${atributeModifier < 0 ? "" : "+"}${atributeModifier}`;
@@ -328,7 +352,6 @@ window.calcAtributos = () => {
     
     let statsModifiers = { pv: 0, ca: 0, des: 0, cd: 0 };
 
-    // Verifica checkboxes marcados
     document.querySelectorAll('.habInvocador:checked').forEach(hab => {
         switch (hab.name) {
             case "moveis": statsModifiers.des += 1.5 + 1.5 * Math.floor(nivelinvocador / 5); break;
@@ -353,7 +376,7 @@ window.calcAtributos = () => {
     const pontosRestantes = maxPoints - usedPoints;
     const elPoints = document.getElementById('pointView');
     elPoints.innerText = pontosRestantes;
-    elPoints.style.color = pontosRestantes < 0 ? '#ff4444' : 'var(--primary)';
+    elPoints.style.color = pontosRestantes < 0 ? '#ff4444' : 'var(--energy)';
 
     document.getElementById('pvValue').innerText = Math.round((5 + 5 * multiplicadorInvocacao + constAtribute * (grauInvocacao - 6) * -1) / 5) * 5 + statsModifiers.pv;
     document.getElementById('dValue').innerText = `${6 + (destModifier * 1.5) + statsModifiers.des}m`;
@@ -367,14 +390,6 @@ window.calcAtributos = () => {
 function getAtributeModifier(atribute) {
     return atribute >= 10 ? Math.floor((atribute - 10) / 2) : Math.ceil((atribute - 10) / 2);
 }
-
-function limparFormulario() {
-  document.getElementById('shikigamiNome').value = "";
-  for(let i=1; i<=6; i++) document.getElementById(`a${i}`).value = 8;
-  document.querySelectorAll('.habInvocador').forEach(c => c.checked = false);
-  calcAtributos();
-}
-
 </script>
 </body>
 </html>
