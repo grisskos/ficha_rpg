@@ -6,156 +6,204 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   :root { 
-    --bg: #0f0f0f; --card: #1c1c1c; --primary: #e63946; 
-    --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; --text: #f1f1f1; 
+    --bg: #0f0f0f; --card: #141414; --panel: #1a1a1a;
+    --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; 
+    --text: #f1f1f1; --dim: #888;
   }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; justify-content: center; }
-  .container { width: 100%; max-width: 500px; padding-bottom: 80px; }
   
-  /* Header */
-  .char-header { text-align: center; margin-bottom: 20px; position: relative; }
-  .char-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); box-shadow: 0 0 20px rgba(230, 57, 70, 0.4); margin-bottom: 10px; }
-  h1 { margin: 5px 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  .tags-header { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-  .tag-badge { background: #333; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; color: #ccc; border: 1px solid #444; }
-  .tag-classe { color: var(--primary); border-color: var(--primary); }
-  .tag-origem { color: var(--energy); border-color: var(--energy); }
-  .tag-nivel { color: white; border-color: white; font-weight: bold; }
-
-  /* Grid Atributos */
-  .attr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-  .attr-box { background: #252525; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #333; }
-  .attr-label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; display: block; }
-  .attr-mod { font-size: 1.5rem; font-weight: bold; color: white; display: block; }
-  .attr-val { font-size: 0.8rem; color: #666; background: #111; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px; }
-
-  /* Barras */
-  .stat-box { background: var(--card); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #333; }
-  .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-  .stat-title { font-weight: bold; color: #ccc; text-transform: uppercase; }
-  .bar-bg { background: #333; height: 12px; border-radius: 6px; overflow: hidden; }
-  .bar-fill { height: 100%; width: 100%; transition: width 0.3s ease; }
+  /* LAYOUT PRINCIPAL (Duas Colunas) */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr; /* Esquerda Fixa, Direita Expande */
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+  }
   
-  .bar-vida .bar-fill { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
-  .bar-energia .bar-fill { background: var(--energy); box-shadow: 0 0 10px var(--energy); }
-  .bar-vigor .bar-fill { background: var(--vigor); box-shadow: 0 0 10px var(--vigor); }
-  .bar-integridade .bar-fill { background: var(--integridade); box-shadow: 0 0 10px var(--integridade); }
+  /* No Celular: Um embaixo do outro */
+  @media (max-width: 768px) {
+    .main-layout { grid-template-columns: 1fr; }
+  }
 
-  .controls { display: flex; gap: 5px; margin-top: 10px; justify-content: flex-end; }
-  .btn-stat { width: 35px; height: 35px; background: #2a2a2a; color: white; border: 1px solid #444; border-radius: 5px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+  /* Painéis */
+  .sidebar, .content-area { display: flex; flex-direction: column; gap: 20px; }
+  .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; }
+
+  /* --- HEADER E SIDEBAR --- */
+  .char-header { text-align: center; }
+  .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
+  .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
   
-  /* Listas */
-  .list-section { background: var(--card); padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-  .list-section h3 { border-bottom: 2px solid var(--primary); display: inline-block; margin-top: 0; color: var(--primary); }
-  ul { padding-left: 20px; color: #ccc; margin-bottom: 0; }
-  li { margin-bottom: 5px; }
+  .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+  .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
+  .b-lvl { color: white; border-color: white; font-weight: bold; }
+  .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* Botão Flutuante de Edição */
-  .fab-edit { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; border: 2px solid #555; width: 60px; height: 60px; border-radius: 50%; font-size: 1.8rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 100; transition: 0.3s; }
+  /* Atributos (Sidebar) */
+  .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
+  .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
+  .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; }
+  .attr-raw { font-size: 0.7rem; color: #555; background: #111; padding: 1px 4px; border-radius: 3px; }
+
+  /* Barras (Sidebar) */
+  .stat-row { margin-bottom: 12px; }
+  .stat-head { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
+  .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; transition: width 0.3s; }
+  
+  .c-vida { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
+  .c-ener { background: var(--energy); box-shadow: 0 0 8px var(--energy); }
+  .c-vigo { background: var(--vigor); box-shadow: 0 0 8px var(--vigor); }
+  .c-inte { background: var(--integridade); box-shadow: 0 0 8px var(--integridade); }
+
+  .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
+  .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .btn-mini:hover { border-color: white; color: white; }
+
+  /* --- ÁREA DE PERÍCIAS (Direita) --- */
+  .skills-card { padding: 0; overflow: hidden; } /* Sem padding para a tabela encostar */
+  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+  .bonus-display { font-size: 0.8rem; color: #aaa; background: #111; padding: 4px 8px; border-radius: 4px; border: 1px solid #333; }
+
+  .skill-list { display: flex; flex-direction: column; }
+  .skill-row { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
+  .skill-row:last-child { border-bottom: none; }
+  .skill-row:hover { background: #1e1e1e; }
+  
+  .sk-name { flex-grow: 1; color: #eee; }
+  .sk-attr { font-size: 0.7rem; color: #666; width: 40px; text-transform: uppercase; font-weight: bold; }
+  .sk-total { font-weight: bold; color: white; width: 30px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
+  
+  .sk-badges { display: flex; gap: 4px; width: 60px; justify-content: flex-end; }
+  .sk-tag { font-size: 0.65rem; padding: 2px 4px; border-radius: 3px; border: 1px solid #333; color: #444; opacity: 0.3; }
+  .sk-tag.active { opacity: 1; font-weight: bold; border-color: currentColor; }
+  .t-train { color: var(--energy); background: rgba(88, 232, 218, 0.1); }
+  .t-master { color: var(--primary); background: rgba(230, 57, 70, 0.1); }
+
+  /* FAB e MODAL */
+  .fab-edit { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: transform 0.2s; }
   .fab-edit:hover { background: var(--primary); border-color: var(--primary); transform: scale(1.1); }
 
-  /* MODAL DE EDIÇÃO */
   .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; border: 1px solid #444; position: relative; }
-  .modal h2 { margin-top: 0; color: var(--primary); border-bottom: 1px solid #333; padding-bottom: 10px; }
-  
+  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto; border: 1px solid #444; }
   .form-group { margin-bottom: 15px; }
-  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.9rem; font-weight: bold; }
-  .form-group input, .form-group textarea, .form-group select { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 5px; box-sizing: border-box; font-family: sans-serif; }
-  .form-group textarea { height: 100px; resize: vertical; }
+  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.8rem; font-weight: bold; }
+  .form-group input, select, textarea { width: 100%; background: #111; border: 1px solid #333; color: white; padding: 10px; border-radius: 5px; box-sizing: border-box; }
   
-  .grid-edit { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-  
+  /* Edit Skills Grid */
+  .edit-skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; max-height: 300px; overflow-y: auto; background: #111; padding: 10px; border-radius: 5px; }
+  .edit-skill-item { display: flex; align-items: center; justify-content: space-between; padding: 5px; border-bottom: 1px solid #222; }
+  .chk-group { display: flex; gap: 10px; }
+  .chk-lbl { font-size: 0.8rem; color: #666; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .chk-lbl input { width: auto; margin: 0; }
+
+  .save-btn { background: var(--primary); width: 100%; padding: 12px; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; margin-top: 20px; }
   .close-btn { background: #333; margin-top: 10px; width: 100%; padding: 12px; color: white; border: none; cursor: pointer; border-radius: 5px; }
-  .save-btn { background: var(--primary); width: 100%; padding: 12px; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; margin-top: 20px; font-size: 1rem; }
-  .delete-btn { background: transparent; border: 1px solid #d00000; color: #d00000; width: 100%; padding: 10px; margin-top: 30px; cursor: pointer; border-radius: 5px; }
-  .delete-btn:hover { background: #d00000; color: white; }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <button class="fab-edit" onclick="abrirEditor()">✎</button>
+<button class="fab-edit" onclick="abrirEditor()">✎</button>
 
-  <div class="char-header">
-    <img id="charImg" class="char-img" src="">
-    <h1 id="charNome">...</h1>
-    <div id="headerTags" class="tags-header"></div>
-  </div>
-
-  <div id="atributosArea" class="attr-grid"></div>
-  <div id="statsArea"></div>
-
-  <div class="list-section">
-    <h3>⚔️ Ataques</h3>
-    <ul id="ataquesList"></ul>
-  </div>
-
-  <div class="list-section">
-    <h3>🔥 Habilidades</h3>
-    <ul id="habsList"></ul>
-  </div>
+<div class="main-layout">
   
-  <button class="close-btn" onclick="window.location='index.html'">Voltar para Lista</button>
+  <div class="sidebar">
+    <div class="card char-header">
+      <img id="charImg" class="char-img" src="">
+      <h2 id="charNome" class="char-name">...</h2>
+      <div id="badges" class="badges"></div>
+    </div>
+
+    <div class="card">
+      <div id="atributosArea" class="attr-grid"></div>
+    </div>
+
+    <div class="card">
+      <div id="statsArea"></div>
+    </div>
+    
+    <button class="close-btn" onclick="window.location='index.html'">Voltar para Menu</button>
+  </div>
+
+  <div class="content-area">
+    
+    <div class="card skills-card">
+      <div class="skills-header">
+        <h3>Perícias</h3>
+        <span id="treinoDisplay" class="bonus-display">Treino: +2</span>
+      </div>
+      <div id="skillsList" class="skill-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="skills-header"><h3>⚔️ Ataques</h3></div>
+      <div style="padding:15px"><ul id="ataquesList" style="margin:0; padding-left:20px; color:#ccc;"></ul></div>
+    </div>
+    
+    <div class="card">
+      <div class="skills-header"><h3>🔥 Habilidades</h3></div>
+      <div style="padding:15px"><ul id="habsList" style="margin:0; padding-left:20px; color:#ccc;"></ul></div>
+    </div>
+
+  </div>
 </div>
 
 <div id="editorModal" class="modal">
   <div class="modal-content">
-    <h2>Editar Ficha</h2>
+    <h2 style="color:var(--primary); margin-top:0;">Editar Ficha</h2>
     
     <div class="form-group"><label>Nome</label><input type="text" id="editNome"></div>
-    <div class="form-group"><label>Imagem (URL)</label><input type="text" id="editImg"></div>
-    
-    <div class="grid-edit">
+    <div class="form-group"><label>Imagem</label><input type="text" id="editImg"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
       <div class="form-group"><label>Nível</label><input type="number" id="editNivel"></div>
-      <div class="form-group"><label>Origem</label><input type="text" id="editOrigem"></div>
-    </div>
-    
-    <div class="form-group">
-      <label>Classe</label>
-      <select id="editClasse">
-        <option value="Lutador">Lutador</option>
-        <option value="Especialista em Combate">Especialista em Combate</option>
-        <option value="Especialista em Técnica">Especialista em Técnica</option>
-        <option value="Suporte">Suporte</option>
-        <option value="Controlador">Controlador</option>
-        <option value="Restringido">Restringido</option>
-      </select>
-    </div>
-    
-    <h3>Atributos</h3>
-    <div class="grid-3">
-      <div class="form-group"><label>FOR</label><input type="number" id="editFor"></div>
-      <div class="form-group"><label>DES</label><input type="number" id="editDes"></div>
-      <div class="form-group"><label>CON</label><input type="number" id="editCon"></div>
-      <div class="form-group"><label>INT</label><input type="number" id="editInt"></div>
-      <div class="form-group"><label>SAB</label><input type="number" id="editSab"></div>
-      <div class="form-group"><label>PRE</label><input type="number" id="editPre"></div>
+      <div class="form-group"><label>Classe</label>
+        <select id="editClasse">
+          <option value="Lutador">Lutador</option>
+          <option value="Especialista em Combate">Especialista em Combate</option>
+          <option value="Especialista em Técnica">Especialista em Técnica</option>
+          <option value="Suporte">Suporte</option>
+          <option value="Controlador">Controlador</option>
+          <option value="Restringido">Restringido</option>
+        </select>
+      </div>
     </div>
 
-    <h3>Máximos</h3>
-    <div class="grid-edit">
+    <h3 style="border-bottom:1px solid #333; padding-bottom:5px;">Atributos</h3>
+    <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:5px; text-align:center;">
+      <div><label>FOR</label><input type="number" id="editFor"></div>
+      <div><label>DES</label><input type="number" id="editDes"></div>
+      <div><label>CON</label><input type="number" id="editCon"></div>
+      <div><label>INT</label><input type="number" id="editInt"></div>
+      <div><label>SAB</label><input type="number" id="editSab"></div>
+      <div><label>PRE</label><input type="number" id="editPre"></div>
+    </div>
+
+    <h3 style="border-bottom:1px solid #333; padding-bottom:5px;">Perícias (Treinado / Mestre)</h3>
+    <div id="editSkillsArea" class="edit-skills-grid"></div>
+
+    <h3 style="border-bottom:1px solid #333; padding-bottom:5px; margin-top:15px;">Máximos</h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <div class="form-group"><label>Vida Máx</label><input type="number" id="editVidaMax"></div>
       <div class="form-group"><label>Energia Máx</label><input type="number" id="editEnergiaMax"></div>
       <div class="form-group"><label>Vigor Máx</label><input type="number" id="editVigorMax"></div>
       <div class="form-group"><label>Integ. Máx</label><input type="number" id="editIntegridadeMax"></div>
     </div>
 
-    <h3>Listas (1 item por linha)</h3>
     <div class="form-group">
-      <label>Ataques</label>
-      <textarea id="editAtaques"></textarea>
+      <label>Ataques (1 por linha)</label><textarea id="editAtaques"></textarea>
     </div>
     <div class="form-group">
-      <label>Habilidades</label>
-      <textarea id="editHabs"></textarea>
+      <label>Habilidades (1 por linha)</label><textarea id="editHabs"></textarea>
     </div>
 
-    <button class="save-btn" onclick="salvarEdicao()">SALVAR ALTERAÇÕES</button>
-    <button class="delete-btn" onclick="excluirPersonagem()">☠ EXCLUIR PERSONAGEM</button>
+    <button class="save-btn" onclick="salvarEdicao()">SALVAR TUDO</button>
     <button class="close-btn" onclick="fecharEditor()">Cancelar</button>
+    <button style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;" onclick="excluirPersonagem()">Excluir Personagem</button>
   </div>
 </div>
 
@@ -164,121 +212,208 @@ import { db, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-let fichaData = {}; 
+let ficha = {}; 
 
-// Monitoramento Real-time
+// LISTA DE PERÍCIAS (Definição do Sistema)
+const PERICIAS_DEF = [
+  { n: "Atletismo", a: "forca" },
+  { n: "Acrobacia", a: "destreza" },
+  { n: "Furtividade", a: "destreza" },
+  { n: "Prestidigitação", a: "destreza" },
+  { n: "Feitiçaria", a: "inteligencia" },
+  { n: "História", a: "inteligencia" },
+  { n: "Investigação", a: "inteligencia" },
+  { n: "Ofício 1", a: "inteligencia" },
+  { n: "Ofício 2", a: "inteligencia" },
+  { n: "Ofício 3", a: "inteligencia" },
+  { n: "Tecnologia", a: "inteligencia" },
+  { n: "Teologia", a: "inteligencia" },
+  { n: "Direção", a: "sabedoria" },
+  { n: "Intuição", a: "sabedoria" },
+  { n: "Medicina", a: "sabedoria" },
+  { n: "Ocultismo", a: "sabedoria" },
+  { n: "Percepção", a: "sabedoria" },
+  { n: "Sobrevivência", a: "sabedoria" },
+  { n: "Enganação", a: "presenca" },
+  { n: "Intimidação", a: "presenca" },
+  { n: "Performance", a: "presenca" },
+  { n: "Persuasão", a: "presenca" }
+];
+
+const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligencia:"INT", sabedoria:"SAB", presenca:"PRE" };
+
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) {
-    fichaData = docSnap.data();
-    renderFicha(fichaData);
+    ficha = docSnap.data();
+    renderFicha();
   } else {
-    alert("Personagem não encontrado (talvez tenha sido excluído).");
-    window.location = "index.html";
+    alert("Personagem não encontrado."); window.location="index.html";
   }
 });
 
-function renderFicha(f) {
+function renderFicha() {
+  const f = ficha;
+  
+  // Header e Sidebar
   document.getElementById('charNome').innerText = f.nome;
   const imgEl = document.getElementById('charImg');
-  if(f.imagem) { imgEl.src = f.imagem; imgEl.style.display = 'block'; } 
-  else { imgEl.style.display = 'none'; }
-
-  // Badges
-  const classe = f.classe || "Aventureiro";
-  const origem = f.origem || "Desconhecido";
+  if(f.imagem) { imgEl.src = f.imagem; imgEl.style.display='block'; } else { imgEl.style.display='none'; }
+  
   const nivel = f.nivel || 1;
-  document.getElementById('headerTags').innerHTML = `
-    <span class="tag-badge tag-nivel">NVL ${nivel}</span>
-    <span class="tag-badge tag-classe">${classe}</span>
-    <span class="tag-badge tag-origem">${origem}</span>
+  document.getElementById('badges').innerHTML = `
+    <span class="badge b-lvl">NVL ${nivel}</span>
+    <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
+    <span class="badge">${f.origem || 'Origem'}</span>
   `;
 
-  // Atributos
-  const attrArea = document.getElementById('atributosArea');
-  attrArea.innerHTML = "";
-  const attrOrder = ['forca', 'destreza', 'constituicao', 'inteligencia', 'sabedoria', 'presenca'];
-  const attrNames = { forca: 'FOR', destreza: 'DES', constituicao: 'CON', inteligencia: 'INT', sabedoria: 'SAB', presenca: 'PRE' };
-  
-  attrOrder.forEach(key => {
-    const valor = f.atributos ? (f.atributos[key] || 10) : 10;
-    const mod = Math.floor((valor - 10) / 2);
-    const sinal = mod >= 0 ? "+" : "";
-    attrArea.innerHTML += `
+  // Renderiza Atributos
+  const areaAttr = document.getElementById('atributosArea');
+  areaAttr.innerHTML = "";
+  Object.keys(ATR_SHORT).forEach(key => {
+    const val = f.atributos[key] || 10;
+    const mod = Math.floor((val - 10) / 2);
+    areaAttr.innerHTML += `
       <div class="attr-box">
-        <span class="attr-label">${attrNames[key]}</span>
-        <span class="attr-mod">${sinal}${mod}</span>
-        <span class="attr-val">${valor}</span>
+        <span class="attr-lbl">${ATR_SHORT[key]}</span>
+        <span class="attr-val">${mod>=0?'+':''}${mod}</span>
+        <span class="attr-raw">${val}</span>
       </div>`;
   });
 
-  // Barras
-  const statsArea = document.getElementById('statsArea');
-  statsArea.innerHTML = "";
-  // Ordem de renderização das barras
-  if(f.vida) createStatBox('vida', f.vida, statsArea);
-  if(f.energia) createStatBox('energia', f.energia, statsArea);
-  if(f.vigor) createStatBox('vigor', f.vigor, statsArea);
-  if(f.integridade) createStatBox('integridade', f.integridade, statsArea);
+  // Renderiza Stats
+  const areaStats = document.getElementById('statsArea');
+  areaStats.innerHTML = "";
+  const statsMap = [
+    {k:'vida', l:'Vida', c:'c-vida'},
+    {k:'energia', l:'Energia', c:'c-ener'},
+    {k:'vigor', l:'Vigor', c:'c-vigo'},
+    {k:'integridade', l:'Integ.', c:'c-inte'}
+  ];
+  statsMap.forEach(s => {
+    const st = f[s.k];
+    if(!st) return;
+    const pct = Math.min(100, (st.atual/st.max)*100);
+    areaStats.innerHTML += `
+      <div class="stat-row">
+        <div class="stat-head"><span>${s.l}</span> <span>${st.atual}/${st.max}</span></div>
+        <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
+        <div class="stat-ctrl">
+          <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
+          <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
+        </div>
+      </div>`;
+  });
 
-  // Listas
-  document.getElementById('ataquesList').innerHTML = (f.ataques || []).map(i => `<li>${i}</li>`).join('');
-  document.getElementById('habsList').innerHTML = (f.habilidades || []).map(i => `<li>${i}</li>`).join('');
-}
+  // === CÁLCULO DE PERÍCIAS ===
+  // Bônus de Treinamento: começa com 2, +1 a cada 4 níveis (1, 5, 9...)
+  // Nvl 1-4: +2 | Nvl 5-8: +3 | Nvl 9-12: +4
+  const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
+  document.getElementById('treinoDisplay').innerText = `Treino: +${bonusTreino}`;
 
-function createStatBox(key, data, container) {
-  const percent = Math.min(100, (data.atual / data.max) * 100);
-  container.innerHTML += `
-    <div class="stat-box bar-${key}">
-      <div class="stat-header">
-        <span class="stat-title">${key}</span>
-        <span class="stat-values">${data.atual} / ${data.max}</span>
+  const listaSkills = document.getElementById('skillsList');
+  listaSkills.innerHTML = "";
+  
+  const metadeNivel = Math.floor(nivel / 2);
+  const userPericias = f.pericias || {}; // Objeto salvo no banco
+
+  PERICIAS_DEF.forEach(p => {
+    // 1. Pega Modificador do Atributo
+    const attrVal = f.atributos[p.a] || 10;
+    const modAttr = Math.floor((attrVal - 10) / 2);
+
+    // 2. Verifica se é treinado/mestre (salvo no banco)
+    // A chave no banco será o nome "Sanitized" (ex: "Ofício 1" -> "Ofício 1")
+    const saved = userPericias[p.n] || { t: false, m: false };
+    
+    // 3. Calcula Total: Mod + MetadeNivel + (BonusTreino se T) + (1 se M)
+    let total = modAttr + metadeNivel;
+    if (saved.t) total += bonusTreino;
+    if (saved.m) total += 1; // Mestre adiciona +1 fixo
+
+    listaSkills.innerHTML += `
+      <div class="skill-row">
+        <span class="sk-name">${p.n}</span>
+        <span class="sk-attr">${ATR_SHORT[p.a]}</span>
+        <span class="sk-total">${total>=0?'+':''}${total}</span>
+        <div class="sk-badges">
+          <span class="sk-tag ${saved.t ? 't-train active' : ''}">T</span>
+          <span class="sk-tag ${saved.m ? 't-master active' : ''}">M</span>
+        </div>
       </div>
-      <div class="bar-bg"><div class="bar-fill" style="width: ${percent}%;"></div></div>
-      <div class="controls">
-        <button class="btn-stat" onclick="window.updateStat('${key}', -1)">-</button>
-        <button class="btn-stat" onclick="window.updateStat('${key}', 1)">+</button>
-      </div>
-    </div>`;
+    `;
+  });
+
+  // Listas de texto
+  document.getElementById('ataquesList').innerHTML = (f.ataques||[]).map(i=>`<li>${i}</li>`).join('');
+  document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
 // === FUNÇÕES GLOBAIS ===
 
+window.upStat = async (key, val) => {
+  const st = ficha[key];
+  const novo = Math.max(0, Math.min(st.max, Number(st.atual)+val));
+  await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
+};
+
 window.abrirEditor = () => {
   document.getElementById('editorModal').style.display = 'block';
-  
-  // Preencher campos
-  document.getElementById('editNome').value = fichaData.nome || "";
-  document.getElementById('editImg').value = fichaData.imagem || "";
-  document.getElementById('editNivel').value = fichaData.nivel || 1;
-  document.getElementById('editClasse').value = fichaData.classe || "Lutador";
-  document.getElementById('editOrigem').value = fichaData.origem || "";
-  
-  if(fichaData.atributos) {
-    document.getElementById('editFor').value = fichaData.atributos.forca;
-    document.getElementById('editDes').value = fichaData.atributos.destreza;
-    document.getElementById('editCon').value = fichaData.atributos.constituicao;
-    document.getElementById('editInt').value = fichaData.atributos.inteligencia;
-    document.getElementById('editSab').value = fichaData.atributos.sabedoria;
-    document.getElementById('editPre').value = fichaData.atributos.presenca;
-  }
+  // Preencher Campos Básicos
+  ['Nome','Img','Nivel','Origem'].forEach(k => 
+    document.getElementById('edit'+k).value = ficha[k.toLowerCase()] || (k==='Nivel'?1:'')
+  );
+  document.getElementById('editClasse').value = ficha.classe;
 
-  document.getElementById('editVidaMax').value = fichaData.vida.max;
-  document.getElementById('editEnergiaMax').value = fichaData.energia.max;
-  document.getElementById('editVigorMax').value = fichaData.vigor.max;
-  document.getElementById('editIntegridadeMax').value = fichaData.integridade.max;
+  // Atributos
+  ['For','Des','Con','Int','Sab','Pre'].forEach(k => {
+    const fullKey = Object.keys(ATR_SHORT).find(key => ATR_SHORT[key] === k.toUpperCase());
+    document.getElementById('edit'+k).value = ficha.atributos[fullKey];
+  });
 
-  document.getElementById('editAtaques').value = (fichaData.ataques || []).join('\n');
-  document.getElementById('editHabs').value = (fichaData.habilidades || []).join('\n');
+  // Stats
+  ['Vida','Energia','Vigor','Integridade'].forEach(k => 
+    document.getElementById('edit'+k+'Max').value = ficha[k.toLowerCase()].max
+  );
+
+  // Listas
+  document.getElementById('editAtaques').value = (ficha.ataques||[]).join('\n');
+  document.getElementById('editHabs').value = (ficha.habilidades||[]).join('\n');
+
+  // PERÍCIAS (Checkbox List)
+  const editSkillsArea = document.getElementById('editSkillsArea');
+  editSkillsArea.innerHTML = "";
+  const userPericias = ficha.pericias || {};
+
+  PERICIAS_DEF.forEach((p, index) => {
+    const saved = userPericias[p.n] || { t: false, m: false };
+    
+    // Checkbox IDs únicos
+    editSkillsArea.innerHTML += `
+      <div class="edit-skill-item">
+        <span style="font-size:0.8rem; color:#ccc;">${p.n}</span>
+        <div class="chk-group">
+          <label class="chk-lbl"><input type="checkbox" id="chk_t_${index}" ${saved.t?'checked':''}> T</label>
+          <label class="chk-lbl"><input type="checkbox" id="chk_m_${index}" ${saved.m?'checked':''}> M</label>
+        </div>
+      </div>`;
+  });
 };
 
-window.fecharEditor = () => {
-  document.getElementById('editorModal').style.display = 'none';
-};
+window.fecharEditor = () => document.getElementById('editorModal').style.display = 'none';
 
 window.salvarEdicao = async () => {
-  const getNum = (id) => Number(document.getElementById(id).value);
   const getVal = (id) => document.getElementById(id).value;
-  const getTextList = (id) => document.getElementById(id).value.split('\n').filter(i => i.trim() !== "");
+  const getNum = (id) => Number(getVal(id));
+  const getArr = (id) => getVal(id).split('\n').filter(x=>x.trim());
+
+  // Captura Perícias dos Checkboxes
+  const novasPericias = {};
+  PERICIAS_DEF.forEach((p, index) => {
+    novasPericias[p.n] = {
+      t: document.getElementById(`chk_t_${index}`).checked,
+      m: document.getElementById(`chk_m_${index}`).checked
+    };
+  });
 
   try {
     await updateDoc(doc(db, "fichas", id), {
@@ -286,7 +421,7 @@ window.salvarEdicao = async () => {
       imagem: getVal('editImg'),
       nivel: getNum('editNivel'),
       classe: getVal('editClasse'),
-      origem: getVal('editOrigem'),
+      // origem: getVal('editOrigem'), // Se quiser editar origem, adicione o input no modal
       
       atributos: {
         forca: getNum('editFor'), destreza: getNum('editDes'), constituicao: getNum('editCon'),
@@ -296,36 +431,20 @@ window.salvarEdicao = async () => {
       "energia.max": getNum('editEnergiaMax'),
       "vigor.max": getNum('editVigorMax'),
       "integridade.max": getNum('editIntegridadeMax'),
-      
-      ataques: getTextList('editAtaques'),
-      habilidades: getTextList('editHabs')
+      ataques: getArr('editAtaques'),
+      habilidades: getArr('editHabs'),
+      pericias: novasPericias
     });
-    alert("Ficha atualizada com sucesso!");
+    alert("Salvo!");
     fecharEditor();
-  } catch(e) {
-    alert("Erro ao salvar: " + e.message);
-  }
+  } catch(e) { alert("Erro: "+e.message); }
 };
 
 window.excluirPersonagem = async () => {
-  const confirmacao = prompt("Para excluir, digite 'DELETAR' abaixo:");
-  if (confirmacao === "DELETAR") {
-    try {
-      await deleteDoc(doc(db, "fichas", id));
-      alert("Personagem apagado da existência.");
-      window.location = "index.html";
-    } catch(e) {
-      alert("Erro ao excluir: " + e.message);
-    }
-  } else {
-    alert("Ação cancelada.");
+  if(prompt("Digite DELETAR para confirmar:")==="DELETAR") {
+    await deleteDoc(doc(db, "fichas", id));
+    window.location="index.html";
   }
-};
-
-window.updateStat = async (stat, delta) => {
-  if (!fichaData[stat]) return;
-  const novoAtual = Math.max(0, Math.min(fichaData[stat].max, Number(fichaData[stat].atual) + delta));
-  await updateDoc(doc(db, "fichas", id), { [`${stat}.atual`]: novoAtual });
 };
 </script>
 </body>
