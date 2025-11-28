@@ -2,101 +2,153 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Escudo do Mestre</title>
+<title>Painel do Mestre</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   :root { 
-    --bg: #0a0a0a; 
-    --card: #141414; 
-    --primary: #e63946; 
-    --energy: #58E8DA;
-    --vigor: #69E858;
-    --integridade: #D073FA;
+    --bg: #0a0a0a; --card: #141414; 
+    --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA;
+    --apice: #f4d35e; --corpo: #9d4edd;
     --text: #f1f1f1; 
   }
   
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
-  h1 { margin: 0; color: var(--integridade); text-transform: uppercase; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
-  
-  .gm-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 20px; 
+  /* HEADER E FILTROS */
+  header { 
+    display: flex; justify-content: space-between; align-items: center; 
+    background: #111; padding: 15px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
   }
+  h1 { margin: 0; color: var(--primary); text-transform: uppercase; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+  
+  .filter-group { display: flex; gap: 10px; align-items: center; }
+  select { background: #222; color: white; border: 1px solid #444; padding: 8px; border-radius: 4px; outline: none; }
+  
+  .btn-back { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+  .btn-back:hover { background: #444; }
+
+  /* GRID DE PERSONAGENS */
+  .gm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
   
   .char-card { 
-    background: var(--card); 
-    border: 1px solid #333; 
-    border-radius: 8px; 
-    padding: 15px; 
-    position: relative; 
-    transition: transform 0.2s, border-color 0.2s;
+    background: var(--card); border: 1px solid #333; border-radius: 8px; 
+    padding: 15px; position: relative; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; gap: 8px;
   }
   .char-card:hover { border-color: var(--primary); transform: translateY(-2px); }
   
-  .card-header { display: flex; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
-  .card-header img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; margin-right: 12px; }
-  .card-header h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-  .card-header small { color: #888; display: block; margin-top: 2px; }
+  /* Header do Card */
+  .card-header { display: flex; align-items: center; border-bottom: 1px solid #222; padding-bottom: 10px; }
+  .char-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; margin-right: 12px; }
+  .char-info h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+  .char-info small { color: #888; display: block; margin-top: 2px; cursor: pointer; }
+  .char-info small:hover { color: var(--energy); text-decoration: underline; }
 
   .lvl-badge { font-size: 0.7rem; background: #333; color: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #555; }
 
-  .stat-row { margin-bottom: 8px; font-size: 0.9rem; font-family: monospace; }
-  .stat-label { display: flex; justify-content: space-between; margin-bottom: 2px; color: #ccc; }
+  /* Barras */
+  .stat-row { font-size: 0.8rem; font-family: monospace; display: flex; flex-direction: column; gap: 2px; }
+  .stat-label { display: flex; justify-content: space-between; color: #ccc; }
+  .bar-bg { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; transition: width 0.5s ease; }
+  .hp .bar-fill { background: var(--primary); }
+  .en .bar-fill { background: var(--energy); }
+  .int .bar-fill { background: var(--integridade); }
+
+  /* Controles do Mestre (Rodapé do Card) */
+  .card-footer { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-top: 5px; padding-top: 10px; border-top: 1px solid #222; 
+  }
   
-  .bar-mini-bg { width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; }
-  .bar-mini-fill { height: 100%; width: 0%; transition: width 0.5s ease; }
+  .transf-toggles { display: flex; gap: 5px; }
+  .btn-toggle { 
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid #444; background: #222; 
+    color: #555; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: 0.2s; 
+  }
   
-  .hp .bar-mini-fill { background: var(--primary); box-shadow: 0 0 5px var(--primary); }
-  .en .bar-mini-fill { background: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  .integ .bar-mini-fill { background: var(--integridade); box-shadow: 0 0 5px var(--integridade); }
+  /* Estados Ativos */
+  .btn-toggle.apice.active { border-color: var(--apice); color: var(--apice); box-shadow: 0 0 8px var(--apice); }
+  .btn-toggle.corpo.active { border-color: var(--corpo); color: var(--corpo); box-shadow: 0 0 8px var(--corpo); }
+
+  .btn-aptidao { background: #222; border: 1px solid #555; color: #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+  .btn-aptidao:hover { border-color: white; color: white; }
 
   .btn-spy { 
-    position: absolute; top: 15px; right: 15px; 
-    background: transparent; border: 1px solid #444; color: #666; 
-    width: 30px; height: 30px; border-radius: 50%; cursor: pointer; 
-    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    position: absolute; top: 10px; right: 10px; background: transparent; border: none; 
+    color: #666; font-size: 1.2rem; cursor: pointer; 
   }
-  .btn-spy:hover { color: white; border-color: white; background: #333; }
+  .btn-spy:hover { color: white; }
 
-  .btn-back { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-  .btn-back:hover { background: #444; }
+  /* MODAL DE APTIDÕES */
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
+  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; border: 1px solid var(--primary); max-height: 80vh; overflow-y: auto; }
+  .modal h2 { margin-top: 0; color: var(--primary); border-bottom: 1px solid #333; padding-bottom: 10px; }
   
-  #loading { text-align: center; color: #666; margin-top: 20px; }
+  .apt-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #222; }
+  .apt-name { color: #ddd; font-size: 0.9rem; }
+  .apt-ctrl { display: flex; align-items: center; gap: 10px; }
+  .lvl-display { font-weight: bold; color: var(--energy); width: 30px; text-align: center; }
+  .btn-adjust { width: 25px; height: 25px; background: #333; border: 1px solid #555; color: white; border-radius: 4px; cursor: pointer; }
+  .btn-adjust:hover { background: var(--primary); border-color: var(--primary); color: black; }
+
 </style>
 </head>
 <body>
 
-<div id="loading">Verificando Credenciais do Mestre...</div>
-
-<div id="app" style="display:none;">
+<div id="app">
   <header>
-    <h1>🛡️ Escudo do Mestre</h1>
-    <button class="btn-back" onclick="window.location='index.html'">Sair</button>
+    <h1>🛡️ Painel do Mestre</h1>
+    
+    <div class="filter-group">
+      <label>Mesa:</label>
+      <select id="mesaFilter" onchange="filtrarMesas()">
+        <option value="todas">Todas as Mesas</option>
+      </select>
+      <button class="btn-back" onclick="window.location='index.html'">Sair</button>
+    </div>
   </header>
 
-  <div id="grid" class="gm-grid">
-    <p style="color:#666">Sintonizando com as almas dos jogadores...</p>
+  <div id="grid" class="gm-grid">Carregando...</div>
+</div>
+
+<div id="aptModal" class="modal">
+  <div class="modal-content">
+    <h2 id="aptModalTitle">Gerenciar Aptidões</h2>
+    <div id="aptList"></div>
+    <button class="btn-back" style="width:100%; margin-top:15px;" onclick="fecharModal()">Fechar</button>
   </div>
 </div>
 
 <script type="module">
-import { db, auth, collection, query, onSnapshot, orderBy, onAuthStateChanged } from "./firebase.js";
+import { db, auth, collection, query, onSnapshot, orderBy, doc, updateDoc, onAuthStateChanged } from "./firebase.js";
 
 const MESTRE_EMAIL = "grisskos@fake.com";
+let allCharacters = []; // Cache local
 
-// VERIFICAÇÃO DE SEGURANÇA
+// Lista base para o modal de edição
+const APTIDOES_LIST = [
+  { nome: "Liberação de Energia", max: 10 },
+  { nome: "Proteção", max: 8 },
+  { nome: "Projeção", max: 5 },
+  { nome: "Criação", max: 5 },
+  { nome: "Concentração", max: 5 },
+  { nome: "Transformação", max: 5 },
+  { nome: "Aura Elemental", max: 5 },
+  { nome: "Molde", max: 5 },
+  { nome: "Intensificação", max: 5 },
+  { nome: "Solidificação", max: 5 },
+  { nome: "Encasular", max: 5 },
+  { nome: "Redirecionar", max: 5 },
+  { nome: "Esconder", max: 5 },
+  { nome: "Perturbação", max: 5 }
+];
+
+// Segurança
 onAuthStateChanged(auth, user => {
   if (user && user.email === MESTRE_EMAIL) {
-    // É o mestre, libera o app
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
     iniciarMonitoramento();
   } else {
-    // Não é o mestre (ou não logado)
-    alert("ACESSO NEGADO: Apenas o Mestre pode entrar aqui.");
+    alert("ACESSO NEGADO.");
     window.location = "index.html";
   }
 });
@@ -105,55 +157,101 @@ function iniciarMonitoramento() {
   const q = query(collection(db, "fichas"), orderBy("nome"));
 
   onSnapshot(q, (snapshot) => {
-    const grid = document.getElementById("grid");
-    
-    if (snapshot.empty) {
-      grid.innerHTML = "<p>Nenhum aventureiro encontrado neste plano.</p>";
-      return;
-    }
-
-    grid.innerHTML = ""; 
+    allCharacters = [];
+    const mesasSet = new Set();
 
     snapshot.forEach((doc) => {
       const f = doc.data();
-      const id = doc.id;
-      
-      const pVida = calcPct(f.vida);
-      const pEnergia = calcPct(f.energia);
-      const pIntegridade = calcPct(f.integridade); 
-      
-      const nivel = f.nivel || 1;
-      const origemTxt = f.origem ? `• ${f.origem}` : "";
+      f.id = doc.id;
+      f.mesa = f.mesa || "Sem Mesa"; // Padrão
+      mesasSet.add(f.mesa);
+      allCharacters.push(f);
+    });
 
-      grid.innerHTML += `
-        <div class="char-card">
-          <button class="btn-spy" onclick="window.open('ficha.html?id=${id}', '_blank')" title="Abrir Ficha Completa">👁️</button>
-          
-          <div class="card-header">
-            <img src="${f.imagem || 'https://via.placeholder.com/50/333/666?text=?'}" onerror="this.src='https://via.placeholder.com/50'">
-            <div>
-              <h3>${f.nome} <span class="lvl-badge">Nvl ${nivel}</span></h3>
-              <small>${f.classe || 'N/A'} ${origemTxt}</small>
-            </div>
-          </div>
+    atualizarFiltroMesas(Array.from(mesasSet));
+    renderGrid();
+  });
+}
 
-          <div class="stat-row hp">
-            <div class="stat-label"><span>VIDA</span> <span>${f.vida?.atual||0}/${f.vida?.max||0}</span></div>
-            <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pVida}%"></div></div>
-          </div>
+function atualizarFiltroMesas(mesas) {
+  const select = document.getElementById('mesaFilter');
+  const atual = select.value;
+  
+  // Mantém a opção "todas" e reconstrói o resto
+  select.innerHTML = '<option value="todas">Todas as Mesas</option>';
+  
+  mesas.sort().forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m;
+    opt.innerText = m;
+    select.appendChild(opt);
+  });
+  
+  select.value = atual; // Tenta manter a seleção
+}
 
-          <div class="stat-row en">
-            <div class="stat-label"><span>ENERGIA</span> <span>${f.energia?.atual||0}/${f.energia?.max||0}</span></div>
-            <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pEnergia}%"></div></div>
-          </div>
+window.filtrarMesas = () => {
+  renderGrid();
+};
 
-          <div class="stat-row integ">
-            <div class="stat-label"><span>INTEGRIDADE</span> <span>${f.integridade?.atual || 0}/${f.integridade?.max || 0}</span></div>
-            <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pIntegridade}%"></div></div>
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  const filtro = document.getElementById('mesaFilter').value;
+  
+  grid.innerHTML = ""; 
+  
+  const filtrados = allCharacters.filter(c => filtro === "todas" || c.mesa === filtro);
+
+  if (filtrados.length === 0) {
+    grid.innerHTML = "<p style='color:#666'>Nenhum personagem nesta mesa.</p>";
+    return;
+  }
+
+  filtrados.forEach(f => {
+    const pVida = calcPct(f.vida);
+    const pEnergia = calcPct(f.energia);
+    const pIntegridade = calcPct(f.integridade); 
+    
+    // Status dos botões
+    const apiceActive = f.transfUnlocked?.apice ? 'active' : '';
+    const corpoActive = f.transfUnlocked?.corpo ? 'active' : '';
+
+    grid.innerHTML += `
+      <div class="char-card">
+        <button class="btn-spy" onclick="window.open('ficha.html?id=${f.id}', '_blank')" title="Abrir Ficha">👁️</button>
+        
+        <div class="card-header">
+          <img src="${f.imagem || 'https://via.placeholder.com/50'}" class="char-img">
+          <div class="char-info">
+            <h3>${f.nome} <span class="lvl-badge">Nvl ${f.nivel||1}</span></h3>
+            <small onclick="mudarMesa('${f.id}', '${f.mesa}')">📍 ${f.mesa}</small>
           </div>
         </div>
-      `;
-    });
+
+        <div class="stat-row hp">
+          <div class="stat-label"><span>VIDA</span> <span>${f.vida?.atual||0}/${f.vida?.max||0}</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${pVida}%"></div></div>
+        </div>
+
+        <div class="stat-row en">
+          <div class="stat-label"><span>ENERGIA</span> <span>${f.energia?.atual||0}/${f.energia?.max||0}</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${pEnergia}%"></div></div>
+        </div>
+
+        <div class="stat-row int">
+          <div class="stat-label"><span>INTEGRIDADE</span> <span>${f.integridade?.atual||0}/${f.integridade?.max||0}</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${pIntegridade}%"></div></div>
+        </div>
+
+        <div class="card-footer">
+           <div class="transf-toggles">
+             <div class="btn-toggle apice ${apiceActive}" onclick="toggleUnlock('${f.id}', 'apice', ${!f.transfUnlocked?.apice})" title="Desbloquear Ápice">⚡</div>
+             <div class="btn-toggle corpo ${corpoActive}" onclick="toggleUnlock('${f.id}', 'corpo', ${!f.transfUnlocked?.corpo})" title="Desbloquear Corpo">👹</div>
+           </div>
+           <button class="btn-aptidao" onclick="abrirAptidoes('${f.id}')">🧠 Aptidões</button>
+        </div>
+      </div>
+    `;
   });
 }
 
@@ -161,7 +259,87 @@ function calcPct(stat) {
   if (!stat || !stat.max) return 0;
   return Math.min(100, Math.max(0, (stat.atual / stat.max) * 100));
 }
-</script>
 
+// === AÇÕES DO MESTRE ===
+
+window.mudarMesa = async (id, atual) => {
+  const nova = prompt("Nome da Mesa para este personagem:", atual);
+  if(nova && nova !== atual) {
+    await updateDoc(doc(db, "fichas", id), { mesa: nova });
+  }
+};
+
+window.toggleUnlock = async (id, tipo, novoEstado) => {
+  // Precisamos ler o estado atual do objeto para não apagar a outra chave
+  const char = allCharacters.find(c => c.id === id);
+  const unlocked = char.transfUnlocked || {};
+  unlocked[tipo] = novoEstado;
+  
+  await updateDoc(doc(db, "fichas", id), { transfUnlocked: unlocked });
+};
+
+// === MODAL DE APTIDÕES ===
+let currentEditId = null;
+
+window.abrirAptidoes = (id) => {
+  currentEditId = id;
+  const char = allCharacters.find(c => c.id === id);
+  const listDiv = document.getElementById('aptList');
+  const modal = document.getElementById('aptModal');
+  
+  document.getElementById('aptModalTitle').innerText = `Aptidões: ${char.nome}`;
+  listDiv.innerHTML = "";
+
+  const progresso = char.progressoAptidoes || {};
+  // Junta base + custom
+  const todas = [...APTIDOES_LIST, ...(char.aptidoesCustom || [])];
+
+  todas.forEach(apt => {
+    const nivel = progresso[apt.nome] || 0;
+    
+    listDiv.innerHTML += `
+      <div class="apt-item">
+        <div class="apt-name">${apt.nome} <span style="color:#666; font-size:0.8rem;">(Max ${apt.max || apt.maxNivel})</span></div>
+        <div class="apt-ctrl">
+          <button class="btn-adjust" onclick="ajustarApt('${apt.nome}', -1)">-</button>
+          <span class="lvl-display">${nivel}</span>
+          <button class="btn-adjust" onclick="ajustarApt('${apt.nome}', 1)">+</button>
+        </div>
+      </div>
+    `;
+  });
+
+  modal.style.display = 'flex';
+};
+
+window.ajustarApt = async (nome, delta) => {
+  if(!currentEditId) return;
+  const char = allCharacters.find(c => c.id === currentEditId);
+  const progresso = char.progressoAptidoes || {};
+  
+  let novoNivel = (progresso[nome] || 0) + delta;
+  if(novoNivel < 0) novoNivel = 0;
+  // Não limitamos o máximo hardcoded aqui pra dar liberdade ao mestre, mas visualmente o max ajuda
+  
+  progresso[nome] = novoNivel;
+  
+  // Atualiza no banco
+  await updateDoc(doc(db, "fichas", currentEditId), { progressoAptidoes: progresso });
+  
+  // Atualiza a tela do modal sem fechar (gambiarra visual rápida ou reabrir)
+  // Como o snapshot atualiza o allCharacters, podemos re-chamar abrirAptidoes?
+  // Não, o snapshot é async. Vamos atualizar visualmente o elemento HTML direto.
+  // Mas o jeito mais seguro é esperar o snapshot. 
+  // Para UI fluida, vamos re-abrir com os dados locais alterados temporariamente:
+  char.progressoAptidoes = progresso;
+  abrirAptidoes(currentEditId);
+};
+
+window.fecharModal = () => {
+  document.getElementById('aptModal').style.display = 'none';
+  currentEditId = null;
+};
+
+</script>
 </body>
 </html>
