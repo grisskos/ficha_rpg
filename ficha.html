@@ -19,13 +19,12 @@
   @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
 
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
-  .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; }
+  .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; position: relative; }
 
   /* Cabeçalho */
   .char-header { text-align: center; }
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
-  
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
   .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
   .b-lvl { color: white; border-color: white; font-weight: bold; }
@@ -38,7 +37,7 @@
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* Inputs e Edição */
+  /* Edição Inline */
   .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
@@ -66,86 +65,52 @@
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* ========================================= */
-  /* NOVO ESTILO DE COMBATE (Cards em Grid) */
-  /* ========================================= */
-  .section-header { 
-    background: #111; color: var(--primary); padding: 8px; text-align: center; 
-    border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #333;
-  }
-
+  /* Combate */
+  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #333; }
   .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; }
   .cols-3 { grid-template-columns: repeat(3, 1fr); }
   .cols-5 { grid-template-columns: repeat(5, 1fr); }
-
-  @media (max-width: 600px) {
-    .cols-3 { grid-template-columns: 1fr; } /* Empilha ataques no mobile */
-    .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } /* Scroll nas resistências */
-    .combat-card { min-width: 80px; }
-  }
-
-  .combat-card {
-    background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px;
-    display: flex; flex-direction: column; overflow: hidden; text-align: center;
-  }
-
-  /* Cabeçalho do Card (Vermelho) */
-  .cc-header {
-    background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px;
-  }
-
-  /* Corpo do Card (Número Grande) */
-  .cc-body {
-    padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1;
-    background: #1a1a1a;
-  }
-
-  /* Rodapé do Card (Inputs) */
-  .cc-footer {
-    background: #000; padding: 5px; display: flex; justify-content: center; align-items: center; gap: 5px; border-top: 1px solid #333;
-  }
-
-  /* Botões Específicos */
-  .btn-toggle-attr { 
-    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); 
-    color: white; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; cursor: pointer; margin-top: 2px;
-  }
-  .btn-toggle-attr:hover { background: white; color: var(--primary); }
-
-  .bonus-input { 
-    background: #222; border: 1px solid #444; color: #aaa; width: 30px; text-align: center; 
-    padding: 2px; border-radius: 4px; font-size: 0.8rem; 
-  }
-  .bonus-input:focus { border-color: var(--energy); color: white; outline: none; }
-
-  .btn-train { 
-    width: 20px; height: 20px; border: 1px solid #444; background: #222; color: #666; 
-    font-size: 0.7rem; display: flex; align-items: center; justify-content: center; 
-    border-radius: 3px; cursor: pointer; font-weight: bold;
-  }
+  @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
+  .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
+  .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
+  .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
+  .cc-footer { background: #000; padding: 5px; display: flex; justify-content: center; align-items: center; gap: 5px; border-top: 1px solid #333; }
+  .btn-toggle-attr { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); color: white; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; cursor: pointer; margin-top: 2px; }
+  .bonus-input { background: #222; border: 1px solid #444; color: #aaa; width: 30px; text-align: center; padding: 2px; border-radius: 4px; font-size: 0.8rem; }
+  .btn-train { width: 20px; height: 20px; border: 1px solid #444; background: #222; color: #666; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; border-radius: 3px; cursor: pointer; font-weight: bold; }
   .btn-train.active { background: var(--energy); border-color: var(--energy); color: #000; }
-
-  select.mini-select { 
-    background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; 
-    max-width: 80px; margin-top: 2px; 
-  }
+  select.mini-select { background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; max-width: 80px; margin-top: 2px; }
   select.mini-select option { background: #222; color: #fff; }
 
-  /* Perícias */
-  .skills-card { padding: 0; overflow: hidden; height: 100%; }
-  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
-  .skill-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
-  .skill-row:hover { background: #1b1b1b; }
-  .sk-name { flex-grow: 1; color: #eee; }
-  .sk-attr { font-size: 0.7rem; color: #555; width: 40px; text-transform: uppercase; font-weight: bold; }
-  .sk-total { font-weight: bold; color: white; width: 35px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
-  .sk-btn-group { display: flex; gap: 5px; }
-  .sk-btn { width: 25px; height: 25px; border-radius: 4px; border: 1px solid #444; background: #111; color: #555; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-  .sk-btn:hover { border-color: #777; color: #aaa; }
-  .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
-  .sk-btn.active-m { background: rgba(230, 57, 70, 0.2); border-color: var(--primary); color: var(--primary); }
+  /* --- INVENTÁRIO CARDS --- */
+  .inv-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  
+  .inv-card { 
+    background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; 
+    transition: 0.2s; display: flex; flex-direction: column; 
+  }
+  .inv-card:hover { border-color: white; transform: translateY(-3px); }
+  .inv-card.grade-4 { border-left: 3px solid #888; }
+  .inv-card.grade-3 { border-left: 3px solid #4cc9f0; }
+  .inv-card.grade-2 { border-left: 3px solid #4361ee; }
+  .inv-card.grade-1 { border-left: 3px solid #f72585; }
+  .inv-card.grade-0 { border-left: 3px solid #ff9e00; box-shadow: 0 0 5px #ff9e00; }
+
+  .inv-img { width: 100%; height: 80px; object-fit: cover; background: #000; }
+  .inv-body { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }
+  .inv-title { font-weight: bold; font-size: 0.9rem; color: #fff; line-height: 1.1; }
+  .inv-type { font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
+  .inv-stats { font-size: 0.75rem; color: var(--energy); font-weight: bold; margin-top: auto; }
+  .inv-slots { font-size: 0.7rem; color: #666; text-align: right; margin-top: 5px; }
+
+  /* Barra de Carga */
+  .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 20px; position: relative; margin-bottom: 15px; overflow: hidden; }
+  .load-fill { height: 100%; width: 0%; background: #2a9d8f; transition: 0.3s; }
+  .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
+  .load-fill.over { background: #e9c46a; }
+  .load-fill.full { background: #e63946; }
+  .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
 
   /* Navegação */
   .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; }
@@ -158,12 +123,23 @@
   .list-box ul { padding-left: 20px; margin: 0; color: #ccc; }
   .list-box li { margin-bottom: 5px; }
 
-  /* FAB e Modal */
+  /* FAB */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
-  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; }
-  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; border: 1px solid #444; }
-  textarea { width: 100%; height: 100px; background: #111; color: white; border: 1px solid #333; margin-top: 5px; }
+
+  /* MODAL */
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; overflow-y: auto; }
+  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 600px; margin: 20px auto; border: 1px solid #444; }
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.8rem; font-weight: bold; }
+  input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; box-sizing: border-box; font-family: inherit; }
+  textarea { height: 80px; resize: vertical; }
+  
+  .list-adder { margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
+  .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
+  .btn-del-item { background: transparent; border: none; color: #d00000; cursor: pointer; font-size: 1.2rem; line-height: 1; }
+  .btn-add-item { background: #222; border: 1px solid #444; color: #ccc; width: 100%; padding: 5px; cursor: pointer; margin-top: 5px; }
+  
 </style>
 </head>
 <body>
@@ -197,14 +173,23 @@
     <div class="card" style="padding:10px;">
       <h3 class="section-header">Jogadas de Ataque</h3>
       <div id="combatAttacksArea" class="combat-grid cols-3"></div>
-
       <h3 class="section-header" style="margin-top:20px;">Testes de Resistência</h3>
       <div id="combatResistArea" class="combat-grid cols-5"></div>
     </div>
 
-    <div class="card list-box">
-      <h3 class="section-header">Inventário & Armas</h3>
-      <ul id="ataquesList"></ul>
+    <div class="card">
+      <div class="inv-header">
+        <h3 class="section-header" style="margin:0; flex-grow:1; margin-right:10px;">Inventário</h3>
+        <button class="btn-mini" onclick="abrirItemModal()">+ Item</button>
+      </div>
+      
+      <div class="load-bar-container">
+        <div id="loadFill" class="load-fill"></div>
+        <div id="loadText" class="load-text">0 / 8 Espaços</div>
+      </div>
+      <div id="overburdenMsg" class="overburden-warning">⚠ SOBRECARREGADO: -5 DEFESA, -4.5m DESLOCAMENTO</div>
+
+      <div id="inventoryGrid" class="inv-grid"></div>
     </div>
     
     <div class="card list-box">
@@ -230,18 +215,67 @@
 <div id="configModal" class="modal">
   <div class="modal-content">
     <h2 style="color:var(--primary); margin-top:0;">Configurações</h2>
-    <label style="display:block; color:#aaa; font-weight:bold;">Imagem (URL)</label>
-    <input id="editImgUrl" style="width:100%; background:#111; border:1px solid #333; color:white; padding:5px; margin-bottom:15px;">
-    <button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Atualizar Imagem</button>
+    <label>Imagem (URL)</label>
+    <input id="editImgUrl" style="margin-bottom:15px;">
+    <button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button>
     <br><br>
-    <label style="display:block; color:#aaa; font-weight:bold;">Inventário / Armas (1 por linha)</label>
-    <textarea id="editAtaques"></textarea>
-    <br><br>
-    <label style="display:block; color:#aaa; font-weight:bold;">Aptidões / Talentos (1 por linha)</label>
+    <label>Aptidões / Talentos (1 por linha)</label>
     <textarea id="editHabs"></textarea>
-    <button onclick="salvarListas()" style="background:var(--primary); width:100%; padding:12px; color:white; border:none; cursor:pointer; border-radius:5px; font-weight:bold; margin-top:20px;">Salvar Listas</button>
-    <button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:12px; color:white; border:none; cursor:pointer; border-radius:5px; margin-top:10px;">Fechar</button>
+    <button onclick="salvarListas()" style="background:var(--primary); width:100%; padding:10px; margin-top:20px; border:none; color:white; cursor:pointer;">Salvar</button>
+    <button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Fechar</button>
     <button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button>
+  </div>
+</div>
+
+<div id="itemModal" class="modal">
+  <div class="modal-content">
+    <h2 id="itemModalTitle" style="color:var(--primary); margin-top:0;">Novo Item</h2>
+    
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+      <div class="form-group"><label>Nome</label><input id="itNome"></div>
+      <div class="form-group"><label>Tipo</label>
+        <select id="itTipo">
+          <option value="Arma">Arma</option>
+          <option value="Uniforme">Uniforme</option>
+          <option value="Item">Item</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+      <div class="form-group"><label>Grau</label>
+        <select id="itGrau">
+          <option value="4">Grau 4</option>
+          <option value="3">Grau 3</option>
+          <option value="2">Grau 2</option>
+          <option value="1">Grau 1</option>
+          <option value="0">Especial</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Espaços</label><input type="number" id="itEspacos" value="1"></div>
+      <div class="form-group"><label>Bônus (Resumo)</label><input id="itBonus" placeholder="+2 CA"></div>
+    </div>
+
+    <div class="form-group"><label>Imagem (URL)</label><input id="itImg" placeholder="http://..."></div>
+    <div class="form-group"><label>Descrição Geral</label><textarea id="itDesc" style="height:60px;"></textarea></div>
+
+    <div class="list-adder">
+      <label>Propriedades</label>
+      <div id="propList"></div>
+      <button class="btn-add-item" onclick="addPropField()">+ Propriedade</button>
+    </div>
+
+    <div class="list-adder">
+      <label>Encantamentos</label>
+      <div id="encantList"></div>
+      <button class="btn-add-item" onclick="addEncantField()">+ Encantamento</button>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button onclick="salvarItem()" style="background:var(--primary); flex-grow:1; padding:10px; border:none; color:white; cursor:pointer;">Salvar Item</button>
+      <button onclick="excluirItem()" id="btnExcluirItem" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer; display:none;">Excluir</button>
+    </div>
+    <button onclick="document.getElementById('itemModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button>
   </div>
 </div>
 
@@ -252,6 +286,7 @@ const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let ficha = {}; 
 let editandoId = null;
+let editingItemIndex = -1;
 
 const PERICIAS_DEF = [
   { n: "Atletismo", a: "forca" }, { n: "Acrobacia", a: "destreza" }, { n: "Furtividade", a: "destreza" },
@@ -267,11 +302,13 @@ const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligenci
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
+    // Safety Checks
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.shikigamis) ficha.shikigamis = [];
     if (!ficha.vida) ficha.vida = { atual: 10, max: 10 };
     if (!ficha.combate) ficha.combate = {}; 
+    if (!ficha.inventario) ficha.inventario = []; 
     if(!editandoId) renderFicha(); 
   } else {
     alert("Personagem não encontrado!");
@@ -282,6 +319,7 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
 function renderFicha() {
   const f = ficha;
   
+  // Header
   const nomeEl = document.getElementById('nomeDisplay');
   if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
   
@@ -330,7 +368,6 @@ function renderFicha() {
   statsMap.forEach(s => {
     const st = f[s.k] || {atual:0, max:0};
     const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
-    
     areaStats.innerHTML += `
       <div class="stat-row">
         <div class="stat-head">
@@ -349,7 +386,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // === RENDERIZAÇÃO DO COMBATE (ESTILO CARD) ===
+  // === COMBATE ===
   const nivel = f.nivel || 1;
   const metadeNivel = Math.floor(nivel / 2);
   const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
@@ -361,102 +398,114 @@ function renderFicha() {
   const attacksArea = document.getElementById('combatAttacksArea');
   attacksArea.innerHTML = "";
 
-  // 1. Corpo a Corpo
   const cCorpo = cData.corpo || {};
   const usaDes = cCorpo.usaDes || false;
   const attrCorpo = usaDes ? modDes : modFor;
   const totCorpo = attrCorpo + metadeNivel + (cCorpo.treino ? bonusTreino : 0) + (cCorpo.outros || 0);
-  
   attacksArea.innerHTML += `
     <div class="combat-card">
-      <div class="cc-header">
-        Corpo a Corpo
-        <div class="btn-toggle-attr" onclick="toggleMeleeAttr()">${usaDes?'DES':'FOR'}</div>
-      </div>
+      <div class="cc-header">Corpo a Corpo <div class="btn-toggle-attr" onclick="toggleMeleeAttr()">${usaDes?'DES':'FOR'}</div></div>
       <div class="cc-body">${totCorpo>=0?'+':''}${totCorpo}</div>
-      <div class="cc-footer">
-        <div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div>
-        <input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)">
-      </div>
+      <div class="cc-footer"><div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div><input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)"></div>
     </div>`;
 
-  // 2. Distância
   const cDist = cData.distancia || {};
   const totDist = modDes + metadeNivel + (cDist.treino ? bonusTreino : 0) + (cDist.outros || 0);
   attacksArea.innerHTML += `
     <div class="combat-card">
       <div class="cc-header">Distância</div>
       <div class="cc-body">${totDist>=0?'+':''}${totDist}</div>
-      <div class="cc-footer">
-        <div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div>
-        <input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)">
-      </div>
+      <div class="cc-footer"><div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div><input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)"></div>
     </div>`;
 
-  // 3. Mágico
   const cMagic = cData.magico || {};
   const attrKey = cMagic.atributo || 'inteligencia';
   const valMagic = (f.atributos && f.atributos[attrKey]) ? f.atributos[attrKey] : 10;
   const modMagic = Math.floor((valMagic - 10) / 2);
   const totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0);
-  
   attacksArea.innerHTML += `
     <div class="combat-card">
-      <div class="cc-header">
-        Amaldiçoado
-        <select class="mini-select" onchange="setMagicAttr(this.value)">
-          ${Object.keys(ATR_SHORT).map(k => `<option value="${k}" ${k===attrKey?'selected':''}>${ATR_SHORT[k]}</option>`).join('')}
-        </select>
-      </div>
+      <div class="cc-header">Amaldiçoado <select class="mini-select" onchange="setMagicAttr(this.value)">${Object.keys(ATR_SHORT).map(k => `<option value="${k}" ${k===attrKey?'selected':''}>${ATR_SHORT[k]}</option>`).join('')}</select></div>
       <div class="cc-body">${totMagic>=0?'+':''}${totMagic}</div>
-      <div class="cc-footer">
-        <span style="font-size:0.7rem; color:var(--energy);">[T]</span>
-        <input class="bonus-input" placeholder="+" value="${cMagic.outros||''}" onchange="setCombatOther('magico', this.value)">
-      </div>
+      <div class="cc-footer"><span style="font-size:0.7rem; color:var(--energy);">[T]</span><input class="bonus-input" placeholder="+" value="${cMagic.outros||''}" onchange="setCombatOther('magico', this.value)"></div>
     </div>`;
 
-  // === RESISTÊNCIAS ===
   const resistArea = document.getElementById('combatResistArea');
   resistArea.innerHTML = "";
-  const resistencias = [
-    { k: 'astucia', l: 'Astúcia', a: 'inteligencia' },
-    { k: 'fortitude', l: 'Fortitude', a: 'constituicao' },
-    { k: 'integridade', l: 'Integ.', a: 'constituicao' },
-    { k: 'reflexos', l: 'Reflexos', a: 'destreza' },
-    { k: 'vontade', l: 'Vontade', a: 'sabedoria' }
-  ];
-
+  const resistencias = [{ k: 'astucia', l: 'Astúcia', a: 'inteligencia' }, { k: 'fortitude', l: 'Fortitude', a: 'constituicao' }, { k: 'integridade', l: 'Integ.', a: 'constituicao' }, { k: 'reflexos', l: 'Reflexos', a: 'destreza' }, { k: 'vontade', l: 'Vontade', a: 'sabedoria' }];
   resistencias.forEach(res => {
     const rData = cData[res.k] || {};
     const rVal = (f.atributos && f.atributos[res.a]) ? f.atributos[res.a] : 10;
     const rMod = Math.floor((rVal - 10) / 2);
     const rTotal = rMod + metadeNivel + (rData.treino ? bonusTreino : 0) + (rData.outros || 0);
-
     resistArea.innerHTML += `
       <div class="combat-card">
         <div class="cc-header">${res.l}</div>
         <div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div>
-        <div class="cc-footer">
-          <div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div>
-          <input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)">
+        <div class="cc-footer"><div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div><input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)"></div>
+      </div>`;
+  });
+
+  // === INVENTÁRIO (CARGA) ===
+  const str = f.atributos?.forca || 10;
+  const strMod = Math.floor((str - 10) / 2);
+  // Regra: 8 + dobro do mod (ou -2 se negativo)
+  const limit = 8 + (strMod * 2); 
+  const hardLimit = limit * 2;
+  
+  // Calcula Peso Atual
+  const currentLoad = (f.inventario || []).reduce((acc, item) => acc + (Number(item.espacos)||0), 0);
+  
+  // Atualiza Barra
+  const bar = document.getElementById('loadFill');
+  const txt = document.getElementById('loadText');
+  const warning = document.getElementById('overburdenMsg');
+  
+  const pct = Math.min(100, (currentLoad / hardLimit) * 100);
+  bar.style.width = pct + '%';
+  txt.innerText = `${currentLoad} / ${limit} Espaços`;
+  
+  bar.classList.remove('over', 'full');
+  warning.style.display = 'none';
+  
+  if (currentLoad > limit) {
+    bar.classList.add('over');
+    warning.style.display = 'block';
+  }
+  if (currentLoad > hardLimit) {
+    bar.classList.add('full');
+    txt.innerText = "IMPOSSÍVEL CARREGAR";
+  }
+
+  // Renderiza Grid de Itens
+  const invGrid = document.getElementById('inventoryGrid');
+  invGrid.innerHTML = "";
+  (f.inventario || []).forEach((item, idx) => {
+    const gradeClass = `grade-${item.grau || 4}`;
+    const imgUrl = item.imagem || 'https://via.placeholder.com/150?text=Item';
+    invGrid.innerHTML += `
+      <div class="inv-card ${gradeClass}" onclick="abrirItemModal(${idx})">
+        <img src="${imgUrl}" class="inv-img">
+        <div class="inv-body">
+          <div class="inv-title">${item.nome}</div>
+          <div class="inv-type">${item.tipo} • Grau ${['Esp','1','2','3','4'][item.grau]}</div>
+          <div class="inv-stats">${item.bonus || ''}</div>
+          <div class="inv-slots">${item.espacos} 📦</div>
         </div>
       </div>`;
   });
 
-  // Perícias e Listas
+  // Perícias
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
   const userPericias = f.pericias || {}; 
-
   PERICIAS_DEF.forEach(p => {
     const attrVal = (f.atributos && f.atributos[p.a]) ? f.atributos[p.a] : 10;
     const modAttr = Math.floor((attrVal - 10) / 2);
     const saved = userPericias[p.n] || { t: false, m: false };
-    
     let total = modAttr + metadeNivel;
     if (saved.t) total += bonusTreino;
     if (saved.m) total += 1;
-
     listaSkills.innerHTML += `
       <div class="skill-row">
         <span class="sk-name">${p.n}</span>
@@ -469,127 +518,125 @@ function renderFicha() {
       </div>`;
   });
 
-  document.getElementById('ataquesList').innerHTML = (f.ataques||[]).map(i=>`<li>${i}</li>`).join('');
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
-// LÓGICA DE DADOS
-window.toggleCombatTrain = async (key) => {
-  const combate = ficha.combate || {};
-  if (!combate[key]) combate[key] = { treino: false, outros: 0 };
-  combate[key].treino = !combate[key].treino;
-  await updateDoc(doc(db, "fichas", id), { combate: combate });
-};
+// === LÓGICA DO INVENTÁRIO (MODAL) ===
+window.abrirItemModal = (index = -1) => {
+  editingItemIndex = index;
+  document.getElementById('itemModal').style.display = 'block';
+  document.getElementById('propList').innerHTML = "";
+  document.getElementById('encantList').innerHTML = "";
+  document.getElementById('btnExcluirItem').style.display = index === -1 ? 'none' : 'block';
+  document.getElementById('itemModalTitle').innerText = index === -1 ? 'Novo Item' : 'Editar Item';
 
-window.setCombatOther = async (key, val) => {
-  const combate = ficha.combate || {};
-  if (!combate[key]) combate[key] = { treino: false, outros: 0 };
-  combate[key].outros = Number(val);
-  await updateDoc(doc(db, "fichas", id), { combate: combate });
-};
-
-window.toggleMeleeAttr = async () => {
-  const combate = ficha.combate || {};
-  if (!combate.corpo) combate.corpo = { treino: false, outros: 0, usaDes: false };
-  combate.corpo.usaDes = !combate.corpo.usaDes;
-  await updateDoc(doc(db, "fichas", id), { combate: combate });
-};
-
-window.setMagicAttr = async (attr) => {
-  const combate = ficha.combate || {};
-  if (!combate.magico) combate.magico = { outros: 0, atributo: 'inteligencia' };
-  combate.magico.atributo = attr;
-  await updateDoc(doc(db, "fichas", id), { combate: combate });
-};
-
-window.mathStat = (el, key) => {
-  if(el.querySelector('input')) return; 
-  const originalHtml = el.innerHTML;
-  el.innerHTML = '';
-  const input = document.createElement('input');
-  input.placeholder = "+/-";
-  input.className = 'math-input';
-  input.type = 'text'; 
-  el.appendChild(input);
-  input.focus();
-  const executar = async () => {
-    const val = input.value.trim();
-    if(!val) { el.innerHTML = originalHtml; return; }
-    const num = Number(val);
-    if(isNaN(num)) { el.innerHTML = originalHtml; return; }
-    const st = ficha[key];
-    let novo = Number(st.atual) + num;
-    novo = Math.max(0, Math.min(st.max, novo));
-    await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
-    el.innerHTML = originalHtml;
-  };
-  input.addEventListener('blur', executar);
-  input.addEventListener('keydown', (e) => { if(e.key === 'Enter') input.blur(); });
-};
-
-window.editarCampo = (el, field, type) => {
-  if (el.querySelector('input')) return;
-  editandoId = field;
-  const valorAtual = el.innerText;
-  el.innerHTML = `<input id="inputEdit" class="inline-input" type="${type}" value="${valorAtual}">`;
-  const input = document.getElementById('inputEdit');
-  input.focus();
-  const salvar = async () => {
-    let novoValor = input.value;
-    if (type === 'number') novoValor = Number(novoValor);
-    el.innerHTML = novoValor;
-    editandoId = null;
-    try { await updateDoc(doc(db, "fichas", id), { [field]: novoValor }); } 
-    catch (e) { console.error(e); el.innerText = valorAtual; }
-  };
-  input.addEventListener('blur', salvar);
-  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
-};
-
-window.togglePericia = async (skillName, tipo) => {
-  const pericias = ficha.pericias || {};
-  if (!pericias[skillName]) pericias[skillName] = { t: false, m: false };
-  pericias[skillName][tipo] = !pericias[skillName][tipo];
-  await updateDoc(doc(db, "fichas", id), { pericias: pericias });
-};
-
-window.upStat = async (key, val) => {
-  const st = ficha[key];
-  const novo = Math.max(0, Math.min(st.max, Number(st.atual)+val));
-  await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
-};
-
-window.irParaShikigamis = () => { window.location = `shikigamis.html?charId=${id}`; };
-window.irParaFeiticos = () => { window.location = `feiticos.html?id=${id}`; };
-
-window.abrirConfig = () => {
-  document.getElementById('configModal').style.display = 'block';
-  document.getElementById('editImgUrl').value = ficha.imagem || "";
-  document.getElementById('editAtaques').value = (ficha.ataques||[]).join('\n');
-  document.getElementById('editHabs').value = (ficha.habilidades||[]).join('\n');
-}
-
-window.salvarImg = async () => {
-  await updateDoc(doc(db, "fichas", id), { imagem: document.getElementById('editImgUrl').value });
-  alert("Imagem atualizada!");
-}
-
-window.salvarListas = async () => {
-  const getArr = (id) => document.getElementById(id).value.split('\n').filter(x=>x.trim());
-  await updateDoc(doc(db, "fichas", id), {
-    ataques: getArr('editAtaques'),
-    habilidades: getArr('editHabs')
-  });
-  alert("Listas salvas!");
-  document.getElementById('configModal').style.display = 'none';
-}
-
-window.excluirPersonagem = async () => {
-  if(prompt("Digite DELETAR para confirmar:")==="DELETAR") {
-    await deleteDoc(doc(db, "fichas", id));
-    window.location="index.html";
+  if (index > -1) {
+    const item = ficha.inventario[index];
+    document.getElementById('itNome').value = item.nome;
+    document.getElementById('itTipo').value = item.tipo;
+    document.getElementById('itGrau').value = item.grau;
+    document.getElementById('itEspacos').value = item.espacos;
+    document.getElementById('itBonus').value = item.bonus;
+    document.getElementById('itImg').value = item.imagem;
+    document.getElementById('itDesc').value = item.descricao;
+    
+    (item.propriedades || []).forEach(p => addPropField(p.nome, p.desc));
+    (item.encantamentos || []).forEach(e => addEncantField(e.nome, e.desc));
+  } else {
+    // Reset para novo item
+    document.getElementById('itNome').value = "";
+    document.getElementById('itEspacos').value = 1;
+    document.getElementById('itBonus').value = "";
+    document.getElementById('itImg').value = "";
+    document.getElementById('itDesc').value = "";
   }
 };
+
+window.addPropField = (nome = "", desc = "") => {
+  const div = document.createElement('div');
+  div.className = 'dynamic-list-item';
+  div.innerHTML = `
+    <div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;">
+      <input placeholder="Nome da Propriedade (ex: Versátil)" value="${nome}" class="prop-name">
+      <textarea placeholder="Descrição da propriedade..." class="prop-desc" style="height:50px;">${desc}</textarea>
+    </div>
+    <button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>
+  `;
+  document.getElementById('propList').appendChild(div);
+};
+
+window.addEncantField = (nome = "", desc = "") => {
+  const div = document.createElement('div');
+  div.className = 'dynamic-list-item';
+  div.innerHTML = `
+    <div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;">
+      <input placeholder="Nome do Encantamento" value="${nome}" class="encant-name" style="border-color:var(--energy);">
+      <textarea placeholder="Descrição do efeito..." class="encant-desc" style="height:50px;">${desc}</textarea>
+    </div>
+    <button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>
+  `;
+  document.getElementById('encantList').appendChild(div);
+};
+
+window.salvarItem = async () => {
+  const novoItem = {
+    nome: document.getElementById('itNome').value || "Item",
+    tipo: document.getElementById('itTipo').value,
+    grau: document.getElementById('itGrau').value,
+    espacos: Number(document.getElementById('itEspacos').value),
+    bonus: document.getElementById('itBonus').value,
+    imagem: document.getElementById('itImg').value,
+    descricao: document.getElementById('itDesc').value,
+    propriedades: [],
+    encantamentos: []
+  };
+
+  // Coleta Props e Encants
+  document.querySelectorAll('#propList .dynamic-list-item').forEach(el => {
+    novoItem.propriedades.push({
+      nome: el.querySelector('.prop-name').value,
+      desc: el.querySelector('.prop-desc').value
+    });
+  });
+  document.querySelectorAll('#encantList .dynamic-list-item').forEach(el => {
+    novoItem.encantamentos.push({
+      nome: el.querySelector('.encant-name').value,
+      desc: el.querySelector('.encant-desc').value
+    });
+  });
+
+  if (!ficha.inventario) ficha.inventario = [];
+  
+  if (editingItemIndex === -1) ficha.inventario.push(novoItem);
+  else ficha.inventario[editingItemIndex] = novoItem;
+
+  await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario });
+  document.getElementById('itemModal').style.display = 'none';
+};
+
+window.excluirItem = async () => {
+  if (editingItemIndex === -1) return;
+  if (!confirm("Excluir este item?")) return;
+  ficha.inventario.splice(editingItemIndex, 1);
+  await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario });
+  document.getElementById('itemModal').style.display = 'none';
+};
+
+// === DEMAIS FUNÇÕES (Combate, Status, etc) ===
+window.toggleCombatTrain = async (key) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].treino = !combate[key].treino; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.setCombatOther = async (key, val) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].outros = Number(val); await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.toggleMeleeAttr = async () => { const combate = ficha.combate || {}; if (!combate.corpo) combate.corpo = { treino: false, outros: 0, usaDes: false }; combate.corpo.usaDes = !combate.corpo.usaDes; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.setMagicAttr = async (attr) => { const combate = ficha.combate || {}; if (!combate.magico) combate.magico = { outros: 0, atributo: 'inteligencia' }; combate.magico.atributo = attr; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.mathStat = (el, key) => { if(el.querySelector('input')) return; const originalHtml = el.innerHTML; el.innerHTML = ''; const input = document.createElement('input'); input.placeholder = "+/-"; input.className = 'math-input'; input.type = 'text'; el.appendChild(input); input.focus(); const executar = async () => { const val = input.value.trim(); if(!val) { el.innerHTML = originalHtml; return; } const num = Number(val); if(isNaN(num)) { el.innerHTML = originalHtml; return; } const st = ficha[key]; let novo = Number(st.atual) + num; novo = Math.max(0, Math.min(st.max, novo)); await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo }); el.innerHTML = originalHtml; }; input.addEventListener('blur', executar); input.addEventListener('keydown', (e) => { if(e.key === 'Enter') input.blur(); }); };
+window.editarCampo = (el, field, type) => { if (el.querySelector('input')) return; editandoId = field; const valorAtual = el.innerText; el.innerHTML = `<input id="inputEdit" class="inline-input" type="${type}" value="${valorAtual}">`; const input = document.getElementById('inputEdit'); input.focus(); const salvar = async () => { let novoValor = input.value; if (type === 'number') novoValor = Number(novoValor); el.innerHTML = novoValor; editandoId = null; try { await updateDoc(doc(db, "fichas", id), { [field]: novoValor }); } catch (e) { console.error(e); el.innerText = valorAtual; } }; input.addEventListener('blur', salvar); input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); }); };
+window.togglePericia = async (skillName, tipo) => { const pericias = ficha.pericias || {}; if (!pericias[skillName]) pericias[skillName] = { t: false, m: false }; pericias[skillName][tipo] = !pericias[skillName][tipo]; await updateDoc(doc(db, "fichas", id), { pericias: pericias }); };
+window.upStat = async (key, val) => { const st = ficha[key]; const novo = Math.max(0, Math.min(st.max, Number(st.atual)+val)); await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo }); };
+window.irParaShikigamis = () => { window.location = `shikigamis.html?charId=${id}`; };
+window.irParaFeiticos = () => { window.location = `feiticos.html?id=${id}`; };
+window.abrirConfig = () => { document.getElementById('configModal').style.display = 'block'; document.getElementById('editImgUrl').value = ficha.imagem || ""; document.getElementById('editHabs').value = (ficha.habilidades||[]).join('\n'); }
+window.salvarImg = async () => { await updateDoc(doc(db, "fichas", id), { imagem: document.getElementById('editImgUrl').value }); alert("Imagem atualizada!"); }
+window.salvarListas = async () => { const getArr = (id) => document.getElementById(id).value.split('\n').filter(x=>x.trim()); await updateDoc(doc(db, "fichas", id), { habilidades: getArr('editHabs') }); alert("Salvo!"); document.getElementById('configModal').style.display = 'none'; }
+window.excluirPersonagem = async () => { if(prompt("Digite DELETAR para confirmar:")==="DELETAR") { await deleteDoc(doc(db, "fichas", id)); window.location="index.html"; } };
 </script>
 </body>
 </html>
