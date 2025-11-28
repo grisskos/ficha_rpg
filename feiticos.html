@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Técnicas e Artes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@300..800&display=swap" rel="stylesheet">
+<style>
+  :root { 
+    --bg: #0f0f0f; --card: #141414; --text: #f1f1f1; --border: #333;
+    --magic: #58E8DA; /* Ciano para Jujutsu */
+    --phys: #e63946;  /* Vermelho para Artes Marciais */
+  }
+  
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Funnel Sans', sans-serif; padding: 20px; margin: 0; }
+
+  .header-nav { display: flex; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .btn-back { background: transparent; border: 1px solid #555; color: #888; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-right: 15px; }
+  h1 { margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* GRID PRINCIPAL */
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* ESTILOS DE SEÇÃO */
+  .section-box { display: flex; flex-direction: column; gap: 15px; }
+  
+  /* CAIXA PRINCIPAL (Descrição Base) */
+  .core-box { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid var(--border); position: relative; }
+  .core-magic { border-top: 4px solid var(--magic); }
+  .core-phys { border-top: 4px solid var(--phys); }
+  
+  .core-title { background: transparent; border: none; color: white; font-size: 1.4rem; font-weight: bold; width: 100%; outline: none; margin-bottom: 10px; }
+  .core-desc { background: #111; border: 1px solid var(--border); color: #ccc; width: 100%; min-height: 80px; padding: 10px; border-radius: 5px; resize: vertical; font-family: inherit; }
+  .btn-save-core { background: #222; color: #aaa; border: 1px solid var(--border); padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; float: right; margin-top: 5px; }
+  .btn-save-core:hover { background: #333; color: white; }
+
+  /* CARDS */
+  .cards-container { display: flex; flex-direction: column; gap: 15px; }
+  .skill-card { background: var(--card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); position: relative; transition: transform 0.2s; }
+  .skill-card:hover { transform: translateY(-2px); border-color: #555; }
+  
+  .card-magic { border-left: 5px solid var(--magic); }
+  .card-phys { border-left: 5px solid var(--phys); }
+
+  .card-header { padding: 10px 15px; background: #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
+  .card-title { font-weight: bold; font-size: 1.1rem; }
+  .card-lvl { font-size: 0.8rem; background: #333; padding: 2px 8px; border-radius: 10px; color: #fff; }
+  
+  .card-stats { display: flex; gap: 10px; padding: 8px 15px; background: #111; font-size: 0.9rem; color: #aaa; border-bottom: 1px solid #222; }
+  .stat-item { display: flex; align-items: center; gap: 5px; }
+  .stat-icon { font-style: normal; }
+
+  .card-body { padding: 15px; font-size: 0.95rem; color: #ddd; white-space: pre-wrap; }
+  
+  .card-actions { position: absolute; top: 10px; right: 10px; display: none; gap: 5px; }
+  .skill-card:hover .card-actions { display: flex; }
+  .btn-icon { background: #000; border: 1px solid #444; color: #fff; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+  .btn-icon:hover { border-color: white; }
+  .btn-del:hover { border-color: #d00000; color: #d00000; }
+
+  /* BOTÕES DE ADICIONAR */
+  .btn-add { width: 100%; padding: 12px; border-radius: 8px; border: 2px dashed #444; background: transparent; color: #666; font-weight: bold; cursor: pointer; transition: 0.2s; }
+  .btn-add:hover { border-color: #777; color: #fff; background: #1a1a1a; }
+  .btn-add-magic:hover { border-color: var(--magic); color: var(--magic); }
+  .btn-add-phys:hover { border-color: var(--phys); color: var(--phys); }
+
+  /* MODAL */
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
+  .modal.open { display: flex; }
+  .modal-box { background: var(--card); width: 90%; max-width: 500px; padding: 20px; border-radius: 10px; border: 1px solid var(--border); }
+  
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  label { display: block; color: #888; font-size: 0.8rem; margin-bottom: 4px; }
+  input, textarea { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; font-family: inherit; }
+  textarea { height: 100px; resize: vertical; }
+  input:focus, textarea:focus { border-color: #777; }
+
+  .btn-confirm { width: 100%; padding: 10px; margin-top: 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: #000; }
+</style>
+</head>
+<body>
+
+<div class="header-nav">
+  <button class="btn-back" onclick="voltar()">⬅ Voltar</button>
+  <h1>Grimório de Técnicas</h1>
+</div>
+
+<div class="main-grid">
+  
+  <div class="section-box">
+    <h2 style="color:var(--magic)">Técnica Inata</h2>
+    
+    <div class="core-box core-magic">
+      <input id="coreInataNome" class="core-title" placeholder="Nome da Técnica (Ex: Dez Sombras)">
+      <textarea id="coreInataDesc" class="core-desc" placeholder="Descreva o funcionamento básico da sua técnica..."></textarea>
+      <button class="btn-save-core" onclick="salvarCores()">Salvar Descrição</button>
+    </div>
+
+    <div id="listaFeiticos" class="cards-container"></div>
+    
+    <button class="btn-add btn-add-magic" onclick="abrirModal('feitico')">+ Novo Feitiço</button>
+  </div>
+
+  <div class="section-box">
+    <h2 style="color:var(--phys)">Artes Marciais</h2>
+    
+    <div class="core-box core-phys">
+      <input id="coreMarcialNome" class="core-title" placeholder="Nome do Estilo (Ex: Punho Gentil)">
+      <textarea id="coreMarcialDesc" class="core-desc" placeholder="Descreva o funcionamento do seu estilo de luta..."></textarea>
+      <button class="btn-save-core" onclick="salvarCores()">Salvar Descrição</button>
+    </div>
+
+    <div id="listaMarcial" class="cards-container"></div>
+    
+    <button class="btn-add btn-add-phys" onclick="abrirModal('marcial')">+ Nova Técnica Marcial</button>
+  </div>
+
+</div>
+
+<div id="modalCard" class="modal">
+  <div class="modal-box">
+    <h2 id="modalTitle" style="margin-top:0; color:white;">Nova Habilidade</h2>
+    
+    <label>Nome</label>
+    <input id="inNome" placeholder="Ex: Vazio Roxo / Chute Alto">
+    
+    <div class="form-row" style="margin-top:10px;">
+      <div><label>Nível / Custo</label><input id="inNivel" placeholder="Ex: 10 PE / Nvl 2"></div>
+      <div><label>Dano / Cura</label><input id="inDano" placeholder="Ex: 2d8+2"></div>
+    </div>
+    
+    <label>Área / Alcance</label>
+    <input id="inArea" placeholder="Ex: Cone 9m / Toque" style="margin-bottom:10px;">
+    
+    <label>Efeitos & Descrição</label>
+    <textarea id="inEfeito" placeholder="Descreva o que acontece..."></textarea>
+
+    <button id="btnConfirmar" class="btn-confirm">Salvar</button>
+    <button onclick="fecharModal()" style="width:100%; background:transparent; border:none; color:#666; margin-top:10px; cursor:pointer;">Cancelar</button>
+  </div>
+</div>
+
+<script type="module">
+import { db, doc, getDoc, updateDoc } from "./firebase.js";
+
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+let ficha = {};
+let editType = null; // 'feitico' ou 'marcial'
+let editIndex = -1;  // -1 para novo
+
+window.onload = async () => {
+  if(!id) return alert("ID não encontrado");
+  await carregar();
+};
+
+async function carregar() {
+  const snap = await getDoc(doc(db, "fichas", id));
+  if(snap.exists()){
+    ficha = snap.data();
+    renderTudo();
+  }
+}
+
+function renderTudo() {
+  // Preencher Cores (Descrições Base)
+  document.getElementById('coreInataNome').value = ficha.tecnicaInata?.nome || "";
+  document.getElementById('coreInataDesc').value = ficha.tecnicaInata?.descricao || "";
+  document.getElementById('coreMarcialNome').value = ficha.estiloMarcial?.nome || "";
+  document.getElementById('coreMarcialDesc').value = ficha.estiloMarcial?.descricao || "";
+
+  // Renderizar Feitiços
+  const divFeiticos = document.getElementById('listaFeiticos');
+  divFeiticos.innerHTML = "";
+  (ficha.feiticos || []).forEach((f, i) => {
+    divFeiticos.innerHTML += cardHtml(f, i, 'feitico');
+  });
+
+  // Renderizar Marciais
+  const divMarcial = document.getElementById('listaMarcial');
+  divMarcial.innerHTML = "";
+  (ficha.artesMarciais || []).forEach((f, i) => {
+    divMarcial.innerHTML += cardHtml(f, i, 'marcial');
+  });
+}
+
+function cardHtml(dados, index, tipo) {
+  const corClass = tipo === 'feitico' ? 'card-magic' : 'card-phys';
+  const iconDano = dados.dano ? `<span class="stat-item" title="Dano">⚔️ ${dados.dano}</span>` : '';
+  const iconArea = dados.area ? `<span class="stat-item" title="Área">🎯 ${dados.area}</span>` : '';
+  
+  return `
+    <div class="skill-card ${corClass}">
+      <div class="card-header">
+        <span class="card-title">${dados.nome}</span>
+        <span class="card-lvl">${dados.nivel}</span>
+        <div class="card-actions">
+          <div class="btn-icon" onclick="editar('${tipo}', ${index})">✎</div>
+          <div class="btn-icon btn-del" onclick="excluir('${tipo}', ${index})">✖</div>
+        </div>
+      </div>
+      <div class="card-stats">
+        ${iconDano} ${iconArea}
+      </div>
+      <div class="card-body">${dados.efeito}</div>
+    </div>
+  `;
+}
+
+// === LÓGICA DE SALVAR ===
+
+window.salvarCores = async () => {
+  await updateDoc(doc(db, "fichas", id), {
+    tecnicaInata: {
+      nome: document.getElementById('coreInataNome').value,
+      descricao: document.getElementById('coreInataDesc').value
+    },
+    estiloMarcial: {
+      nome: document.getElementById('coreMarcialNome').value,
+      descricao: document.getElementById('coreMarcialDesc').value
+    }
+  });
+  alert("Descrições salvas!");
+};
+
+window.abrirModal = (tipo) => {
+  editType = tipo;
+  editIndex = -1; // Novo
+  
+  // Resetar campos
+  document.getElementById('modalTitle').innerText = tipo === 'feitico' ? "Novo Feitiço" : "Nova Técnica Marcial";
+  document.getElementById('btnConfirmar').style.background = tipo === 'feitico' ? "var(--magic)" : "var(--phys)";
+  
+  document.getElementById('inNome').value = "";
+  document.getElementById('inNivel').value = "";
+  document.getElementById('inDano').value = "";
+  document.getElementById('inArea').value = "";
+  document.getElementById('inEfeito').value = "";
+  
+  document.getElementById('modalCard').classList.add('open');
+};
+
+window.editar = (tipo, index) => {
+  editType = tipo;
+  editIndex = index;
+  
+  const lista = tipo === 'feitico' ? (ficha.feiticos||[]) : (ficha.artesMarciais||[]);
+  const item = lista[index];
+
+  document.getElementById('modalTitle').innerText = "Editar Habilidade";
+  document.getElementById('btnConfirmar').style.background = tipo === 'feitico' ? "var(--magic)" : "var(--phys)";
+
+  document.getElementById('inNome').value = item.nome;
+  document.getElementById('inNivel').value = item.nivel;
+  document.getElementById('inDano').value = item.dano;
+  document.getElementById('inArea').value = item.area;
+  document.getElementById('inEfeito').value = item.efeito;
+
+  document.getElementById('modalCard').classList.add('open');
+};
+
+document.getElementById('btnConfirmar').onclick = async () => {
+  const novoItem = {
+    nome: document.getElementById('inNome').value || "Sem Nome",
+    nivel: document.getElementById('inNivel').value,
+    dano: document.getElementById('inDano').value,
+    area: document.getElementById('inArea').value,
+    efeito: document.getElementById('inEfeito').value
+  };
+
+  // Atualiza Array Local
+  if(editType === 'feitico') {
+    if(!ficha.feiticos) ficha.feiticos = [];
+    if(editIndex === -1) ficha.feiticos.push(novoItem);
+    else ficha.feiticos[editIndex] = novoItem;
+    await updateDoc(doc(db, "fichas", id), { feiticos: ficha.feiticos });
+  } else {
+    if(!ficha.artesMarciais) ficha.artesMarciais = [];
+    if(editIndex === -1) ficha.artesMarciais.push(novoItem);
+    else ficha.artesMarciais[editIndex] = novoItem;
+    await updateDoc(doc(db, "fichas", id), { artesMarciais: ficha.artesMarciais });
+  }
+
+  fecharModal();
+  renderTudo();
+};
+
+window.excluir = async (tipo, index) => {
+  if(!confirm("Excluir esta habilidade?")) return;
+  
+  if(tipo === 'feitico') {
+    ficha.feiticos.splice(index, 1);
+    await updateDoc(doc(db, "fichas", id), { feiticos: ficha.feiticos });
+  } else {
+    ficha.artesMarciais.splice(index, 1);
+    await updateDoc(doc(db, "fichas", id), { artesMarciais: ficha.artesMarciais });
+  }
+  renderTudo();
+};
+
+window.fecharModal = () => {
+  document.getElementById('modalCard').classList.remove('open');
+};
+
+window.voltar = () => {
+  window.location = `ficha.html?id=${id}`;
+};
+</script>
+</body>
+  </html>
+  
