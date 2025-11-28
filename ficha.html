@@ -13,14 +13,25 @@
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  /* Layout Responsivo */
-  .main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; padding-bottom: 80px; }
-  @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
+  /* === LAYOUT 3 COLUNAS === */
+  .main-layout { 
+    display: grid; 
+    grid-template-columns: 280px 1fr 300px; /* Sidebar | Meio | Perícias */
+    gap: 20px; 
+    max-width: 1600px; 
+    margin: 0 auto; 
+    padding-bottom: 80px; 
+  }
+  
+  /* Responsividade */
+  @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } } /* Esconde 3ª col e joga pra baixo se precisar, ou ajusta */
+  @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } } /* Mobile: Tudo empilhado */
 
-  .sidebar, .content-area { display: flex; flex-direction: column; gap: 20px; }
+  .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
+  
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; }
 
-  /* Cabeçalho */
+  /* Cabeçalho do Personagem */
   .char-header { text-align: center; }
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
@@ -30,18 +41,41 @@
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* Tokens */
-  .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
-  .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
+  /* TOKENS DE SHIKIGAMI */
+  .shiki-container {
+    display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap;
+    border-top: 1px solid #222; padding-top: 15px;
+  }
+  .shiki-token {
+    width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy);
+    background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s;
+  }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
-  .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+  .shiki-add {
+    width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444;
+    display: flex; align-items: center; justify-content: center; color: #555;
+    cursor: pointer; font-size: 1.2rem; transition: 0.2s;
+  }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* Inputs e Edição */
-  .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
+  /* EDIÇÃO INLINE */
+  .editable { 
+    cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; 
+    display: inline-block; min-width: 20px; text-align: center;
+  }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
-  .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
-  .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
+  
+  .inline-input { 
+    background: #000; color: white; border: 2px solid var(--primary); 
+    border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; 
+    width: 80px; text-align: center; outline: none;
+  }
+
+  /* Math Input */
+  .math-input {
+    width: 40px; background: #fff; color: #000; border: none; 
+    border-radius: 3px; text-align: center; font-weight: bold; outline: none;
+  }
 
   /* Atributos */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -50,30 +84,32 @@
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
 
-  /* Barras */
+  /* Barras de Status */
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
   .bar-fill { height: 100%; transition: width 0.3s; }
+  
   .c-vida { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
   .c-ener { background: var(--energy); box-shadow: 0 0 8px var(--energy); }
   .c-vigo { background: var(--vigor); box-shadow: 0 0 8px var(--vigor); }
   .c-inte { background: var(--integridade); box-shadow: 0 0 8px var(--integridade); }
+
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
   .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
   .btn-mini:hover { border-color: white; color: white; background: #333; }
+  
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* COMBATE & RESISTÊNCIAS (NOVO) */
-  .combat-header { padding-bottom: 10px; border-bottom: 1px solid #333; margin-bottom: 10px; color: var(--primary); margin-top: 0; }
+  /* COMBATE & RESISTÊNCIAS */
+  .section-header { padding-bottom: 10px; border-bottom: 1px solid #333; margin-bottom: 10px; color: var(--primary); margin-top: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+  
   .combat-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; }
   .combat-label { font-size: 0.9rem; color: #eee; flex-grow: 1; }
   .combat-controls { display: flex; align-items: center; gap: 8px; }
-  
   .combat-total { font-weight: bold; font-size: 1.1rem; color: white; width: 35px; text-align: right; }
   
-  /* Botões Específicos de Combate */
   .btn-toggle-attr { background: #222; border: 1px solid #555; color: #aaa; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; cursor: pointer; min-width: 35px; text-align: center; }
   .btn-toggle-attr:hover { color: white; border-color: white; }
   
@@ -85,10 +121,8 @@
 
   select.mini-select { background: #111; border: 1px solid #444; color: #ccc; font-size: 0.7rem; padding: 2px; border-radius: 4px; max-width: 60px; }
 
-  /* Perícias */
-  .skills-card { padding: 0; overflow: hidden; }
-  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+  /* Perícias (Coluna Direita) */
+  .skills-card { padding: 0; overflow: hidden; height: 100%; } /* Full height */
   .skill-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
   .skill-row:hover { background: #1b1b1b; }
   .sk-name { flex-grow: 1; color: #eee; }
@@ -107,6 +141,10 @@
   .btn-tech { border: 1px solid var(--energy); color: var(--energy); }
   .btn-tech:hover { background: var(--energy); color: #000; }
 
+  /* Listas */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; }
+  .list-box li { margin-bottom: 5px; }
+
   /* FAB e Modal */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
@@ -119,7 +157,7 @@
 
 <div class="main-layout">
   
-  <div class="sidebar">
+  <div class="col-side">
     <div class="card char-header">
       <img id="charImg" class="char-img" src="">
       <h2 class="char-name"><span class="editable" id="nomeDisplay" onclick="editarCampo(this, 'nome', 'text')">...</span></h2>
@@ -141,31 +179,39 @@
     <button class="btn-mini" style="width:100%; padding:10px; font-size:1rem; margin-top:10px;" onclick="window.location='index.html'">Voltar para Lista</button>
   </div>
 
-  <div class="content-area">
+  <div class="col-center">
     
     <div class="card">
-      <h3 class="combat-header">⚔️ Combate & Resistências</h3>
-      <div id="combatArea"></div>
+      <h3 class="section-header">⚔️ Testes de Ataque</h3>
+      <div id="combatAttacksArea"></div>
     </div>
 
+    <div class="card">
+      <h3 class="section-header">🛡️ Testes de Resistência</h3>
+      <div id="combatResistArea"></div>
+    </div>
+
+    <div class="card list-box">
+      <h3 class="section-header">Inventário & Armas</h3>
+      <ul id="ataquesList"></ul>
+    </div>
+    
+    <div class="card list-box">
+      <h3 class="section-header">Aptidões & Talentos</h3>
+      <ul id="habsList"></ul>
+    </div>
+  </div>
+
+  <div class="col-right">
     <div class="card skills-card">
-      <div class="skills-header">
-        <h3>Perícias</h3>
-        <span id="treinoDisplay" style="font-size:0.8rem; color:#aaa;"></span>
+      <div class="skills-header" style="padding-top:0;">
+        <h3 style="margin-bottom:5px;">Perícias</h3>
+        <span id="treinoDisplay" style="font-size:0.8rem; color:#aaa; display:block;"></span>
       </div>
       <div id="skillsList"></div>
     </div>
-
-    <div class="card">
-      <div class="skills-header"><h3>⚔️ Inventário / Ataques Básicos</h3></div>
-      <div style="padding:15px"><ul id="ataquesList" style="margin:0; padding-left:20px; color:#ccc;"></ul></div>
-    </div>
-    
-    <div class="card">
-      <div class="skills-header"><h3>🔥 Talentos Passivos</h3></div>
-      <div style="padding:15px"><ul id="habsList" style="margin:0; padding-left:20px; color:#ccc;"></ul></div>
-    </div>
   </div>
+
 </div>
 
 <button class="fab-config" onclick="abrirConfig()">⚙️</button>
@@ -177,10 +223,10 @@
     <input id="editImgUrl" style="width:100%; background:#111; border:1px solid #333; color:white; padding:5px; margin-bottom:15px;">
     <button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Atualizar Imagem</button>
     <br><br>
-    <label style="display:block; color:#aaa; font-weight:bold;">Ataques (1 por linha)</label>
+    <label style="display:block; color:#aaa; font-weight:bold;">Inventário / Armas (1 por linha)</label>
     <textarea id="editAtaques"></textarea>
     <br><br>
-    <label style="display:block; color:#aaa; font-weight:bold;">Talentos (1 por linha)</label>
+    <label style="display:block; color:#aaa; font-weight:bold;">Aptidões / Talentos (1 por linha)</label>
     <textarea id="editHabs"></textarea>
     <button onclick="salvarListas()" style="background:var(--primary); width:100%; padding:12px; color:white; border:none; cursor:pointer; border-radius:5px; font-weight:bold; margin-top:20px;">Salvar Listas</button>
     <button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:12px; color:white; border:none; cursor:pointer; border-radius:5px; margin-top:10px;">Fechar</button>
@@ -210,7 +256,7 @@ const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligenci
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
-    // Correções de segurança
+    // Safety Checks
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.shikigamis) ficha.shikigamis = [];
@@ -238,7 +284,7 @@ function renderFicha() {
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
   `;
 
-  // Tokens
+  // Tokens Shikigami
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
   if(f.shikigamis && f.shikigamis.length > 0) {
@@ -275,7 +321,6 @@ function renderFicha() {
   statsMap.forEach(s => {
     const st = f[s.k] || {atual:0, max:0};
     const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
-    
     areaStats.innerHTML += `
       <div class="stat-row">
         <div class="stat-head">
@@ -294,27 +339,26 @@ function renderFicha() {
       </div>`;
   });
 
-  // === RENDERIZAÇÃO DO COMBATE & RESISTÊNCIAS ===
-  const areaCombat = document.getElementById('combatArea');
-  areaCombat.innerHTML = "";
-  
+  // === CÁLCULOS GERAIS ===
   const nivel = f.nivel || 1;
   const metadeNivel = Math.floor(nivel / 2);
   const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
   document.getElementById('treinoDisplay').innerText = `Treino: +${bonusTreino}`;
-
-  // 1. ATAQUES
   const modFor = Math.floor(((f.atributos?.forca || 10) - 10) / 2);
   const modDes = Math.floor(((f.atributos?.destreza || 10) - 10) / 2);
-  
-  // Corpo a Corpo (Alterna FOR/DES)
   const cData = f.combate || {};
+
+  // === 1. ATAQUES (COLUNA DO MEIO) ===
+  const attacksArea = document.getElementById('combatAttacksArea');
+  attacksArea.innerHTML = "";
+
+  // Ataque Corpo a Corpo
   const cCorpo = cData.corpo || {};
   const usaDes = cCorpo.usaDes || false;
   const attrCorpo = usaDes ? modDes : modFor;
   const totCorpo = attrCorpo + metadeNivel + (cCorpo.treino ? bonusTreino : 0) + (cCorpo.outros || 0);
   
-  areaCombat.innerHTML += `
+  attacksArea.innerHTML += `
     <div class="combat-row">
       <span class="combat-label">Corpo a Corpo</span>
       <div class="combat-controls">
@@ -325,10 +369,10 @@ function renderFicha() {
       </div>
     </div>`;
 
-  // Distância (Sempre DES)
+  // Ataque Distância
   const cDist = cData.distancia || {};
   const totDist = modDes + metadeNivel + (cDist.treino ? bonusTreino : 0) + (cDist.outros || 0);
-  areaCombat.innerHTML += `
+  attacksArea.innerHTML += `
     <div class="combat-row">
       <span class="combat-label">Distância</span>
       <div class="combat-controls">
@@ -339,14 +383,14 @@ function renderFicha() {
       </div>
     </div>`;
 
-  // Místico/Especial (Escolhe Atributo, Sempre Treinado)
+  // Ataque Mágico/Especial
   const cMagic = cData.magico || {};
   const attrKey = cMagic.atributo || 'inteligencia';
   const valMagic = (f.atributos && f.atributos[attrKey]) ? f.atributos[attrKey] : 10;
   const modMagic = Math.floor((valMagic - 10) / 2);
-  const totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0); // Sempre treinado
+  const totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0);
   
-  areaCombat.innerHTML += `
+  attacksArea.innerHTML += `
     <div class="combat-row">
       <span class="combat-label">Mágico/Especial</span>
       <div class="combat-controls">
@@ -359,11 +403,13 @@ function renderFicha() {
       </div>
     </div>`;
 
-  // 2. RESISTÊNCIAS
+  // === 2. RESISTÊNCIAS (COLUNA DO MEIO) ===
+  const resistArea = document.getElementById('combatResistArea');
+  resistArea.innerHTML = "";
   const resistencias = [
     { k: 'astucia', l: 'Astúcia', a: 'inteligencia' },
     { k: 'fortitude', l: 'Fortitude', a: 'constituicao' },
-    { k: 'integridade', l: 'Integ.', a: 'constituicao' }, // User pediu CON
+    { k: 'integridade', l: 'Integridade', a: 'constituicao' },
     { k: 'reflexos', l: 'Reflexos', a: 'destreza' },
     { k: 'vontade', l: 'Vontade', a: 'sabedoria' }
   ];
@@ -374,9 +420,9 @@ function renderFicha() {
     const rMod = Math.floor((rVal - 10) / 2);
     const rTotal = rMod + metadeNivel + (rData.treino ? bonusTreino : 0) + (rData.outros || 0);
 
-    areaCombat.innerHTML += `
+    resistArea.innerHTML += `
       <div class="combat-row">
-        <span class="combat-label">Res. ${res.l}</span>
+        <span class="combat-label">${res.l}</span>
         <div class="combat-controls">
           <span style="font-size:0.7rem; color:#666;">${ATR_SHORT[res.a]}</span>
           <div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div>
@@ -386,7 +432,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // Renderiza Perícias
+  // === 3. PERÍCIAS (COLUNA DIREITA) ===
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
   const userPericias = f.pericias || {}; 
@@ -412,11 +458,13 @@ function renderFicha() {
       </div>`;
   });
 
+  // Listas de Texto
   document.getElementById('ataquesList').innerHTML = (f.ataques||[]).map(i=>`<li>${i}</li>`).join('');
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
-// === FUNÇÕES DE COMBATE ===
+// === LÓGICA DE DADOS E EVENTOS ===
+
 window.toggleCombatTrain = async (key) => {
   const combate = ficha.combate || {};
   if (!combate[key]) combate[key] = { treino: false, outros: 0 };
@@ -445,7 +493,6 @@ window.setMagicAttr = async (attr) => {
   await updateDoc(doc(db, "fichas", id), { combate: combate });
 };
 
-// === CÁLCULO DE DANO/CURA INLINE ===
 window.mathStat = (el, key) => {
   if(el.querySelector('input')) return; 
   const originalHtml = el.innerHTML;
@@ -471,7 +518,6 @@ window.mathStat = (el, key) => {
   input.addEventListener('keydown', (e) => { if(e.key === 'Enter') input.blur(); });
 };
 
-// === EDIÇÃO INLINE ===
 window.editarCampo = (el, field, type) => {
   if (el.querySelector('input')) return;
   editandoId = field;
@@ -504,11 +550,11 @@ window.upStat = async (key, val) => {
   await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
 };
 
-// NAVEGAÇÃO
+// Navegação
 window.irParaShikigamis = () => { window.location = `shikigamis.html?charId=${id}`; };
 window.irParaFeiticos = () => { window.location = `feiticos.html?id=${id}`; };
 
-// Configurações e Listas
+// Configurações
 window.abrirConfig = () => {
   document.getElementById('configModal').style.display = 'block';
   document.getElementById('editImgUrl').value = ficha.imagem || "";
