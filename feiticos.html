@@ -18,7 +18,7 @@
   .btn-back { background: transparent; border: 1px solid #555; color: #888; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-right: 15px; }
   h1 { margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
 
-  /* BARRA DE STATUS (Slots e Habilidades) */
+  /* BARRA DE STATUS */
   .status-bar { 
     background: #1a1a1a; padding: 10px 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
@@ -33,7 +33,6 @@
 
   .section-box { display: flex; flex-direction: column; gap: 15px; }
   
-  /* CORE BOX */
   .core-box { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid var(--border); position: relative; }
   .core-magic { border-top: 4px solid var(--magic); }
   .core-phys { border-top: 4px solid var(--phys); }
@@ -51,12 +50,10 @@
   }
   .skill-card:hover { transform: translateY(-2px); border-color: #555; }
   
-  /* Bloqueio de Nível */
   .skill-card.locked { opacity: 0.5; filter: grayscale(0.8); border: 1px dashed #555; }
   .skill-card.locked::after {
     content: "NÍVEL INSUFICIENTE"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg);
-    font-size: 1.5rem; font-weight: bold; color: rgba(255, 0, 0, 0.5); border: 2px solid rgba(255, 0, 0, 0.5); padding: 10px;
-    pointer-events: none;
+    font-size: 1.5rem; font-weight: bold; color: rgba(255, 0, 0, 0.5); border: 2px solid rgba(255, 0, 0, 0.5); padding: 10px; pointer-events: none;
   }
 
   .card-magic { border-left: 5px solid var(--magic); }
@@ -66,8 +63,9 @@
   .card-title { font-weight: bold; font-size: 1.1rem; }
   
   .card-lvl-badge { font-size: 0.75rem; background: #333; padding: 2px 8px; border-radius: 10px; color: #fff; margin-left: 10px; }
+  .card-type-badge { font-size: 0.7rem; color: var(--special); border: 1px solid var(--special); padding: 1px 6px; border-radius: 4px; margin-left: 5px; text-transform: uppercase; }
   .card-cost { font-size: 0.75rem; color: var(--magic); font-weight: bold; margin-left: auto; margin-right: 10px; }
-  .card-cost.reduced { color: #00ff00; } /* Custo reduzido */
+  .card-cost.reduced { color: #00ff00; } 
 
   .card-stats { display: flex; gap: 15px; padding: 8px 15px; background: #111; font-size: 0.85rem; color: #aaa; border-bottom: 1px solid #222; }
   .stat-item { display: flex; align-items: center; gap: 5px; }
@@ -95,7 +93,11 @@
   textarea { height: 100px; resize: vertical; }
   input:focus, textarea:focus { border-color: #777; }
 
-  .special-note { font-size: 0.8rem; color: var(--special); margin-top: 5px; display: none; }
+  .special-note { 
+    font-size: 0.8rem; color: var(--special); margin-top: 10px; 
+    border: 1px solid var(--special); padding: 10px; border-radius: 5px; 
+    background: rgba(208, 115, 250, 0.1); display: none;
+  }
 
   .btn-confirm { width: 100%; padding: 10px; margin-top: 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: #000; }
   
@@ -182,12 +184,27 @@
           <input id="inCustoDisplay" readonly style="color:var(--magic); font-weight:bold;">
         </div>
       </div>
+
+      <label>Tipo de Feitiço</label>
+      <select id="inFeiticoTipo" onchange="atualizarRegrasEspeciais()" style="margin-bottom:10px;">
+        <option value="Normal">Feitiço Padrão (Dano/Cura/Utilidade)</option>
+        <option value="Shikigami">Criação de Shikigami</option>
+        <option value="Item">Criação de Item</option>
+      </select>
       
       <div id="shikigamiNote" class="special-note">
-        <b>Shikigami (Técnica Máxima):</b> +2 Ações/Características. Custo como Nível 6 (12 PE Permanentes).
+        <b>Regra de Shikigami:</b> O custo de invocação é igual ao do Feitiço. Este custo vira "PE Permanente" reduzido do seu máximo enquanto o Shikigami existir.<br>
+        • Nv 0-1: Grau 4<br>
+        • Nv 2: Grau 3<br>
+        • Nv 3: Grau 2<br>
+        • Nv 4: Grau 1<br>
+        • Nv 5: Grau Especial
       </div>
+      
       <div id="itemNote" class="special-note">
-        <b>Criação de Item:</b> Cria item de Custo igual ao nível. Nível 5 cria 2 itens Custo 4.
+        <b>Regra de Item:</b> Cria um item de Custo igual ao Nível do feitiço. 
+        Feitiços de nível maior podem criar +1 item do custo anterior.<br>
+        • Itens não contam no limite de carga.
       </div>
     </div>
 
@@ -230,7 +247,6 @@ async function carregar() {
     ficha = snap.data();
     if(!ficha.passivas) ficha.passivas = { economia: false, honrado: false };
     
-    // Atualiza Checkboxes
     document.getElementById('chkEconomia').checked = ficha.passivas.economia;
     document.getElementById('chkHonrado').checked = ficha.passivas.honrado;
     
@@ -241,12 +257,24 @@ async function carregar() {
 // === CÁLCULO DE SLOTS ===
 function getSlotsInfo() {
   const nivel = Number(ficha.nivel || 1);
-  let slots = 2 + Math.floor(nivel / 2); // 2 Base + 1 a cada par
+  const isEspecialista = (ficha.classe === "Especialista em Técnica");
+  
+  let slots = 0;
+
+  if (isEspecialista) {
+    // Especialista: 1 por nível (+1 extra no 10 e 20)
+    // Nivel 1 = 2 Feitiços (Base)
+    // Nivel 2 = 3 Feitiços (+1)
+    // Formula: 1 + Nivel
+    slots = 1 + nivel;
+  } else {
+    // Padrão: 2 Base + 1 a cada par
+    slots = 2 + Math.floor(nivel / 2);
+  }
+
+  // Bônus de Nível 10 e 20 (Para todos)
   if (nivel >= 10) slots += 1;
   if (nivel >= 20) slots += 1;
-  
-  // Limite de modificação por nível = Bônus de Treino
-  // (Isso é uma regra de GM, não precisa travar no código, apenas informar)
   
   const usados = (ficha.feiticos || []).length;
   return `${usados} / ${slots}`;
@@ -275,15 +303,13 @@ function getNivelMaximoFeitico() {
 // === CÁLCULO DE CUSTO REAL ===
 function calcularCustoReal(nivelBase) {
   let custo = CUSTO_BASE[nivelBase];
-  if (nivelBase === 0) return 0; // Nível 0 é sempre 0? A regra diz 0.
+  if (nivelBase === 0) return 0;
 
-  // Foco Economia: -2 custo (mínimo 0 para nv 1)
   if (ficha.passivas?.economia) {
     custo -= 2;
-    if (nivelBase === 1 && custo < 0) custo = 0; // Regra diz "reduzir custo nv 1 para 0"
+    if (nivelBase === 1 && custo < 0) custo = 0;
   }
 
-  // O Honrado: Metade para Nv 1, 2, 3
   if (ficha.passivas?.honrado && nivelBase <= 3) {
     custo = Math.floor(custo / 2);
   }
@@ -333,6 +359,7 @@ function cardHtml(dados, index, tipo, bloqueado, nivelFeitico) {
   
   let badge = "";
   let custoHtml = "";
+  let typeBadge = "";
 
   if(tipo === 'feitico') {
     badge = `<span class="card-lvl-badge">Nível ${nivelFeitico}</span>`;
@@ -340,8 +367,11 @@ function cardHtml(dados, index, tipo, bloqueado, nivelFeitico) {
     const custoOriginal = CUSTO_BASE[nivelFeitico];
     const custoReal = calcularCustoReal(nivelFeitico);
     const reducedClass = custoReal < custoOriginal ? "reduced" : "";
-    
     custoHtml = `<span class="card-cost ${reducedClass}">${custoReal} PE</span>`;
+
+    if(dados.tipoEspecial && dados.tipoEspecial !== "Normal") {
+      typeBadge = `<span class="card-type-badge">${dados.tipoEspecial}</span>`;
+    }
   } else {
     badge = dados.nivel ? `<span class="card-lvl-badge">${dados.nivel}</span>` : '';
   }
@@ -352,6 +382,7 @@ function cardHtml(dados, index, tipo, bloqueado, nivelFeitico) {
         <div style="display:flex; align-items:center;">
           <span class="card-title">${dados.nome}</span>
           ${badge}
+          ${typeBadge}
         </div>
         
         <div style="display:flex; align-items:center;">
@@ -379,8 +410,8 @@ window.salvarPassivas = async () => {
     honrado: document.getElementById('chkHonrado').checked
   };
   await updateDoc(doc(db, "fichas", id), { passivas: passivas });
-  ficha.passivas = passivas; // Atualiza local
-  renderTudo(); // Re-renderiza para atualizar custos
+  ficha.passivas = passivas;
+  renderTudo();
 };
 
 window.salvarCores = async () => {
@@ -400,12 +431,13 @@ window.salvarCores = async () => {
 window.atualizarInfoFeitico = () => {
   const nivel = document.getElementById('inFeiticoNivel').value;
   document.getElementById('inCustoDisplay').value = CUSTO_BASE[nivel] + " PE";
-  
-  // Notas Especiais (Item/Shiki)
-  // Essas notas são apenas informativas baseadas na tabela que você mandou
-  document.getElementById('itemNote').style.display = "block"; 
-  document.getElementById('shikigamiNote').style.display = "block";
 };
+
+window.atualizarRegrasEspeciais = () => {
+  const tipo = document.getElementById('inFeiticoTipo').value;
+  document.getElementById('shikigamiNote').style.display = (tipo === 'Shikigami') ? 'block' : 'none';
+  document.getElementById('itemNote').style.display = (tipo === 'Item') ? 'block' : 'none';
+}
 
 window.abrirModal = (tipo) => {
   editType = tipo;
@@ -418,7 +450,9 @@ window.abrirModal = (tipo) => {
     document.getElementById('spellConfig').style.display = 'block';
     document.getElementById('genericConfig').style.display = 'none';
     document.getElementById('inFeiticoNivel').value = "0";
+    document.getElementById('inFeiticoTipo').value = "Normal";
     atualizarInfoFeitico();
+    atualizarRegrasEspeciais();
   } else {
     document.getElementById('spellConfig').style.display = 'none';
     document.getElementById('genericConfig').style.display = 'block';
@@ -447,7 +481,9 @@ window.editar = (tipo, index) => {
     document.getElementById('spellConfig').style.display = 'block';
     document.getElementById('genericConfig').style.display = 'none';
     document.getElementById('inFeiticoNivel').value = item.nivelFeitico || 0;
+    document.getElementById('inFeiticoTipo').value = item.tipoEspecial || "Normal";
     atualizarInfoFeitico();
+    atualizarRegrasEspeciais();
   } else {
     document.getElementById('spellConfig').style.display = 'none';
     document.getElementById('genericConfig').style.display = 'block';
@@ -472,6 +508,8 @@ document.getElementById('btnConfirmar').onclick = async () => {
 
   if (editType === 'feitico') {
     novoItem.nivelFeitico = document.getElementById('inFeiticoNivel').value;
+    novoItem.tipoEspecial = document.getElementById('inFeiticoTipo').value;
+    
     if(!ficha.feiticos) ficha.feiticos = [];
     if(editIndex === -1) ficha.feiticos.push(novoItem);
     else ficha.feiticos[editIndex] = novoItem;
