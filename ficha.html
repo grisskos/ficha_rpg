@@ -44,7 +44,9 @@
   /* TOKENS & UTILS */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
+  .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+  .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
   .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
@@ -66,11 +68,10 @@
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* COMBATE & VALORES DERIVADOS */
+  /* COMBATE */
   .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
-  .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; }
-  .cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; } .cols-3 { grid-template-columns: repeat(3, 1fr); } .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
   .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
   .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
   .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
@@ -82,15 +83,32 @@
   select.mini-select { background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; max-width: 80px; margin-top: 2px; }
   select.mini-select option { background: #222; color: #fff; }
 
-  /* VALORES ADICIONAIS (DERIVADOS) */
+  /* VALORES ADICIONAIS */
   .derived-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .derived-box { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 10px; text-align: center; }
   .derived-label { font-size: 0.7rem; color: var(--energy); font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
   .derived-value { font-size: 1.6rem; font-weight: bold; color: #fff; }
-  .derived-calc { font-size: 0.7rem; color: #666; display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 5px; }
-  .derived-calc input { background: #111; border: 1px solid #444; color: #aaa; width: 25px; text-align: center; border-radius: 3px; font-size: 0.7rem; }
+  .derived-calc { display: flex; justify-content: center; margin-top: 5px; } /* Limpo */
+  .derived-calc input { background: #111; border: 1px solid #444; color: #aaa; width: 40px; text-align: center; border-radius: 3px; font-size: 0.8rem; }
+  .derived-calc input:focus { border-color: var(--energy); color: white; outline: none; }
 
-  /* INVENTÁRIO, APTIDÕES & PERÍCIAS */
+  /* PERÍCIAS (Novo Estilo) */
+  .skills-card { padding: 0; overflow: hidden; height: 100%; }
+  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+  
+  .skill-row { display: flex; align-items: center; padding: 4px 10px; border-bottom: 1px solid #222; font-size: 0.8rem; }
+  .skill-row:hover { background: #1b1b1b; }
+  .sk-name { flex-grow: 1; color: #999; font-weight: 500; }
+  .sk-attr { font-size: 0.65rem; color: #444; width: 30px; text-transform: uppercase; font-weight: bold; }
+  .sk-total { font-weight: bold; color: white; width: 30px; text-align: right; margin-right: 10px; font-size: 0.9rem; }
+  .sk-btn-group { display: flex; gap: 3px; align-items: center; }
+  .sk-btn { width: 20px; height: 20px; border-radius: 3px; border: 1px solid #333; background: #111; color: #555; font-size: 0.6rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+  .sk-btn:hover { border-color: #777; color: #aaa; }
+  .sk-btn.active-t { background: rgba(88, 232, 218, 0.1); border-color: var(--energy); color: var(--energy); }
+  .sk-btn.active-m { background: rgba(230, 57, 70, 0.1); border-color: var(--primary); color: var(--primary); }
+
+  /* INVENTÁRIO & APTIDÕES */
   .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
   .inv-card { background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
   .inv-card:hover { border-color: white; transform: translateY(-3px); }
@@ -106,7 +124,7 @@
   .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
   .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
   .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
-  
+
   .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
   .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .aptidao-header:hover { background: #2a2a2a; }
@@ -124,24 +142,13 @@
   .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
   .btn-edit-apt:hover { color: var(--primary); }
 
-  .skills-card { padding: 0; overflow: hidden; height: 100%; }
-  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
-  .skill-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
-  .skill-row:hover { background: #1b1b1b; }
-  .sk-name { flex-grow: 1; color: #eee; }
-  .sk-attr { font-size: 0.7rem; color: #555; width: 40px; text-transform: uppercase; font-weight: bold; }
-  .sk-total { font-weight: bold; color: white; width: 35px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
-  .sk-btn-group { display: flex; gap: 5px; align-items: center; }
-  .sk-btn { width: 25px; height: 25px; border-radius: 4px; border: 1px solid #444; background: #111; color: #555; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-  .sk-btn:hover { border-color: #777; color: #aaa; }
-  .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
-  .sk-btn.active-m { background: rgba(230, 57, 70, 0.2); border-color: var(--primary); color: var(--primary); }
-
+  /* LISTAS & NAV */
   .list-box ul { padding-left: 20px; margin: 0; color: #ccc; } .list-box li { margin-bottom: 5px; }
   .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
   .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
+
+  /* MODALS */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
   .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; overflow-y: auto; }
@@ -217,22 +224,22 @@
         <div class="derived-box">
           <div class="derived-label">DEFESA</div>
           <div class="derived-value" id="valDefesa">10</div>
-          <div class="derived-calc">Base 10 + Des + Nvl/2 + <input id="bonusDef" class="bonus-input" onchange="setDerivadoBonus('defesa', this.value)"></div>
+          <div class="derived-calc"><input id="bonusDef" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('defesa', this.value)"></div>
         </div>
         <div class="derived-box">
           <div class="derived-label">ATENÇÃO</div>
           <div class="derived-value" id="valAtencao">10</div>
-          <div class="derived-calc">Base 10 + Percepção + <input id="bonusAtencao" class="bonus-input" onchange="setDerivadoBonus('atencao', this.value)"></div>
+          <div class="derived-calc"><input id="bonusAtencao" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('atencao', this.value)"></div>
         </div>
         <div class="derived-box">
           <div class="derived-label">INICIATIVA</div>
           <div class="derived-value" id="valIniciativa">+0</div>
-          <div class="derived-calc">Mod. Destreza + <input id="bonusIniciativa" class="bonus-input" onchange="setDerivadoBonus('iniciativa', this.value)"></div>
+          <div class="derived-calc"><input id="bonusIniciativa" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('iniciativa', this.value)"></div>
         </div>
         <div class="derived-box">
           <div class="derived-label">DESLOC.</div>
           <div class="derived-value" id="valDesloc">9m</div>
-          <div class="derived-calc">Base 9m + <input id="bonusDesloc" class="bonus-input" onchange="setDerivadoBonus('deslocamento', this.value)"></div>
+          <div class="derived-calc"><input id="bonusDesloc" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('deslocamento', this.value)"></div>
         </div>
       </div>
     </div>
@@ -307,17 +314,17 @@ const APTIDOES_BASE = [
   { nome: "Projeção", descricao: "Você aprende a projetar sua aura para ataques.", maxNivel: 5, niveis: ["NV 1 - Ataque 1d8. Crítico 20.", "NV 2 - Soma Atributo Mental. Imbuir objeto (+1d6).", "NV 3 - Soma Treinamento. Dano 1d10. Imbuir (+1d8+Mental). Custo 2 PE.", "NV 4 - Dano 2d8. Ignora RD (Treino). Imbuir (+2d6+Mental). Custo 3 PE.", "NV 5 - Dano 3d10. Ignora RD (Treino+Mental). Imbuir (+3d8+Mental). Custo 4 PE."] },
   { nome: "Criação", descricao: "Você pode criar coisas feitas de energia.", maxNivel: 5, niveis: ["NV 1 - Paredes 1x1. Vida = Metade Nível x Treino. Custo 1 PE.", "NV 2 - Soma Atributo Mental na Vida.", "NV 3 - Paredes 3x3, formatos variáveis. Custo 2 PE.", "NV 4 - Vida = Nível x Treino + Mental. Maleáveis.", "NV 5 - Vida = Nível x Treino + 2x Mental. Imune ao 1º ataque. Custo 4 PE."] },
   { nome: "Concentração", descricao: "Foca energia para aumentar o dano.", maxNivel: 5, niveis: ["NV 1 - Aumenta dado de dano em 1 nível. Custo 2 PE.", "NV 2 - Soma modificador do maior atributo.", "NV 3 - +1 dado adicional no dano. Custo 3 PE.", "NV 4 - Aumenta dado em 2 níveis. Custo 4 PE.", "NV 5 - Maximiza dados (qtd igual Treinamento). Custo 5 PE."] },
-  { nome: "Transformação", descricao: "Altera propriedades da aura.", maxNivel: 5, niveis: ["NV 1 - Líquida (+1 CA/Ref), Sólida (+1 RD/Fort), Gasosa (+1 Dano/Integ).", "NV 2 - Bônus aumenta para +2.", "NV 3 - Bônus aumenta para +3. Custo 3 PE/turno.", "NV 4 - Bônus aumenta para +4.", "NV 5 - Estado Máximo. Custo 4 PE/turno."] },
-  { nome: "Aura Elemental", descricao: "Imbui aura com elementos naturais.", maxNivel: 5, niveis: ["NV 1 - Mudar tipo de dano.", "NV 2 - Transformar objeto. +1d6 dano.", "NV 3 - Transformar aura do alvo.", "NV 4 - Elemento passivo.", "NV 5 - Causa 2d10 + Mental de dano."] },
-  { nome: "Molde", descricao: "Esculpe energia em formas complexas.", maxNivel: 5, niveis: ["NV 1 - Moldar 1x1.", "NV 2 - +1 Vida.", "NV 3 - Moldar 3x3.", "NV 4 - Mecanismos.", "NV 5 - Característica extra."] },
-  { nome: "Intensificação", descricao: "Comprime energia para efeitos mais potentes.", maxNivel: 5, niveis: ["NV 1 - +1 Dano/Defesa.", "NV 2 - +2 Dano/Defesa.", "NV 3 - +1 + Metade Treino.", "NV 4 - +1 Nível Dano.", "NV 5 - Dano Bônus X+Y."] },
-  { nome: "Solidificação", descricao: "Compacta aura como armadura.", maxNivel: 5, niveis: ["NV 1 - +1 Redução.", "NV 2 - +2 Redução.", "NV 3 - Redução 1+X.", "NV 4 - Redução Y+X.", "NV 5 - Res. Física e Dano X+Y."] },
-  { nome: "Encasular", descricao: "Cria bolhas para prender ou proteger.", maxNivel: 5, niveis: ["NV 1 - Bolha 1x1.", "NV 2 - Bolha ganha HP.", "NV 3 - Dano periódico.", "NV 4 - Múltiplos alvos.", "NV 5 - Quase impenetrável."] },
-  { nome: "Redirecionar", descricao: "Manipula a direção de ataques.", maxNivel: 5, niveis: ["NV 1 - Curvar ataque.", "NV 2 - Redirecionar projéteis.", "NV 3 - Redirecionar área.", "NV 4 - Nós de redirecionamento.", "NV 5 - Refletir habilidade."] },
-  { nome: "Esconder", descricao: "Oculta a aura.", maxNivel: 5, niveis: ["NV 1 - Indetectável.", "NV 2 - Isca falsa.", "NV 3 - Ocultação completa.", "NV 4 - Mascarar grupo.", "NV 5 - Indetectável total."] },
-  { nome: "Perturbação", descricao: "Interfere na energia alheia.", maxNivel: 5, niveis: ["NV 1 - Alvo -1 testes.", "NV 2 - Teste Vontade.", "NV 3 - Zona perturbação.", "NV 4 - Interromper recarga.", "NV 5 - Anular habilidade."] },
-  { nome: "Ápice Humano", descricao: "Seu corpo atinge o pico absoluto. +Treino Redução e Testes Físicos.", maxNivel: 1, niveis: ["Desbloqueado"] },
-  { nome: "Corpo Amaldiçoado", descricao: "Corpo de energia pura. Ataques Mágicos, +Treino Dano e Manipulação.", maxNivel: 1, niveis: ["Desbloqueado"] }
+  { nome: "Transformação", descricao: "Altera propriedades da aura (Líquida, Sólida, Gasosa).", maxNivel: 5, niveis: ["NV 1 - Líquida (+1 CA/Ref), Sólida (+1 RD/Fort), Gasosa (+1 Dano/Integ).", "NV 2 - Bônus aumenta para +2.", "NV 3 - Bônus aumenta para +3. Custo 3 PE/turno.", "NV 4 - Bônus aumenta para +4.", "NV 5 - Estado Máximo. Custo 4 PE/turno."] },
+  { nome: "Aura Elemental", descricao: "Imbui aura com elementos naturais.", maxNivel: 5, niveis: ["NV 1 - Mudar tipo de dano por Treinamento turnos.", "NV 2 - Transformar objeto/efeito. +1d6 dano elemental. Duração Cena.", "NV 3 - Transformar aura do alvo (Teste Res). Soma Mental no dano.", "NV 4 - Elemento passivo. Segundo elemento disponível.", "NV 5 - Causa 2d10 + Mental de dano elemental."] },
+  { nome: "Molde", descricao: "Esculpe energia em formas complexas.", maxNivel: 5, niveis: ["NV 1 - Moldar 1x1 (pilar, lâmina). Dur: Treino turnos. Custo 2 PE.", "NV 2 - +1 Vida, formas mais complexas.", "NV 3 - Moldar 3x3 com partes móveis.", "NV 4 - Criar mecanismos (portas, alavancas).", "NV 5 - Ganha característica extra. Imune 1º ataque."] },
+  { nome: "Intensificação", descricao: "Comprime energia para efeitos mais potentes.", maxNivel: 5, niveis: ["NV 1 - +1 Dano/Defesa. Custo 1 PE.", "NV 2 - +2 Dano/Defesa, +1 Alcance. Custo 1 PE.", "NV 3 - +1 + Metade Treino. Ignora RD (Metade Treino). Custo 2 PE.", "NV 4 - +1 Nível Dano ou Modificador na Defesa. Custo 3 PE.", "NV 5 - Dano Bônus X+Y. Sacrificar energia para +2 Níveis Dano. Custo 5 PE."] },
+  { nome: "Solidificação", descricao: "Compacta aura como armadura.", maxNivel: 5, niveis: ["NV 1 - +1 Redução. PV Temp = Treinamento.", "NV 2 - +2 Redução. +1 Dano energético.", "NV 3 - Redução 1+X. Res. Física X. PV Temp = Treino + Mental. Custo 2 PE.", "NV 4 - Redução Y+X. Redução extra contra críticos.", "NV 5 - Res. Física e Dano X+Y. Imunidade a 1 efeito negativo. Custo 4 PE."] },
+  { nome: "Encasular", descricao: "Cria bolhas para prender ou proteger.", maxNivel: 5, niveis: ["NV 1 - Bolha 1x1. Reduz mobilidade, concede RD. Dur: Treino turnos.", "NV 2 - Bolha ganha HP. Inimigos: Desvantagem física. Custo 2 PE.", "NV 3 - Dano periódico. À prova de som.", "NV 4 - Múltiplos alvos ou 3x3. Absorve 1 ataque. Custo 3 PE.", "NV 5 - Quase impenetrável. Bloqueia feitiços. Custo 4 PE."] },
+  { nome: "Redirecionar", descricao: "Manipula a direção de ataques.", maxNivel: 5, niveis: ["NV 1 - Curvar ataque de projeção. Custo 1 PE.", "NV 2 - Redirecionar projéteis curtos. Desvantagem no atacante. Custo 1 PE.", "NV 3 - Redirecionar efeitos de área. Custo 2 PE.", "NV 4 - Criar nós de redirecionamento.", "NV 5 - Refletir habilidade para o remetente. Custo 5 PE."] },
+  { nome: "Esconder", descricao: "Oculta a aura de detecção.", maxNivel: 5, niveis: ["NV 1 - Indetectável por métodos simples.", "NV 2 - Projetar isca falsa. Treinamento em Furtividade.", "NV 3 - Ocultação completa. Duplicar assinatura.", "NV 4 - Mascarar grupo (Raio = Metade Nível).", "NV 5 - Indetectável total. Assumir assinatura de outro."] },
+  { nome: "Perturbação", descricao: "Interfere no fluxo de energia alheio.", maxNivel: 5, niveis: ["NV 1 - Alvo -1 em testes de energia.", "NV 2 - Teste de Vontade para conjurar.", "NV 3 - Zona de perturbação 3x3. Reduz eficácia.", "NV 4 - Interromper recarga.", "NV 5 - Anular habilidade ou inverter efeito."] },
+  { nome: "Ápice Humano", descricao: "Seu corpo atinge o pico absoluto. Passivo: +Treino em Redução de Dano e Testes Físicos. Ativo: Corpo no Limite (1/longo) +1 Ação, Resistência Física. Causa Exaustão (-2 testes físicos).", maxNivel: 1, niveis: ["Desbloqueado"] },
+  { nome: "Corpo Amaldiçoado", descricao: "Corpo de energia pura. Passivo: Ataques Físicos são Mágicos, +Treino Dano, +Treino Manipulação. Ativo: Forma Amaldiçoada (1/longo) +Nvl d12 Dano, Imunidade física. Causa Corrupção (-Nvlx2 Max HP).", maxNivel: 1, niveis: ["Desbloqueado"] }
 ];
 
 const params = new URLSearchParams(location.search);
@@ -374,7 +381,6 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
 function renderFicha() {
   const f = ficha;
   
-  // Header
   const nomeEl = document.getElementById('nomeDisplay');
   if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
   document.getElementById('charImg').src = f.imagem || "";
@@ -384,17 +390,16 @@ function renderFicha() {
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
   `;
 
-  // Transf
   const btnApice = document.getElementById('btnApice');
   const btnCorpo = document.getElementById('btnCorpo');
   const divSequela = document.getElementById('statusSequela');
+  
   btnApice.className = "transf-btn apice locked"; btnCorpo.className = "transf-btn corpo locked"; divSequela.innerHTML = "";
   if(f.transfUnlocked.apice) { btnApice.classList.remove('locked'); btnApice.classList.add('unlocked'); if(f.transfActive === 'apice') btnApice.classList.add('active'); }
   if(f.transfUnlocked.corpo) { btnCorpo.classList.remove('locked'); btnCorpo.classList.add('unlocked'); if(f.transfActive === 'corpo') btnCorpo.classList.add('active'); }
-  if(f.sequelas.exaustao) divSequela.innerHTML += `<span class="sequela-tag">⚠ EXAUSTÃO</span>`;
-  if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO</span>`;
+  if(f.sequelas.exaustao) divSequela.innerHTML += `<span class="sequela-tag">⚠ EXAUSTÃO (-2 Físico)</span>`;
+  if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO (HP Max Reduzido)</span>`;
 
-  // Tokens
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
   if(f.shikigamis.length > 0) {
@@ -402,7 +407,6 @@ function renderFicha() {
     if(f.shikigamis.length < 20) shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()">+</div>`;
   } else { shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()">+</div>`; }
 
-  // Atributos
   const areaAttr = document.getElementById('atributosArea');
   areaAttr.innerHTML = "";
   Object.keys(ATR_SHORT).forEach(key => {
@@ -411,7 +415,6 @@ function renderFicha() {
     areaAttr.innerHTML += `<div class="attr-box"><span class="attr-lbl">${ATR_SHORT[key]}</span><span class="attr-val">${mod>=0?'+':''}${mod}</span><span class="attr-raw editable" onclick="editarCampo(this, 'atributos.${key}', 'number')">${val}</span></div>`;
   });
 
-  // Stats
   const areaStats = document.getElementById('statsArea');
   areaStats.innerHTML = "";
   const statsMap = [{k:'vida', l:'Vida', color:'var(--primary)'}, {k:'energia', l:'Energia', color:'var(--energy)'}, {k:'vigor', l:'Vigor', color:'var(--vigor)'}, {k:'integridade', l:'Integ.', color:'var(--integridade)'}];
@@ -434,7 +437,6 @@ function renderFicha() {
 
   renderDerivados();
 
-  // Combate
   const attacksArea = document.getElementById('combatAttacksArea');
   attacksArea.innerHTML = "";
   
@@ -465,7 +467,6 @@ function renderFicha() {
     resistArea.innerHTML += `<div class="combat-card"><div class="cc-header">${res.l}</div><div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div><div class="cc-footer"><div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div><input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)"></div></div>`;
   });
 
-  // Inventário
   const strMod = Math.floor((f.atributos.forca - 10) / 2);
   const limit = 8 + (strMod * 2); 
   const hardLimit = limit * 2;
@@ -482,7 +483,6 @@ function renderFicha() {
     invGrid.innerHTML += `<div class="inv-card ${gradeClass}" onclick="abrirItemModal(${idx})"><img src="${imgUrl}" class="inv-img"><div class="inv-body"><div class="inv-title">${item.nome}</div><div class="inv-type">${item.tipo} • Grau ${['Esp','1','2','3','4'][item.grau]}</div><div class="inv-stats">${item.bonus || ''}</div><div class="inv-slots">${item.espacos} 📦</div></div></div>`;
   });
 
-  // Aptidões
   const containerApt = document.getElementById('listaAptidoes');
   containerApt.innerHTML = "";
   const todasAptidoes = [...APTIDOES_BASE, ...(ficha.aptidoesCustom || [])];
@@ -505,7 +505,6 @@ function renderFicha() {
       });
     }
 
-    // Verifica se é Custom para mostrar botão de editar (Index relativo)
     let editBtn = "";
     if (isMestre && index >= APTIDOES_BASE.length) {
       const realIndex = index - APTIDOES_BASE.length;
@@ -515,7 +514,6 @@ function renderFicha() {
     containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body ${nivelAtual > 0 ? 'open' : ''}"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
   });
 
-  // Perícias
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
   const PHYS_ATTRS = ['forca', 'destreza', 'constituicao'];
@@ -528,24 +526,19 @@ function renderFicha() {
     if (saved.m) total += 1;
     total += Number(saved.bonus || 0);
     if (f.transfUnlocked.apice && PHYS_ATTRS.includes(p.a)) total += bonusPhysSkill_Apice;
-
     listaSkills.innerHTML += `<div class="skill-row"><span class="sk-name">${p.n}</span><span class="sk-attr">${ATR_SHORT[p.a]}</span><span class="sk-total">${total>=0?'+':''}${total}</span><div class="sk-btn-group"><input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)"><div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div><div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div></div></div>`;
   });
 }
 
-// === VALORES ADICIONAIS ===
 function renderDerivados() {
   const desMod = Math.floor((ficha.atributos.destreza - 10) / 2);
   const metadeNivel = Math.floor((ficha.nivel || 1) / 2);
   
-  // Defesa = 10 + Des + Nvl/2 + Outros
   const defBonus = Number(ficha.derivados.defesa || 0);
   const defesa = 10 + desMod + metadeNivel + defBonus;
   document.getElementById('valDefesa').innerText = defesa;
   document.getElementById('bonusDef').value = ficha.derivados.defesa || "";
 
-  // Atenção = 10 + Percepção Total + Outros
-  // Calcula percepção total manualmente
   const sabMod = Math.floor((ficha.atributos.sabedoria - 10) / 2);
   const pSaved = (ficha.pericias && ficha.pericias["Percepção"]) || {t:false, m:false, bonus:0};
   const bonusTreino = 2 + Math.floor(((ficha.nivel||1)-1)/4);
@@ -558,13 +551,11 @@ function renderDerivados() {
   document.getElementById('valAtencao').innerText = atencao;
   document.getElementById('bonusAtencao').value = ficha.derivados.atencao || "";
 
-  // Iniciativa = Des + Outros
   const iniBonus = Number(ficha.derivados.iniciativa || 0);
   const iniciativa = desMod + iniBonus;
   document.getElementById('valIniciativa').innerText = (iniciativa>=0?'+':'') + iniciativa;
   document.getElementById('bonusIniciativa').value = ficha.derivados.iniciativa || "";
 
-  // Deslocamento = 9 + Outros
   const desBonus = Number(ficha.derivados.deslocamento || 0);
   const desloc = 9 + desBonus;
   document.getElementById('valDesloc').innerText = desloc + "m";
@@ -577,7 +568,6 @@ window.setDerivadoBonus = async (key, val) => {
   await updateDoc(doc(db, "fichas", id), { derivados: derivados });
 };
 
-// === FUNÇÕES GLOBAIS ===
 window.toggleTransformacao = async (tipo) => { if (!ficha.transfUnlocked[tipo]) return; let novoEstado = null; if (ficha.transfActive === tipo) { novoEstado = null; if (tipo === 'apice') await aplicarSequela('exaustao'); if (tipo === 'corpo') await aplicarSequela('corrupcao'); } else { novoEstado = tipo; } await updateDoc(doc(db, "fichas", id), { transfActive: novoEstado }); };
 async function aplicarSequela(tipo) { const seq = ficha.sequelas || {}; seq[tipo] = true; if (tipo === 'corrupcao') { const dano = (ficha.nivel || 1) * 2; const novoMax = Math.max(1, (ficha.vida.max - dano)); const novoAtual = Math.min(ficha.vida.atual, novoMax); await updateDoc(doc(db, "fichas", id), { sequelas: seq, "vida.max": novoMax, "vida.atual": novoAtual }); alert(`Transformação cessou. -${dano} Vida Máxima.`); } else { await updateDoc(doc(db, "fichas", id), { sequelas: seq }); alert("Transformação cessou. Exaustão aplicada."); } }
 window.gmUnlock = async (tipo) => { const unlocked = ficha.transfUnlocked || {}; unlocked[tipo] = true; await updateDoc(doc(db, "fichas", id), { transfUnlocked: unlocked }); };
