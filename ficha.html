@@ -92,7 +92,21 @@
   .derived-calc input { background: #111; border: 1px solid #444; color: #aaa; width: 40px; text-align: center; border-radius: 3px; font-size: 0.8rem; }
   .derived-calc input:focus { border-color: var(--energy); color: white; outline: none; }
 
-  /* INVENTÁRIO */
+  /* HABILIDADES DE CLASSE (ESTILOS) */
+  .class-ability-box { border-left: 4px solid var(--primary); padding: 10px; background: #151515; margin-bottom: 10px; border-radius: 4px; }
+  .class-ability-name { font-weight: bold; color: #fff; font-size: 0.95rem; }
+  .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 5px; white-space: pre-wrap; line-height: 1.4; }
+  .class-select { background: #000; border: 1px solid #444; color: #ccc; padding: 5px; border-radius: 4px; width: 100%; margin-top: 5px; font-family: inherit; }
+  
+  /* Checkbox Multiplo */
+  .multi-choice-container { background: #111; padding: 10px; border: 1px solid #333; border-radius: 4px; margin-top: 5px; }
+  .multi-choice-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; color: #ccc; font-size: 0.85rem; border-bottom: 1px solid #222; padding-bottom: 5px; }
+  .multi-choice-item input { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; accent-color: var(--primary); }
+  
+  .btn-add-origin { width: 100%; border: 1px dashed #555; background: transparent; color: #666; padding: 8px; cursor: pointer; margin-top: 5px; border-radius: 5px; }
+  .btn-add-origin:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* INVENTÁRIO & APTIDÕES */
   .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
   .inv-card { background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
   .inv-card:hover { border-color: white; transform: translateY(-3px); }
@@ -109,8 +123,7 @@
   .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
   .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
 
-  /* APTIDÕES & HABILIDADES CLASSE */
-  .aptidao-box, .class-ability-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
+  .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
   .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .aptidao-header:hover { background: #2a2a2a; }
   .aptidao-body { display: none; padding: 10px; background: #151515; }
@@ -120,24 +133,12 @@
   .nivel-row.unlocked { color: #fff; } 
   .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
   .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  
-  /* Habilidades de Classe Estilo */
-  .class-ability-box { border-left: 4px solid var(--primary); padding: 10px; background: #151515; }
-  .class-ability-name { font-weight: bold; color: #fff; font-size: 0.95rem; }
-  .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 5px; white-space: pre-wrap; }
-  .class-select { background: #000; border: 1px solid #444; color: #ccc; padding: 5px; border-radius: 4px; width: 100%; margin-top: 5px; font-family: inherit; }
-
-  /* Botões Mestre */
   .gm-controls { display: none; margin-left: auto; gap: 5px; } 
   .gm-visible .gm-controls { display: flex; }
   .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
   .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
   .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
   .btn-edit-apt:hover { color: var(--primary); }
-
-  /* Botão Origem */
-  .btn-add-origin { width: 100%; border: 1px dashed #555; background: transparent; color: #666; padding: 8px; cursor: pointer; margin-top: 5px; border-radius: 5px; }
-  .btn-add-origin:hover { border-color: var(--primary); color: var(--primary); }
 
   /* PERÍCIAS & NAV */
   .skills-card { padding: 0; overflow: hidden; height: 100%; }
@@ -210,8 +211,11 @@
 
     <div class="card">
       <h3 class="section-header" style="margin-bottom:10px;">Habilidades de Classe & Origem</h3>
+      
       <div id="classAbilitiesList"></div>
+      
       <hr style="border-color:#222; margin:15px 0;">
+      
       <h4 style="margin:0 0 10px 0; color:var(--vigor); font-size:0.9rem;">Origem</h4>
       <div id="originAbilitiesList"></div>
       <button class="btn-add-origin" onclick="addOrigem()">+ Habilidade de Origem</button>
@@ -263,7 +267,6 @@
 </div>
 
 <button class="fab-config" onclick="abrirConfig()">⚙️</button>
-
 <div id="configModal" class="modal">
   <div class="modal-content">
     <h2 style="color:var(--primary);">Configurações</h2>
@@ -386,7 +389,6 @@ function renderFicha() {
   const btnApice = document.getElementById('btnApice');
   const btnCorpo = document.getElementById('btnCorpo');
   const divSequela = document.getElementById('statusSequela');
-  
   btnApice.className = "transf-btn apice locked"; btnCorpo.className = "transf-btn corpo locked"; divSequela.innerHTML = "";
   if(f.transfUnlocked.apice) { btnApice.classList.remove('locked'); btnApice.classList.add('unlocked'); if(f.transfActive === 'apice') btnApice.classList.add('active'); }
   if(f.transfUnlocked.corpo) { btnCorpo.classList.remove('locked'); btnCorpo.classList.add('unlocked'); if(f.transfActive === 'corpo') btnCorpo.classList.add('active'); }
@@ -538,12 +540,12 @@ function renderDerivados() {
   document.getElementById('bonusDef').value = ficha.derivados.defesa || "";
 
   const pSaved = (ficha.pericias && ficha.pericias["Percepção"]) || {t:false, m:false, bonus:0};
-  let percTotal = sabMod + metadeNivel + Number(pSaved.bonus || 0);
-  if(pSaved.t) percTotal += bonusTreino;
-  if(pSaved.m) percTotal += 1;
+  let percMod = sabMod + metadeNivel + Number(pSaved.bonus || 0);
+  if(pSaved.t) percMod += bonusTreino;
+  if(pSaved.m) percMod += 1;
   
   const atencaoBonus = Number(ficha.derivados.atencao || 0);
-  const atencao = 10 + percTotal + atencaoBonus;
+  const atencao = 10 + percMod + atencaoBonus;
   document.getElementById('valAtencao').innerText = atencao;
   document.getElementById('bonusAtencao').value = ficha.derivados.atencao || "";
 
@@ -558,6 +560,7 @@ function renderDerivados() {
   document.getElementById('bonusDesloc').value = ficha.derivados.deslocamento || "";
 }
 
+// FUNÇÃO CORRIGIDA: MÚLTIPLA ESCOLHA CHECKBOX
 function renderHabilidadesClasse() {
   const container = document.getElementById('classAbilitiesList');
   container.innerHTML = "";
@@ -571,24 +574,34 @@ function renderHabilidadesClasse() {
 
       let content = "";
       
-      if (hab.tipo === "escolha") {
+      if (hab.tipo === "selecao_unica") {
         const savedChoice = (ficha.escolhasClasse || {})[idx] || "";
         const options = hab.opcoes.map(op => `<option value="${op}" ${op===savedChoice?'selected':''}>${op}</option>`).join('');
+        content = `<div class="class-ability-box"><div class="class-ability-name">${hab.nome}</div><div class="class-ability-desc">${hab.desc || ''}</div><select class="class-select" onchange="salvarEscolhaClasse(${idx}, this.value)"><option value="">-- Escolha --</option>${options}</select></div>`;
+      } else if (hab.tipo === "selecao_multipla") {
+        // LÓGICA DE CHECKBOXES
+        const savedChoices = (ficha.escolhasClasse || {})[idx] || []; 
+        const qtdMax = hab.qtd || 2;
         
-        content = `
-          <div class="class-ability-box">
-            <div class="class-ability-name">${hab.nome}</div>
-            <select class="class-select" onchange="salvarEscolhaClasse(${idx}, this.value)">
-              <option value="">-- Escolha uma opção --</option>
-              ${options}
-            </select>
-          </div>`;
+        let checksHtml = "";
+        hab.opcoes.forEach(op => {
+          const nomeOp = typeof op === 'string' ? op : op.nome;
+          const descOp = typeof op === 'string' ? '' : op.desc;
+          const isChecked = savedChoices.includes(nomeOp);
+          
+          checksHtml += `
+            <div class="multi-choice-item">
+              <input type="checkbox" onchange="toggleEscolhaMultipla(${idx}, '${nomeOp}', ${qtdMax}, this)" ${isChecked ? 'checked' : ''}>
+              <div>
+                <strong style="color:white;">${nomeOp}</strong>
+                <div style="color:#888;">${descOp}</div>
+              </div>
+            </div>`;
+        });
+
+        content = `<div class="class-ability-box"><div class="class-ability-name">${hab.nome} (Escolha ${qtdMax})</div><div class="class-ability-desc">${hab.desc || ''}</div><div class="multi-choice-container">${checksHtml}</div></div>`;
       } else {
-        content = `
-          <div class="class-ability-box">
-            <div class="class-ability-name">${hab.nome}</div>
-            <div class="class-ability-desc">${hab.desc}</div>
-          </div>`;
+        content = `<div class="class-ability-box"><div class="class-ability-name">${hab.nome}</div><div class="class-ability-desc">${hab.desc}</div></div>`;
       }
       
       container.innerHTML += content;
@@ -612,6 +625,25 @@ function renderHabilidadesClasse() {
 window.salvarEscolhaClasse = async (index, valor) => {
   const escolhas = ficha.escolhasClasse || {};
   escolhas[index] = valor;
+  await updateDoc(doc(db, "fichas", id), { escolhasClasse: escolhas });
+};
+
+window.toggleEscolhaMultipla = async (index, valorOpcao, max, checkbox) => {
+  const escolhas = ficha.escolhasClasse || {};
+  let listaAtual = escolhas[index] || [];
+  
+  if (checkbox.checked) {
+    if (listaAtual.length >= max) {
+      alert(`Você só pode escolher ${max} opções.`);
+      checkbox.checked = false;
+      return;
+    }
+    listaAtual.push(valorOpcao);
+  } else {
+    listaAtual = listaAtual.filter(item => item !== valorOpcao);
+  }
+  
+  escolhas[index] = listaAtual;
   await updateDoc(doc(db, "fichas", id), { escolhasClasse: escolhas });
 };
 
