@@ -9,8 +9,8 @@
   :root { 
     --bg: #0f0f0f; --card: #141414; --text: #f1f1f1; --border: #333;
     --magic: #58E8DA; --phys: #e63946; --special: #D073FA;
-    --header-bg: #2a1a35; /* Fundo roxo escuro para header de feitiço */
-    --header-phys: #351a1a; /* Fundo vermelho escuro para header marcial */
+    --header-magic: #0a2a29; /* Fundo Ciano Escuro */
+    --header-phys: #351a1a; /* Fundo Vermelho Escuro */
   }
   
   * { box-sizing: border-box; }
@@ -45,7 +45,7 @@
   .btn-save-core { background: #222; color: #aaa; border: 1px solid var(--border); padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; float: right; margin-top: 5px; }
   .btn-save-core:hover { background: #333; color: white; }
 
-  /* === NOVOS CARDS ESTILO TABELA === */
+  /* CARDS */
   .cards-container { display: flex; flex-direction: column; gap: 20px; }
   
   .tech-card {
@@ -58,10 +58,12 @@
     padding: 8px 15px; font-weight: bold; font-size: 1.1rem; color: white; text-align: center;
     display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 1px;
   }
-  .magic-theme .tc-header { background: var(--header-bg); border-bottom: 2px solid var(--magic); }
-  .phys-theme .tc-header { background: var(--header-phys); border-bottom: 2px solid var(--phys); }
+  
+  /* Cores dos Headers */
+  .magic-theme .tc-header { background: var(--header-magic); border-bottom: 2px solid var(--magic); color: var(--magic); }
+  .phys-theme .tc-header { background: var(--header-phys); border-bottom: 2px solid var(--phys); color: var(--phys); }
 
-  /* Corpo do Card (Grid) */
+  /* Corpo do Card */
   .tc-body { display: grid; grid-template-columns: 140px 1fr; }
   
   /* Coluna Esquerda (Stats) */
@@ -76,12 +78,12 @@
   
   .val-cost { font-size: 1.1rem; }
   .magic-theme .val-cost { color: var(--magic); }
-  .phys-theme .val-cost { color: var(--phys); } /* PV é vermelho/laranja */
+  .phys-theme .val-cost { color: var(--phys); }
 
   /* Coluna Direita (Descrição) */
   .tc-desc { padding: 15px; font-size: 0.95rem; color: #ddd; white-space: pre-wrap; line-height: 1.5; }
 
-  /* Botões de Ação no Card */
+  /* Botões de Ação */
   .card-actions { display: flex; gap: 5px; }
   .btn-icon { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
   .btn-icon:hover { background: white; color: black; }
@@ -94,7 +96,6 @@
     font-size: 2rem; font-weight: bold; color: rgba(255, 0, 0, 0.5); border: 4px solid rgba(255, 0, 0, 0.5); padding: 10px; pointer-events: none;
   }
 
-  /* Botões Adicionar */
   .btn-add { width: 100%; padding: 12px; border-radius: 8px; border: 2px dashed #444; background: transparent; color: #666; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 10px; }
   .btn-add:hover { border-color: #777; color: #fff; background: #1a1a1a; }
   .btn-add-magic:hover { border-color: var(--magic); color: var(--magic); }
@@ -146,7 +147,7 @@
 <div class="main-grid">
   
   <div class="section-box">
-    <h2 style="color:var(--magic)">Feitiços (Técnica Inata)</h2>
+    <h2 style="color:var(--magic)">Feitiços</h2>
     
     <div class="core-box core-magic">
       <input id="coreInataNome" class="core-title" placeholder="Nome da Técnica (Ex: Dez Sombras)">
@@ -201,25 +202,38 @@
         </div>
       </div>
 
-      <label>Tipo / Categoria</label>
-      <select id="inTipo" onchange="atualizarInfoModal()" style="margin-bottom:10px;">
-        <option value="Normal">Padrão (Dano/Cura/Utilidade)</option>
-        <option value="Shikigami">Criação de Shikigami</option>
-        <option value="Item">Criação de Item</option>
-      </select>
-      
-      <div id="shikigamiNote" class="special-note">
-        <b>Regra de Shikigami:</b> Custo vira "PE Permanente" reduzido do máximo.<br>
-        Nv 0-1: Grau 4 | Nv 2: Grau 3 | Nv 3: Grau 2 | Nv 4: Grau 1 | Nv 5: Especial
-      </div>
-      
-      <div id="itemNote" class="special-note">
-        <b>Regra de Item:</b> Cria item de Custo igual ao Nível. Nv 5 cria 2 itens Custo 4.
+      <div id="divTipoContainer">
+        <label>Tipo de Feitiço</label>
+        <select id="inTipo" onchange="atualizarInfoModal()" style="margin-bottom:10px;">
+          <option value="Normal">Padrão</option>
+          <option value="Shikigami">Criação de Shikigami</option>
+          <option value="Item">Criação de Item</option>
+        </select>
+        
+        <div id="shikigamiNote" class="special-note">
+          <b>Regra de Shikigami:</b> Custo vira "PE Permanente" reduzido do máximo.<br>
+          Nv 0-1: Grau 4 | Nv 2: Grau 3 | Nv 3: Grau 2 | Nv 4: Grau 1 | Nv 5: Especial
+        </div>
+        
+        <div id="itemNote" class="special-note">
+          <b>Regra de Item:</b> Cria item de Custo igual ao Nível. Nv 5 cria 2 itens Custo 4.
+        </div>
       </div>
     </div>
 
     <div class="form-grid-3">
-      <div><label>Ação</label><input id="inAcao" placeholder="Padrão, Bônus..."></div>
+      <div>
+        <label>Ação (Conjuração)</label>
+        <select id="inAcao">
+          <option value="Comum">Ação Comum</option>
+          <option value="Bônus">Ação Bônus</option>
+          <option value="Reação">Reação</option>
+          <option value="Livre">Ação Livre</option>
+          <option value="Movimento">Ação de Movimento</option>
+          <option value="Completa">Ação Completa</option>
+          <option value="Conjuração Completa">Conjuração (2 Turnos)</option>
+        </select>
+      </div>
       <div><label>Alcance</label><input id="inAlcance" placeholder="9m, Toque..."></div>
       <div><label>Alvo/Área</label><input id="inAlvo" placeholder="1 ser, Cone..."></div>
     </div>
@@ -342,10 +356,6 @@ function renderTudo() {
   const divMarcial = document.getElementById('listaMarcial');
   divMarcial.innerHTML = "";
   (ficha.artesMarciais || []).forEach((f, i) => {
-    // Artes marciais não bloqueiam por nível da mesma forma que feitiços (regra da casa?),
-    // mas vamos manter desbloqueado por enquanto ou usar a mesma regra se quiser.
-    // Assumindo desbloqueado:
-    divFeiticos.innerHTML += ""; // Bug fix placeholder
     divMarcial.innerHTML += cardHtml(f, i, 'marcial', false);
   });
 }
@@ -357,17 +367,25 @@ function cardHtml(dados, index, tipo, bloqueado) {
   
   const nivel = Number(dados.nivel || 0);
   const custoBase = CUSTO_BASE[nivel];
-  // Calcula custo real (Passivas afetam feitiços, Marciais talvez não? Vamos assumir que só feitiço muda)
   const custoFinal = isMagic ? calcularCustoReal(nivel) : custoBase;
   const unit = isMagic ? 'PE' : 'PV';
   
-  // Renderiza Campos Opcionais se existirem
+  // Renderiza Campos Opcionais
   const field = (lbl, val) => val ? `<div class="stat-row"><span class="stat-label">${lbl}</span><span class="stat-value">${val}</span></div>` : '';
+  
+  let typeBadge = "";
+  if(isMagic && dados.tipoEspecial && dados.tipoEspecial !== "Normal") {
+    typeBadge = `<span class="card-type-badge">${dados.tipoEspecial}</span>`;
+  }
 
   return `
     <div class="tech-card ${themeClass} ${lockClass}">
       <div class="tc-header">
-        <span>${dados.nome}</span>
+        <div style="display:flex; align-items:center;">
+          <span class="card-title">${dados.nome}</span>
+          ${typeBadge}
+        </div>
+        
         <div style="display:flex; align-items:center; gap:10px;">
           <span style="font-size:0.8rem; background:rgba(0,0,0,0.3); padding:2px 6px; border-radius:4px;">NVL ${nivel}</span>
           <div class="card-actions">
@@ -434,11 +452,13 @@ window.atualizarInfoModal = () => {
   document.getElementById('inCustoDisplay').value = `${custo} ${unit}`;
   document.getElementById('inCustoDisplay').style.color = isMagic ? 'var(--magic)' : 'var(--phys)';
 
-  // Notas
+  // Notas e Tipo (Só para feitiço)
   if (isMagic) {
+    document.getElementById('divTipoContainer').style.display = 'block';
     document.getElementById('shikigamiNote').style.display = (tipo === 'Shikigami') ? 'block' : 'none';
     document.getElementById('itemNote').style.display = (tipo === 'Item') ? 'block' : 'none';
   } else {
+    document.getElementById('divTipoContainer').style.display = 'none'; // Esconde selector de tipo
     document.getElementById('shikigamiNote').style.display = 'none';
     document.getElementById('itemNote').style.display = 'none';
   }
@@ -451,11 +471,11 @@ window.abrirModal = (tipo) => {
   document.getElementById('modalTitle').innerText = tipo === 'feitico' ? "Novo Feitiço" : "Nova Técnica Marcial";
   document.getElementById('btnConfirmar').style.background = tipo === 'feitico' ? "var(--magic)" : "var(--phys)";
   
-  // Reset
+  // Reset Inputs
   document.getElementById('inNome').value = "";
   document.getElementById('inNivel').value = "0";
   document.getElementById('inTipo').value = "Normal";
-  document.getElementById('inAcao').value = "";
+  document.getElementById('inAcao').value = "Comum";
   document.getElementById('inAlcance').value = "";
   document.getElementById('inAlvo').value = "";
   document.getElementById('inDT').value = "";
@@ -479,7 +499,7 @@ window.editar = (tipo, index) => {
   document.getElementById('inNome').value = item.nome;
   document.getElementById('inNivel').value = item.nivel || 0;
   document.getElementById('inTipo').value = item.tipoEspecial || "Normal";
-  document.getElementById('inAcao').value = item.acao || "";
+  document.getElementById('inAcao').value = item.acao || "Comum";
   document.getElementById('inAlcance').value = item.alcance || "";
   document.getElementById('inAlvo').value = item.alvo || "";
   document.getElementById('inDT').value = item.dt || "";
@@ -494,7 +514,7 @@ document.getElementById('btnConfirmar').onclick = async () => {
   const novoItem = {
     nome: document.getElementById('inNome').value || "Sem Nome",
     nivel: document.getElementById('inNivel').value,
-    tipoEspecial: document.getElementById('inTipo').value,
+    tipoEspecial: editType === 'feitico' ? document.getElementById('inTipo').value : "Normal",
     acao: document.getElementById('inAcao').value,
     alcance: document.getElementById('inAlcance').value,
     alvo: document.getElementById('inAlvo').value,
