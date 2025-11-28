@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Painel do Mestre</title>
+<title>Escudo do Mestre</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   :root { 
@@ -91,11 +91,14 @@
   .btn-adjust { width: 25px; height: 25px; background: #333; border: 1px solid #555; color: white; border-radius: 4px; cursor: pointer; }
   .btn-adjust:hover { background: var(--primary); border-color: var(--primary); color: black; }
 
+  #loading { text-align: center; color: #666; margin-top: 20px; }
 </style>
 </head>
 <body>
 
-<div id="app">
+<div id="loading">Verificando Credenciais do Mestre...</div>
+
+<div id="app" style="display:none;">
   <header>
     <h1>🛡️ Painel do Mestre</h1>
     
@@ -123,9 +126,9 @@
 import { db, auth, collection, query, onSnapshot, orderBy, doc, updateDoc, onAuthStateChanged } from "./firebase.js";
 
 const MESTRE_EMAIL = "grisskos@fake.com";
-let allCharacters = []; // Cache local
+let allCharacters = []; 
 
-// Lista base para o modal de edição
+// LISTA COMPLETA PARA O MESTRE DAR NIVEIS
 const APTIDOES_LIST = [
   { nome: "Liberação de Energia", max: 10 },
   { nome: "Proteção", max: 8 },
@@ -140,15 +143,25 @@ const APTIDOES_LIST = [
   { nome: "Encasular", max: 5 },
   { nome: "Redirecionar", max: 5 },
   { nome: "Esconder", max: 5 },
-  { nome: "Perturbação", max: 5 }
+  { nome: "Perturbação", max: 5 },
+  // NOVAS APTIDÕES ADICIONADAS
+  { nome: "Infestar", max: 3 },
+  { nome: "Destruir", max: 3 },
+  { nome: "Torturar", max: 3 },
+  { nome: "Assombrar", max: 3 },
+  // TRANSFORMAÇÕES
+  { nome: "Ápice Humano", max: 1 },
+  { nome: "Corpo Amaldiçoado", max: 1 }
 ];
 
 // Segurança
 onAuthStateChanged(auth, user => {
   if (user && user.email === MESTRE_EMAIL) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
     iniciarMonitoramento();
   } else {
-    alert("ACESSO NEGADO.");
+    alert("ACESSO NEGADO: Apenas o Mestre pode entrar aqui.");
     window.location = "index.html";
   }
 });
@@ -163,7 +176,7 @@ function iniciarMonitoramento() {
     snapshot.forEach((doc) => {
       const f = doc.data();
       f.id = doc.id;
-      f.mesa = f.mesa || "Sem Mesa"; // Padrão
+      f.mesa = f.mesa || "Sem Mesa"; 
       mesasSet.add(f.mesa);
       allCharacters.push(f);
     });
@@ -177,7 +190,6 @@ function atualizarFiltroMesas(mesas) {
   const select = document.getElementById('mesaFilter');
   const atual = select.value;
   
-  // Mantém a opção "todas" e reconstrói o resto
   select.innerHTML = '<option value="todas">Todas as Mesas</option>';
   
   mesas.sort().forEach(m => {
@@ -187,7 +199,7 @@ function atualizarFiltroMesas(mesas) {
     select.appendChild(opt);
   });
   
-  select.value = atual; // Tenta manter a seleção
+  select.value = atual; 
 }
 
 window.filtrarMesas = () => {
@@ -212,7 +224,6 @@ function renderGrid() {
     const pEnergia = calcPct(f.energia);
     const pIntegridade = calcPct(f.integridade); 
     
-    // Status dos botões
     const apiceActive = f.transfUnlocked?.apice ? 'active' : '';
     const corpoActive = f.transfUnlocked?.corpo ? 'active' : '';
 
@@ -270,11 +281,9 @@ window.mudarMesa = async (id, atual) => {
 };
 
 window.toggleUnlock = async (id, tipo, novoEstado) => {
-  // Precisamos ler o estado atual do objeto para não apagar a outra chave
   const char = allCharacters.find(c => c.id === id);
   const unlocked = char.transfUnlocked || {};
   unlocked[tipo] = novoEstado;
-  
   await updateDoc(doc(db, "fichas", id), { transfUnlocked: unlocked });
 };
 
@@ -291,7 +300,6 @@ window.abrirAptidoes = (id) => {
   listDiv.innerHTML = "";
 
   const progresso = char.progressoAptidoes || {};
-  // Junta base + custom
   const todas = [...APTIDOES_LIST, ...(char.aptidoesCustom || [])];
 
   todas.forEach(apt => {
@@ -319,18 +327,11 @@ window.ajustarApt = async (nome, delta) => {
   
   let novoNivel = (progresso[nome] || 0) + delta;
   if(novoNivel < 0) novoNivel = 0;
-  // Não limitamos o máximo hardcoded aqui pra dar liberdade ao mestre, mas visualmente o max ajuda
   
   progresso[nome] = novoNivel;
   
-  // Atualiza no banco
   await updateDoc(doc(db, "fichas", currentEditId), { progressoAptidoes: progresso });
   
-  // Atualiza a tela do modal sem fechar (gambiarra visual rápida ou reabrir)
-  // Como o snapshot atualiza o allCharacters, podemos re-chamar abrirAptidoes?
-  // Não, o snapshot é async. Vamos atualizar visualmente o elemento HTML direto.
-  // Mas o jeito mais seguro é esperar o snapshot. 
-  // Para UI fluida, vamos re-abrir com os dados locais alterados temporariamente:
   char.progressoAptidoes = progresso;
   abrirAptidoes(currentEditId);
 };
