@@ -36,7 +36,7 @@
   .main-area { overflow-y: auto; padding-right: 10px; display: none; }
   .main-area.visible { display: block; }
 
-  /* HEADER CENTRALIZADO (NOVO) */
+  /* HEADER CENTRALIZADO */
   .shiki-header { 
     display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; 
     background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid var(--border);
@@ -213,7 +213,7 @@ const params = new URLSearchParams(location.search);
 const charId = params.get("charId");
 let currentData = null;
 let currentShikiIndex = -1;
-let acoesList = []; // Lista temporária de ações
+let acoesList = []; 
 
 window.onload = async () => {
   if (!charId) return alert("Erro: ID do personagem não fornecido.");
@@ -234,7 +234,7 @@ async function carregarDados() {
     currentData = docSnap.data();
     if (!currentData.shikigamis) currentData.shikigamis = [];
     
-    // Nível do Invocador (Pega da ficha)
+    // Nível do Invocador
     document.getElementById('displayNivel').innerText = currentData.nivel || 1;
     
     renderLista();
@@ -244,17 +244,21 @@ async function carregarDados() {
 function renderLista() {
   const lista = document.getElementById('listaShikigamis');
   lista.innerHTML = "";
-  currentData.shikigamis.forEach((shiki, index) => {
-    const imgHtml = shiki.imagem ? `<img src="${shiki.imagem}" class="sidebar-thumb">` : `<div class="sidebar-thumb"></div>`;
-    lista.innerHTML += `
-      <div class="shikigami-item ${index === currentShikiIndex ? 'active' : ''}" onclick="abrirShikigami(${index})">
-        ${imgHtml}
-        <div class="shiki-info"><h3>${shiki.nome || 'Sem Nome'}</h3><small>Grau ${['Especial','1','2','3','4'][shiki.grau] || '?'}</small></div>
-      </div>`;
-  });
+  
+  if (currentData && currentData.shikigamis) {
+    currentData.shikigamis.forEach((shiki, index) => {
+      const imgHtml = shiki.imagem ? `<img src="${shiki.imagem}" class="sidebar-thumb">` : `<div class="sidebar-thumb"></div>`;
+      lista.innerHTML += `
+        <div class="shikigami-item ${index === currentShikiIndex ? 'active' : ''}" onclick="abrirShikigami(${index})">
+          ${imgHtml}
+          <div class="shiki-info"><h3>${shiki.nome || 'Sem Nome'}</h3><small>Grau ${['Especial','1','2','3','4'][shiki.grau] || '?'}</small></div>
+        </div>`;
+    });
+  }
 }
 
 window.novoShikigami = () => {
+  if (!currentData) return alert("Aguarde carregamento...");
   if (currentData.shikigamis.length >= 20) return alert("Limite de 20 invocações!");
   currentShikiIndex = -1;
   limparFormulario();
@@ -262,6 +266,7 @@ window.novoShikigami = () => {
 };
 
 window.abrirShikigami = (index) => {
+  if (!currentData) return;
   currentShikiIndex = index;
   renderLista();
   const s = currentData.shikigamis[index];
@@ -279,7 +284,7 @@ window.abrirShikigami = (index) => {
     chk.checked = s.habilidades && s.habilidades[chk.name];
   });
 
-  acoesList = s.acoes || []; // Carrega ações salvas
+  acoesList = s.acoes || []; 
   renderAcoes();
   calcAtributos();
 };
@@ -333,8 +338,6 @@ window.updateAcao = (idx, field, val) => {
 
 function atualizarSlots() {
   const grau = document.getElementById('seletorGrau').value;
-  // Graus: 4=0, 3=1, 2=2, 1=3, 0=4 (indices do array visual, mas value é 4,3,2,1,0)
-  // Regra: 4/3 -> 2 slots. 2/1 -> 3 slots. 0 -> 4 slots.
   let baseLimit = 2;
   if(grau == 2 || grau == 1) baseLimit = 3;
   if(grau == 0) baseLimit = 4;
@@ -359,6 +362,7 @@ function atualizarSlots() {
 
 // === SALVAR E EXCLUIR ===
 window.salvarShikigami = async () => {
+  if (!currentData) return;
   const nome = document.getElementById('shikigamiNome').value || "Invocação";
   const imagem = document.getElementById('shikigamiImgUrl').value;
   
@@ -370,7 +374,7 @@ window.salvarShikigami = async () => {
 
   const novoShiki = {
     nome, imagem,
-    nivelInv: Number(currentData.nivel || 1), // Salva snapshot do nivel ou usa logica dinamica
+    nivelInv: Number(currentData.nivel || 1),
     grau: document.getElementById('seletorGrau').value,
     atrPericia: document.getElementById('seletorAtributoPericia').value,
     atributos,
@@ -379,6 +383,7 @@ window.salvarShikigami = async () => {
   };
 
   if (currentShikiIndex === -1) {
+    if (!currentData.shikigamis) currentData.shikigamis = [];
     currentData.shikigamis.push(novoShiki);
     currentShikiIndex = currentData.shikigamis.length - 1;
   } else {
@@ -404,6 +409,7 @@ window.voltarFicha = () => { window.location = `ficha.html?id=${charId}`; };
 
 // === CÁLCULOS ===
 window.calcAtributos = () => {
+    if (!currentData) return;
     const grauInvocacao = document.getElementById('seletorGrau').value;
     const multiplicadorInvocacao = [6, 4, 2, 1, 0][grauInvocacao];
     const maxPoints = 10 + 5 * multiplicadorInvocacao;
@@ -424,7 +430,7 @@ window.calcAtributos = () => {
     const destAtribute = document.getElementById('a2').value;
     const destModifier = getAtributeModifier(destAtribute);
     const periciaModifier = getAtributeModifier(document.getElementById(`a${document.getElementById('seletorAtributoPericia').value}`).value);
-    const nivelinvocador = Number(currentData.nivel || 1); // PEGA DA FICHA
+    const nivelinvocador = Number(currentData.nivel || 1); 
     const maestriaInvocador = Math.ceil(1 + nivelinvocador / 4);
     
     let statsModifiers = { pv: 0, ca: 0, des: 0, cd: 0 };
