@@ -330,7 +330,7 @@
 </div>
 
 <script type="module">
-import { db, auth, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
+import { db, auth, doc, updateDoc, deleteDoc, onSnapshot, collection } from "./firebase.js";
 import { APTIDOES_BASE } from "./aptidoes_db.js";
 import { HABILIDADES_CLASSE } from "./classes_db.js";
 
@@ -368,7 +368,6 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
     ficha = docSnap.data();
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
-    if (!ficha.shikigamis) ficha.shikigamis = [];
     if (!ficha.vida) ficha.vida = { atual: 10, max: 10 };
     if (!ficha.energia) ficha.energia = { atual: 10, max: 10 };
     if (!ficha.vigor) ficha.vigor = { atual: 5, max: 5 };
@@ -388,6 +387,20 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
   }
 });
 
+// LISTENER SEPARADO PARA SHIKIGAMIS
+onSnapshot(collection(db, "fichas", id, "shikigamis"), (snap) => {
+  const shikiArea = document.getElementById('shikiTokens');
+  shikiArea.innerHTML = "";
+  let count = 0;
+  snap.forEach(docShiki => {
+    const s = docShiki.data();
+    const imgUrl = s.imagem || `https://via.placeholder.com/40/222/58E8DA?text=${(s.nome||'?').charAt(0)}`;
+    shikiArea.innerHTML += `<img src="${imgUrl}" class="shiki-token" title="${s.nome}" onclick="irParaShikigamis()">`;
+    count++;
+  });
+  if(count < 20) shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()" title="Nova Invocação">+</div>`;
+});
+
 function renderFicha() {
   const f = ficha;
   
@@ -403,18 +416,12 @@ function renderFicha() {
   const btnApice = document.getElementById('btnApice');
   const btnCorpo = document.getElementById('btnCorpo');
   const divSequela = document.getElementById('statusSequela');
+  
   btnApice.className = "transf-btn apice locked"; btnCorpo.className = "transf-btn corpo locked"; divSequela.innerHTML = "";
   if(f.transfUnlocked.apice) { btnApice.classList.remove('locked'); btnApice.classList.add('unlocked'); if(f.transfActive === 'apice') btnApice.classList.add('active'); }
   if(f.transfUnlocked.corpo) { btnCorpo.classList.remove('locked'); btnCorpo.classList.add('unlocked'); if(f.transfActive === 'corpo') btnCorpo.classList.add('active'); }
   if(f.sequelas.exaustao) divSequela.innerHTML += `<span class="sequela-tag">⚠ EXAUSTÃO (-2 Físico)</span>`;
   if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO (HP Max Reduzido)</span>`;
-
-  const shikiArea = document.getElementById('shikiTokens');
-  shikiArea.innerHTML = "";
-  if(f.shikigamis.length > 0) {
-    f.shikigamis.forEach(s => shikiArea.innerHTML += `<img src="${s.imagem||''}" class="shiki-token" onclick="irParaShikigamis()">`);
-    if(f.shikigamis.length < 20) shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()">+</div>`;
-  } else { shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()">+</div>`; }
 
   const areaAttr = document.getElementById('atributosArea');
   areaAttr.innerHTML = "";
@@ -503,7 +510,6 @@ function renderFicha() {
     if (apt.nome === "Corpo Amaldiçoado" && f.transfUnlocked.corpo) nivelAtual = 1;
 
     let isOpenClass = ''; 
-    
     if (!isMestre && nivelAtual === 0) return;
 
     let niveisHtml = "";
@@ -575,7 +581,6 @@ function renderDerivados() {
   document.getElementById('bonusDesloc').value = ficha.derivados.deslocamento || "";
 }
 
-// RENDERIZAR CLASSE + ORIGEM (MODIFICADA)
 function renderHabilidadesClasse() {
   const container = document.getElementById('classAbilitiesList');
   container.innerHTML = "";
@@ -625,7 +630,6 @@ function renderHabilidadesClasse() {
   });
 }
 
-// MODAL ORIGEM
 window.abrirModalOrigem = (index = -1) => {
   editingOriginIndex = index;
   const modal = document.getElementById('origemModal');
