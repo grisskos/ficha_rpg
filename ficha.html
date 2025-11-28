@@ -5,61 +5,156 @@
 <title>Ficha RPG</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  :root { --bg: #0f0f0f; --card: #141414; --primary: #e63946; --energy: #58E8DA; --text: #f1f1f1; --dim: #888; }
+  :root { 
+    --bg: #0f0f0f; --card: #141414; 
+    --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; 
+    --text: #f1f1f1; --dim: #888;
+  }
+  
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
+  /* === LAYOUT === */
   .main-layout { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; max-width: 1600px; margin: 0 auto; padding-bottom: 80px; }
   @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } }
   @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
 
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
-  .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; }
+  .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; position: relative; }
 
-  /* HEADER */
-  .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin: 0 auto 10px auto; display: block; }
-  .char-name { font-size: 1.5rem; margin: 0; color: white; text-align: center; }
+  /* HEADER & SIDEBAR */
+  .char-header { text-align: center; }
+  .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
+  .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
   .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
+  .b-lvl { color: white; border-color: white; font-weight: bold; }
+  .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* APTIDÕES (NOVO ESTILO) */
-  .aptidao-box { margin-bottom: 15px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
+  /* TOKENS SHIKIGAMI */
+  .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
+  .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
+  .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
+  .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+  .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
+
+  /* EDIÇÃO INLINE */
+  .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
+  .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
+  .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
+  .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
+
+  /* ATRIBUTOS & BARRAS */
+  .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
+  .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
+  .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
+  .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
+
+  .stat-row { margin-bottom: 12px; }
+  .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
+  .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; transition: width 0.3s; }
+  .c-vida { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
+  .c-ener { background: var(--energy); box-shadow: 0 0 8px var(--energy); }
+  .c-vigo { background: var(--vigor); box-shadow: 0 0 8px var(--vigor); }
+  .c-inte { background: var(--integridade); box-shadow: 0 0 8px var(--integridade); }
+  .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
+  .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .btn-mini:hover { border-color: white; color: white; background: #333; }
+  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
+  .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
+
+  /* COMBATE (CARDS) */
+  .section-header { 
+    background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333;
+    border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; 
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
+  .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
+
+  .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; }
+  .cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
+  
+  .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
+  .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
+  .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
+  .cc-footer { background: #000; padding: 5px; display: flex; justify-content: center; align-items: center; gap: 5px; border-top: 1px solid #333; }
+  .btn-toggle-attr { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); color: white; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; cursor: pointer; margin-top: 2px; }
+  .bonus-input { background: #222; border: 1px solid #444; color: #aaa; width: 30px; text-align: center; padding: 2px; border-radius: 4px; font-size: 0.8rem; }
+  .btn-train { width: 20px; height: 20px; border: 1px solid #444; background: #222; color: #666; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; border-radius: 3px; cursor: pointer; font-weight: bold; }
+  .btn-train.active { background: var(--energy); border-color: var(--energy); color: #000; }
+  select.mini-select { background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; max-width: 80px; margin-top: 2px; }
+  select.mini-select option { background: #222; color: #fff; }
+
+  /* INVENTÁRIO */
+  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .inv-card { background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
+  .inv-card:hover { border-color: white; transform: translateY(-3px); }
+  .inv-card.grade-4 { border-left: 3px solid #888; } .inv-card.grade-3 { border-left: 3px solid #4cc9f0; } .inv-card.grade-2 { border-left: 3px solid #4361ee; } .inv-card.grade-1 { border-left: 3px solid #f72585; } .inv-card.grade-0 { border-left: 3px solid #ff9e00; box-shadow: 0 0 5px #ff9e00; }
+  .inv-img { width: 100%; height: 80px; object-fit: cover; background: #000; }
+  .inv-body { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }
+  .inv-title { font-weight: bold; font-size: 0.9rem; color: #fff; line-height: 1.1; }
+  .inv-type { font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
+  .inv-stats { font-size: 0.75rem; color: var(--energy); font-weight: bold; margin-top: auto; }
+  .inv-slots { font-size: 0.7rem; color: #666; text-align: right; margin-top: 5px; }
+
+  .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 20px; position: relative; margin-bottom: 15px; overflow: hidden; }
+  .load-fill { height: 100%; width: 0%; background: #2a9d8f; transition: 0.3s; }
+  .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
+  .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
+  .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
+
+  /* APTIDÕES (ESTILO NOVO) */
+  .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
   .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .aptidao-header:hover { background: #2a2a2a; }
-  .aptidao-body { display: none; padding: 10px; background: #111; }
+  .aptidao-body { display: none; padding: 10px; background: #151515; }
   .aptidao-body.open { display: block; }
-  
-  .nivel-row { 
-    display: flex; align-items: center; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #666;
-  }
-  .nivel-row.unlocked { color: #fff; } /* Desbloqueado */
-  .nivel-check { width: 20px; height: 20px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .nivel-row { display: flex; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #555; }
+  .nivel-row.unlocked { color: #fff; } 
+  .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
   .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  
-  /* Controles do Mestre */
-  .gm-controls { display: none; margin-left: auto; gap: 5px; } /* Escondido por padrão */
+  /* Controles Mestre */
+  .gm-controls { display: none; margin-left: auto; gap: 5px; } 
   .gm-visible .gm-controls { display: flex; }
   .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
   .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
 
-  /* OUTROS ESTILOS MANTIDOS (Resumidos) */
-  .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; }
-  .stat-row { margin-bottom: 12px; } .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; } .bar-fill { height: 100%; transition: width 0.3s; }
-  .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; border: 1px solid #444; color: #aaa; margin-bottom: 5px; }
-  .btn-mini { width: 30px; height: 30px; cursor: pointer; background: #222; border: 1px solid #444; color: #ccc; border-radius: 4px; }
-  .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); cursor: pointer; }
-  
-  .c-vida { background: var(--primary); } .c-ener { background: var(--energy); } .c-vigo { background: var(--vigor); } .c-inte { background: var(--integridade); }
-  .editable { cursor: pointer; border-bottom: 1px dashed #555; } .inline-input { background: #000; color: white; border: 2px solid var(--primary); width: 80px; text-align: center; }
-  
-  /* Combate Styles */
-  .combat-grid { display: grid; gap: 10px; } .cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; text-align: center; }
-  .cc-header { background: var(--primary); color: white; padding: 5px; font-weight: bold; }
-  .cc-body { font-size: 1.5rem; font-weight: bold; padding: 10px; }
-  
-  /* Skills */
-  .skill-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; }
+  /* PERÍCIAS & NAV */
+  .skills-card { padding: 0; overflow: hidden; height: 100%; }
+  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+  .skill-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
+  .skill-row:hover { background: #1b1b1b; }
+  .sk-name { flex-grow: 1; color: #eee; }
+  .sk-attr { font-size: 0.7rem; color: #555; width: 40px; text-transform: uppercase; font-weight: bold; }
+  .sk-total { font-weight: bold; color: white; width: 35px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
+  .sk-btn-group { display: flex; gap: 5px; }
+  .sk-btn { width: 25px; height: 25px; border-radius: 4px; border: 1px solid #444; background: #111; color: #555; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+  .sk-btn:hover { border-color: #777; color: #aaa; }
+  .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
+  .sk-btn.active-m { background: rgba(230, 57, 70, 0.2); border-color: var(--primary); color: var(--primary); }
+
+  .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
+  .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
+  .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
+
+  /* MODALS */
+  .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
+  .fab-config:hover { background: var(--primary); border-color: var(--primary); }
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; overflow-y: auto; }
+  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 600px; margin: 20px auto; border: 1px solid #444; }
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.8rem; font-weight: bold; }
+  input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; box-sizing: border-box; font-family: inherit; }
+  textarea { height: 80px; resize: vertical; }
+  .list-adder { margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
+  .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
+  .btn-del-item { background: transparent; border: none; color: #d00000; cursor: pointer; font-size: 1.2rem; line-height: 1; }
+  .btn-add-item { background: #222; border: 1px solid #444; color: #ccc; width: 100%; padding: 5px; cursor: pointer; margin-top: 5px; }
 </style>
 </head>
 <body>
@@ -71,62 +166,147 @@
       <img id="charImg" class="char-img" src="">
       <h2 class="char-name"><span class="editable" id="nomeDisplay" onclick="editarCampo(this, 'nome', 'text')">...</span></h2>
       <div id="badges" class="badges"></div>
-      <div id="shikiTokens" style="display:flex; justify-content:center; gap:5px; margin-top:10px; flex-wrap:wrap;"></div>
+      <div id="shikiTokens" class="shiki-container"></div>
     </div>
 
     <div class="card">
       <div id="atributosArea" class="attr-grid"></div>
+      <p style="text-align:center; font-size:0.7rem; color:#666; margin-bottom:0;">Clique no número pequeno para editar</p>
     </div>
 
     <div class="card">
       <div id="statsArea"></div>
     </div>
     
-    <button class="btn-nav" style="border-color:var(--integridade); color:var(--integridade);" onclick="location='shikigamis.html?charId='+id">🐺 Invocações</button>
-    <button class="btn-nav" style="border-color:var(--energy); color:var(--energy);" onclick="location='feiticos.html?id='+id">⚡ Técnicas</button>
-    <button class="btn-nav" onclick="location='index.html'">⬅ Voltar</button>
+    <button class="btn-nav btn-summon" onclick="irParaShikigamis()">🐺 Invocações</button>
+    <button class="btn-nav btn-tech" onclick="irParaFeiticos()">⚡ Técnicas & Artes</button>
+    <button class="btn-mini" style="width:100%; padding:10px; font-size:1rem; margin-top:10px;" onclick="window.location='index.html'">Voltar para Lista</button>
   </div>
 
   <div class="col-center">
-    <div class="card">
-      <h3 style="margin:0 0 10px 0; color:var(--primary); border-bottom:1px solid #333;">Combate</h3>
+    
+    <div class="card" style="padding:10px;">
+      <h3 class="section-header">Jogadas de Ataque</h3>
       <div id="combatAttacksArea" class="combat-grid cols-3"></div>
+      <h3 class="section-header" style="margin-top:20px;">Testes de Resistência</h3>
+      <div id="combatResistArea" class="combat-grid cols-5"></div>
     </div>
 
+    <div class="card">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; background:#111;">
+        <span style="flex-grow:1; text-align:center;">Inventário</span>
+        <button class="btn-icon-sm" onclick="abrirItemModal()" title="Adicionar Item">+</button>
+      </div>
+      
+      <div class="load-bar-container">
+        <div id="loadFill" class="load-fill"></div>
+        <div id="loadText" class="load-text">0 / 8 Espaços</div>
+      </div>
+      <div id="overburdenMsg" class="overburden-warning">⚠ SOBRECARREGADO</div>
+
+      <div id="inventoryGrid" class="inv-grid"></div>
+    </div>
+    
     <div class="card" id="aptidoesCard">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h3 style="margin:0; color:var(--energy);">Aptidões & Evolução</h3>
-        <button id="btnCriarAptidao" class="btn-mini" style="display:none; width:auto; padding:0 10px;" onclick="addNovaAptidao()">+ Nova</button>
+        <h3 class="section-header" style="width:100%; margin:0;">Aptidões & Evolução</h3>
+        <button id="btnCriarAptidao" class="btn-mini" style="display:none; position:absolute; right:20px; width:auto; padding:0 8px; height:25px;" onclick="addNovaAptidao()">+</button>
       </div>
       <div id="listaAptidoes"></div>
-    </div>
-
-    <div class="card">
-      <h3 style="margin:0 0 10px 0;">Inventário</h3>
-      <ul id="ataquesList" style="padding-left:20px; color:#ccc;"></ul>
     </div>
   </div>
 
   <div class="col-right">
-    <div class="card" style="height:100%;">
-      <h3 style="margin-top:0; color:var(--primary);">Perícias</h3>
+    <div class="card skills-card">
+      <div class="skills-header" style="padding-top:0;">
+        <h3 style="margin-bottom:5px;">Perícias</h3>
+        <span id="treinoDisplay" style="font-size:0.8rem; color:#aaa; display:block;"></span>
+      </div>
       <div id="skillsList"></div>
     </div>
+  </div>
+
+</div>
+
+<button class="fab-config" onclick="abrirConfig()">⚙️</button>
+
+<div id="configModal" class="modal">
+  <div class="modal-content">
+    <h2 style="color:var(--primary); margin-top:0;">Configurações</h2>
+    <label>Imagem (URL)</label>
+    <input id="editImgUrl" style="margin-bottom:15px;">
+    <button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button>
+    <br><br>
+    <button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Fechar</button>
+    <button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button>
+  </div>
+</div>
+
+<div id="itemModal" class="modal">
+  <div class="modal-content">
+    <h2 id="itemModalTitle" style="color:var(--primary); margin-top:0;">Novo Item</h2>
+    
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+      <div class="form-group"><label>Nome</label><input id="itNome"></div>
+      <div class="form-group"><label>Tipo</label>
+        <select id="itTipo">
+          <option value="Arma">Arma</option>
+          <option value="Uniforme">Uniforme</option>
+          <option value="Item">Item</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+      <div class="form-group"><label>Grau</label>
+        <select id="itGrau">
+          <option value="4">Grau 4</option>
+          <option value="3">Grau 3</option>
+          <option value="2">Grau 2</option>
+          <option value="1">Grau 1</option>
+          <option value="0">Especial</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Espaços</label><input type="number" id="itEspacos" value="1"></div>
+      <div class="form-group"><label>Bônus</label><input id="itBonus" placeholder="+2 CA"></div>
+    </div>
+
+    <div class="form-group"><label>Imagem (URL)</label><input id="itImg" placeholder="http://..."></div>
+    <div class="form-group"><label>Descrição Geral</label><textarea id="itDesc" style="height:60px;"></textarea></div>
+
+    <div class="list-adder">
+      <label>Propriedades</label>
+      <div id="propList"></div>
+      <button class="btn-add-item" onclick="addPropField()">+ Propriedade</button>
+    </div>
+
+    <div class="list-adder">
+      <label>Encantamentos</label>
+      <div id="encantList"></div>
+      <button class="btn-add-item" onclick="addEncantField()">+ Encantamento</button>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button onclick="salvarItem()" style="background:var(--primary); flex-grow:1; padding:10px; border:none; color:white; cursor:pointer;">Salvar Item</button>
+      <button onclick="excluirItem()" id="btnExcluirItem" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer; display:none;">Excluir</button>
+    </div>
+    <button onclick="document.getElementById('itemModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button>
   </div>
 </div>
 
 <script type="module">
-import { db, auth, doc, updateDoc, onSnapshot } from "./firebase.js";
-import { APTIDOES_BASE } from "./aptidoes_db.js"; // Importa o banco de dados
+import { db, auth, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
+import { APTIDOES_BASE } from "./aptidoes_db.js";
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-window.id = id; // Global para botoes
-let ficha = {};
+window.id = id;
+let ficha = {}; 
+let editandoId = null;
+let editingItemIndex = -1;
 const MESTRE_EMAIL = "grisskos@fake.com";
 let isMestre = false;
 
-// Perícias Definição
 const PERICIAS_DEF = [
   { n: "Atletismo", a: "forca" }, { n: "Acrobacia", a: "destreza" }, { n: "Furtividade", a: "destreza" },
   { n: "Prestidigitação", a: "destreza" }, { n: "Feitiçaria", a: "inteligencia" }, { n: "História", a: "inteligencia" },
@@ -138,120 +318,214 @@ const PERICIAS_DEF = [
 ];
 const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligencia:"INT", sabedoria:"SAB", presenca:"PRE" };
 
-// Check Mestre
+// CHECK MESTRE
 auth.onAuthStateChanged(user => {
   if(user && user.email === MESTRE_EMAIL) {
     isMestre = true;
     document.getElementById('btnCriarAptidao').style.display = 'block';
-    document.body.classList.add('gm-visible'); // CSS class para mostrar botões
+    document.body.classList.add('gm-visible');
   }
 });
 
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
-  if (docSnap.exists()) {
+  if (docSnap.exists()) { 
     ficha = docSnap.data();
     // Safety
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
-    if (!ficha.progressoAptidoes) ficha.progressoAptidoes = {}; // Guarda quais niveis o player tem { "Proteção": 2 }
-    if (!ficha.aptidoesCustom) ficha.aptidoesCustom = []; // Aptidões extras criadas pelo mestre
+    if (!ficha.pericias) ficha.pericias = {};
+    if (!ficha.shikigamis) ficha.shikigamis = [];
+    if (!ficha.vida) ficha.vida = { atual: 10, max: 10 };
+    if (!ficha.combate) ficha.combate = {}; 
+    if (!ficha.inventario) ficha.inventario = []; 
+    if (!ficha.progressoAptidoes) ficha.progressoAptidoes = {};
+    if (!ficha.aptidoesCustom) ficha.aptidoesCustom = [];
     
-    renderFicha();
+    if(!editandoId) renderFicha(); 
+  } else {
+    alert("Personagem não encontrado!");
+    window.location = "index.html";
   }
 });
 
 function renderFicha() {
   const f = ficha;
   
-  // Render Básicos (Resumido)
-  document.getElementById('nomeDisplay').innerText = f.nome || "Sem Nome";
-  if(f.imagem) document.getElementById('charImg').src = f.imagem;
-  
-  // Badges
-  document.getElementById('badges').innerHTML = `<span class="badge b-lvl">NVL ${f.nivel||1}</span><span class="badge b-cls">${f.classe||'Classe'}</span>`;
+  // Header
+  const nomeEl = document.getElementById('nomeDisplay');
+  if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
+  const imgEl = document.getElementById('charImg');
+  if(f.imagem) imgEl.src = f.imagem;
+
+  document.getElementById('badges').innerHTML = `
+    <span class="badge b-lvl">NVL <span class="editable" onclick="editarCampo(this, 'nivel', 'number')">${f.nivel||1}</span></span>
+    <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
+  `;
 
   // Tokens
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
-  (f.shikigamis || []).forEach(s => {
-    shikiArea.innerHTML += `<img src="${s.imagem || 'https://via.placeholder.com/40'}" class="shiki-token" title="${s.nome}">`;
-  });
+  if(f.shikigamis && f.shikigamis.length > 0) {
+    f.shikigamis.forEach(s => {
+        const imgUrl = s.imagem || `https://via.placeholder.com/40/222/58E8DA?text=${(s.nome||'?').charAt(0)}`;
+        shikiArea.innerHTML += `<img src="${imgUrl}" class="shiki-token" title="${s.nome}" onclick="irParaShikigamis()">`;
+    });
+    if(f.shikigamis.length < 20) shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()" title="Nova Invocação">+</div>`;
+  } else {
+    shikiArea.innerHTML = `<div class="shiki-add" onclick="irParaShikigamis()" title="Criar Invocação">+</div>`;
+  }
 
   // Atributos
   const areaAttr = document.getElementById('atributosArea');
   areaAttr.innerHTML = "";
-  Object.keys(ATR_SHORT).forEach(k => {
-    const v = f.atributos[k] || 10;
-    const m = Math.floor((v-10)/2);
-    areaAttr.innerHTML += `<div class="attr-box"><span style="font-size:0.7rem;color:#888;">${ATR_SHORT[k]}</span><div style="font-size:1.2rem;font-weight:bold;">${m>=0?'+':''}${m}</div><div class="editable" onclick="editarCampo(this,'atributos.${k}','number')" style="font-size:0.8rem;color:#666;">${v}</div></div>`;
+  Object.keys(ATR_SHORT).forEach(key => {
+    const val = (f.atributos && f.atributos[key]) ? f.atributos[key] : 10;
+    const mod = Math.floor((val - 10) / 2);
+    areaAttr.innerHTML += `
+      <div class="attr-box">
+        <span class="attr-lbl">${ATR_SHORT[key]}</span>
+        <span class="attr-val">${mod>=0?'+':''}${mod}</span>
+        <span class="attr-raw editable" onclick="editarCampo(this, 'atributos.${key}', 'number')">${val}</span>
+      </div>`;
   });
 
-  // Status Bars
-  const statsArea = document.getElementById('statsArea');
-  statsArea.innerHTML = "";
-  ['vida','energia','vigor','integridade'].forEach(k => {
-    const s = f[k] || {atual:0,max:0};
-    const p = s.max>0 ? Math.min(100,(s.atual/s.max)*100) : 0;
-    const colors = {vida:'var(--primary)',energia:'var(--energy)',vigor:'var(--vigor)',integridade:'var(--integridade)'};
-    statsArea.innerHTML += `
+  // Stats
+  const areaStats = document.getElementById('statsArea');
+  areaStats.innerHTML = "";
+  const statsMap = [
+    {k:'vida', l:'Vida', c:'c-vida'}, {k:'energia', l:'Energia', c:'c-ener'},
+    {k:'vigor', l:'Vigor', c:'c-vigo'}, {k:'integridade', l:'Integ.', c:'c-inte'}
+  ];
+  statsMap.forEach(s => {
+    const st = f[s.k] || {atual:0, max:0};
+    const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
+    areaStats.innerHTML += `
       <div class="stat-row">
-        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:2px;">
-          <span>${k.toUpperCase()}</span>
-          <span><span class="editable" onclick="editarCampo(this,'${k}.atual','number')">${s.atual}</span>/<span class="editable" onclick="editarCampo(this,'${k}.max','number')">${s.max}</span></span>
+        <div class="stat-head">
+          <span>${s.l}</span> 
+          <div>
+            <span class="editable" onclick="editarCampo(this, '${s.k}.atual', 'number')">${st.atual}</span> / 
+            <span class="editable" onclick="editarCampo(this, '${s.k}.max', 'number')">${st.max}</span>
+          </div>
         </div>
-        <div class="bar-bg"><div class="bar-fill" style="width:${p}%;background:${colors[k]}"></div></div>
+        <div class="bar-bg"><div class="bar-fill ${s.c}" style="width:${pct}%"></div></div>
         <div class="stat-ctrl">
-          <div class="btn-calc" onclick="mathStat('${k}')">🔢</div>
-          <div class="btn-mini" onclick="upStat('${k}',-1)">-</div><div class="btn-mini" onclick="upStat('${k}',1)">+</div>
+          <div class="btn-calc" onclick="mathStat(this, '${s.k}')" title="Calcular">🔢</div>
+          <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
+          <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
         </div>
       </div>`;
   });
 
-  // === RENDERIZAÇÃO DAS APTIDÕES ===
-  renderAptidoes();
+  // === COMBATE ===
+  const nivel = f.nivel || 1;
+  const metadeNivel = Math.floor(nivel / 2);
+  const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
+  document.getElementById('treinoDisplay').innerText = `Treino: +${bonusTreino}`;
+  const modFor = Math.floor(((f.atributos?.forca || 10) - 10) / 2);
+  const modDes = Math.floor(((f.atributos?.destreza || 10) - 10) / 2);
+  const cData = f.combate || {};
 
-  // Inventário (Simples)
-  document.getElementById('ataquesList').innerHTML = (f.ataques||[]).map(i=>`<li>${i}</li>`).join('');
+  const attacksArea = document.getElementById('combatAttacksArea');
+  attacksArea.innerHTML = "";
 
-  // Perícias
-  const skillsList = document.getElementById('skillsList');
-  skillsList.innerHTML = "";
-  const metadeNivel = Math.floor((f.nivel||1)/2);
-  const bonusTreino = 2 + Math.floor(((f.nivel||1)-1)/4);
-  PERICIAS_DEF.forEach(p => {
-    const mod = Math.floor(((f.atributos[p.a]||10)-10)/2);
-    const saved = (f.pericias||{})[p.n] || {t:false,m:false};
-    let tot = mod + metadeNivel;
-    if(saved.t) tot += bonusTreino; if(saved.m) tot += 1;
-    skillsList.innerHTML += `
-      <div class="skill-row">
-        <span style="flex-grow:1;">${p.n}</span>
-        <span style="font-weight:bold;">${tot>=0?'+':''}${tot}</span>
+  const cCorpo = cData.corpo || {};
+  const usaDes = cCorpo.usaDes || false;
+  const attrCorpo = usaDes ? modDes : modFor;
+  const totCorpo = attrCorpo + metadeNivel + (cCorpo.treino ? bonusTreino : 0) + (cCorpo.outros || 0);
+  attacksArea.innerHTML += `
+    <div class="combat-card">
+      <div class="cc-header">Corpo a Corpo <div class="btn-toggle-attr" onclick="toggleMeleeAttr()">${usaDes?'DES':'FOR'}</div></div>
+      <div class="cc-body">${totCorpo>=0?'+':''}${totCorpo}</div>
+      <div class="cc-footer"><div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div><input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)"></div>
+    </div>`;
+
+  const cDist = cData.distancia || {};
+  const totDist = modDes + metadeNivel + (cDist.treino ? bonusTreino : 0) + (cDist.outros || 0);
+  attacksArea.innerHTML += `
+    <div class="combat-card">
+      <div class="cc-header">Distância</div>
+      <div class="cc-body">${totDist>=0?'+':''}${totDist}</div>
+      <div class="cc-footer"><div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div><input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)"></div>
+    </div>`;
+
+  const cMagic = cData.magico || {};
+  const attrKey = cMagic.atributo || 'inteligencia';
+  const valMagic = (f.atributos && f.atributos[attrKey]) ? f.atributos[attrKey] : 10;
+  const modMagic = Math.floor((valMagic - 10) / 2);
+  const totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0);
+  attacksArea.innerHTML += `
+    <div class="combat-card">
+      <div class="cc-header">Amaldiçoado <select class="mini-select" onchange="setMagicAttr(this.value)">${Object.keys(ATR_SHORT).map(k => `<option value="${k}" ${k===attrKey?'selected':''}>${ATR_SHORT[k]}</option>`).join('')}</select></div>
+      <div class="cc-body">${totMagic>=0?'+':''}${totMagic}</div>
+      <div class="cc-footer"><span style="font-size:0.7rem; color:var(--energy);">[T]</span><input class="bonus-input" placeholder="+" value="${cMagic.outros||''}" onchange="setCombatOther('magico', this.value)"></div>
+    </div>`;
+
+  const resistArea = document.getElementById('combatResistArea');
+  resistArea.innerHTML = "";
+  const resistencias = [{ k: 'astucia', l: 'Astúcia', a: 'inteligencia' }, { k: 'fortitude', l: 'Fortitude', a: 'constituicao' }, { k: 'integridade', l: 'Integ.', a: 'constituicao' }, { k: 'reflexos', l: 'Reflexos', a: 'destreza' }, { k: 'vontade', l: 'Vontade', a: 'sabedoria' }];
+  resistencias.forEach(res => {
+    const rData = cData[res.k] || {};
+    const rVal = (f.atributos && f.atributos[res.a]) ? f.atributos[res.a] : 10;
+    const rMod = Math.floor((rVal - 10) / 2);
+    const rTotal = rMod + metadeNivel + (rData.treino ? bonusTreino : 0) + (rData.outros || 0);
+    resistArea.innerHTML += `
+      <div class="combat-card">
+        <div class="cc-header">${res.l}</div>
+        <div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div>
+        <div class="cc-footer"><div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div><input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)"></div>
       </div>`;
   });
-}
 
-function renderAptidoes() {
-  const container = document.getElementById('listaAptidoes');
-  container.innerHTML = "";
+  // === INVENTÁRIO ===
+  const str = f.atributos?.forca || 10;
+  const strMod = Math.floor((str - 10) / 2);
+  const limit = 8 + (strMod * 2); 
+  const hardLimit = limit * 2;
+  const currentLoad = (f.inventario || []).reduce((acc, item) => acc + (Number(item.espacos)||0), 0);
+  
+  const bar = document.getElementById('loadFill');
+  const txt = document.getElementById('loadText');
+  const warning = document.getElementById('overburdenMsg');
+  const pct = Math.min(100, (currentLoad / hardLimit) * 100);
+  bar.style.width = pct + '%';
+  txt.innerText = `${currentLoad} / ${limit} Espaços`;
+  bar.classList.remove('over', 'full');
+  warning.style.display = 'none';
+  if (currentLoad > limit) { bar.classList.add('over'); warning.style.display = 'block'; }
+  if (currentLoad > hardLimit) { bar.classList.add('full'); txt.innerText = "IMPOSSÍVEL CARREGAR"; }
 
+  const invGrid = document.getElementById('inventoryGrid');
+  invGrid.innerHTML = "";
+  (f.inventario || []).forEach((item, idx) => {
+    const gradeClass = `grade-${item.grau || 4}`;
+    const imgUrl = item.imagem || 'https://via.placeholder.com/150?text=Item';
+    invGrid.innerHTML += `
+      <div class="inv-card ${gradeClass}" onclick="abrirItemModal(${idx})">
+        <img src="${imgUrl}" class="inv-img">
+        <div class="inv-body">
+          <div class="inv-title">${item.nome}</div>
+          <div class="inv-type">${item.tipo} • Grau ${['Esp','1','2','3','4'][item.grau]}</div>
+          <div class="inv-stats">${item.bonus || ''}</div>
+          <div class="inv-slots">${item.espacos} 📦</div>
+        </div>
+      </div>`;
+  });
+
+  // === RENDERIZAÇÃO DAS APTIDÕES (MASTER SYSTEM) ===
+  const containerApt = document.getElementById('listaAptidoes');
+  containerApt.innerHTML = "";
   // Junta as Aptidões Base + Customizadas da Ficha
   const todasAptidoes = [...APTIDOES_BASE, ...(ficha.aptidoesCustom || [])];
 
   todasAptidoes.forEach((apt, index) => {
-    // Nível atual desbloqueado pelo jogador
     const nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
-    
-    // Se não for mestre e o jogador tiver nível 0, nem mostra a aptidão (Segredo)
-    if (!isMestre && nivelAtual === 0) return;
+    if (!isMestre && nivelAtual === 0) return; // Esconde se não tem
 
     let niveisHtml = "";
     apt.niveis.forEach((desc, idx) => {
       const lvl = idx + 1;
       const isUnlocked = lvl <= nivelAtual;
-      
-      // Se não for mestre, só mostra os níveis desbloqueados (ou o próximo a desbloquear para dar gostinho?)
-      // Vamos mostrar apenas desbloqueados para o player.
-      if (!isMestre && !isUnlocked) return; 
+      if (!isMestre && !isUnlocked) return; // Player vê só desbloqueado
 
       const controls = isMestre ? `
         <div class="gm-controls">
@@ -267,7 +541,7 @@ function renderAptidoes() {
         </div>`;
     });
 
-    container.innerHTML += `
+    containerApt.innerHTML += `
       <div class="aptidao-box">
         <div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')">
           <span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span></span>
@@ -278,9 +552,32 @@ function renderAptidoes() {
         </div>
       </div>`;
   });
+
+  // Perícias
+  const listaSkills = document.getElementById('skillsList');
+  listaSkills.innerHTML = "";
+  const userPericias = f.pericias || {}; 
+  PERICIAS_DEF.forEach(p => {
+    const attrVal = (f.atributos && f.atributos[p.a]) ? f.atributos[p.a] : 10;
+    const modAttr = Math.floor((attrVal - 10) / 2);
+    const saved = userPericias[p.n] || { t: false, m: false };
+    let total = modAttr + metadeNivel;
+    if (saved.t) total += bonusTreino;
+    if (saved.m) total += 1;
+    listaSkills.innerHTML += `
+      <div class="skill-row">
+        <span class="sk-name">${p.n}</span>
+        <span class="sk-attr">${ATR_SHORT[p.a]}</span>
+        <span class="sk-total">${total>=0?'+':''}${total}</span>
+        <div class="sk-btn-group">
+           <div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div>
+           <div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div>
+        </div>
+      </div>`;
+  });
 }
 
-// === FUNÇÕES DO MESTRE ===
+// === FUNÇÕES DO MESTRE (APTIDÕES) ===
 window.setAptidao = async (nomeApt, novoNivel) => {
   if (!isMestre) return;
   const progresso = ficha.progressoAptidoes || {};
@@ -292,36 +589,108 @@ window.addNovaAptidao = async () => {
   if (!isMestre) return;
   const nome = prompt("Nome da Nova Aptidão:");
   if (!nome) return;
-  
-  // Cria estrutura básica
   const nova = {
-    nome: nome,
-    maxNivel: 5,
+    nome: nome, maxNivel: 5,
     niveis: ["NV 1 - Descrição...", "NV 2 - ...", "NV 3 - ...", "NV 4 - ...", "NV 5 - ..."]
   };
-  
   const custom = ficha.aptidoesCustom || [];
   custom.push(nova);
-  
   await updateDoc(doc(db, "fichas", id), { aptidoesCustom: custom });
   alert("Aptidão criada! Edite os níveis direto no banco se precisar de detalhes, ou use o padrão.");
 };
 
-// Utils (Mantidos)
-window.upStat = async (k,v) => { 
-  const s=ficha[k]; const n=Math.max(0,Math.min(s.max,Number(s.atual)+v)); 
-  await updateDoc(doc(db,"fichas",id),{[`${k}.atual`]:n}); 
-};
-window.mathStat = async (k) => {
-  const v = prompt("Valor (+/-):"); if(!v)return;
-  const n = Math.max(0,Math.min(ficha[k].max, Number(ficha[k].atual)+Number(v)));
-  await updateDoc(doc(db,"fichas",id),{[`${k}.atual`]:n});
-};
-window.editarCampo = async (el, field, type) => {
-  const val = prompt("Novo valor:", el.innerText);
-  if(val !== null) await updateDoc(doc(db,"fichas",id), {[field]: (type==='number'?Number(val):val)});
+// === INVENTÁRIO (MODAL) ===
+window.abrirItemModal = (index = -1) => {
+  editingItemIndex = index;
+  document.getElementById('itemModal').style.display = 'block';
+  document.getElementById('propList').innerHTML = "";
+  document.getElementById('encantList').innerHTML = "";
+  document.getElementById('btnExcluirItem').style.display = index === -1 ? 'none' : 'block';
+  document.getElementById('itemModalTitle').innerText = index === -1 ? 'Novo Item' : 'Editar Item';
+
+  if (index > -1) {
+    const item = ficha.inventario[index];
+    document.getElementById('itNome').value = item.nome;
+    document.getElementById('itTipo').value = item.tipo;
+    document.getElementById('itGrau').value = item.grau;
+    document.getElementById('itEspacos').value = item.espacos;
+    document.getElementById('itBonus').value = item.bonus;
+    document.getElementById('itImg').value = item.imagem;
+    document.getElementById('itDesc').value = item.descricao;
+    (item.propriedades || []).forEach(p => addPropField(p.nome, p.desc));
+    (item.encantamentos || []).forEach(e => addEncantField(e.nome, e.desc));
+  } else {
+    document.getElementById('itNome').value = "";
+    document.getElementById('itEspacos').value = 1;
+    document.getElementById('itBonus').value = "";
+    document.getElementById('itImg').value = "";
+    document.getElementById('itDesc').value = "";
+  }
 };
 
+window.addPropField = (nome = "", desc = "") => {
+  const div = document.createElement('div');
+  div.className = 'dynamic-list-item';
+  div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="prop-name"><textarea placeholder="Descrição" class="prop-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`;
+  document.getElementById('propList').appendChild(div);
+};
+
+window.addEncantField = (nome = "", desc = "") => {
+  const div = document.createElement('div');
+  div.className = 'dynamic-list-item';
+  div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="encant-name" style="border-color:var(--energy);"><textarea placeholder="Descrição" class="encant-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`;
+  document.getElementById('encantList').appendChild(div);
+};
+
+window.salvarItem = async () => {
+  const novoItem = {
+    nome: document.getElementById('itNome').value || "Item",
+    tipo: document.getElementById('itTipo').value,
+    grau: document.getElementById('itGrau').value,
+    espacos: Number(document.getElementById('itEspacos').value),
+    bonus: document.getElementById('itBonus').value,
+    imagem: document.getElementById('itImg').value,
+    descricao: document.getElementById('itDesc').value,
+    propriedades: [],
+    encantamentos: []
+  };
+  document.querySelectorAll('#propList .dynamic-list-item').forEach(el => {
+    novoItem.propriedades.push({ nome: el.querySelector('.prop-name').value, desc: el.querySelector('.prop-desc').value });
+  });
+  document.querySelectorAll('#encantList .dynamic-list-item').forEach(el => {
+    novoItem.encantamentos.push({ nome: el.querySelector('.encant-name').value, desc: el.querySelector('.encant-desc').value });
+  });
+
+  if (!ficha.inventario) ficha.inventario = [];
+  if (editingItemIndex === -1) ficha.inventario.push(novoItem);
+  else ficha.inventario[editingItemIndex] = novoItem;
+
+  await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario });
+  document.getElementById('itemModal').style.display = 'none';
+};
+
+window.excluirItem = async () => {
+  if (editingItemIndex === -1) return;
+  if (!confirm("Excluir?")) return;
+  ficha.inventario.splice(editingItemIndex, 1);
+  await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario });
+  document.getElementById('itemModal').style.display = 'none';
+};
+
+// Utils & Globals
+window.toggleCombatTrain = async (key) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].treino = !combate[key].treino; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.setCombatOther = async (key, val) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].outros = Number(val); await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.toggleMeleeAttr = async () => { const combate = ficha.combate || {}; if (!combate.corpo) combate.corpo = { treino: false, outros: 0, usaDes: false }; combate.corpo.usaDes = !combate.corpo.usaDes; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.setMagicAttr = async (attr) => { const combate = ficha.combate || {}; if (!combate.magico) combate.magico = { outros: 0, atributo: 'inteligencia' }; combate.magico.atributo = attr; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.mathStat = (el, key) => { if(el.querySelector('input')) return; const originalHtml = el.innerHTML; el.innerHTML = ''; const input = document.createElement('input'); input.placeholder = "+/-"; input.className = 'math-input'; input.type = 'text'; el.appendChild(input); input.focus(); const executar = async () => { const val = input.value.trim(); if(!val) { el.innerHTML = originalHtml; return; } const num = Number(val); if(isNaN(num)) { el.innerHTML = originalHtml; return; } const st = ficha[key]; let novo = Number(st.atual) + num; novo = Math.max(0, Math.min(st.max, novo)); await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo }); el.innerHTML = originalHtml; }; input.addEventListener('blur', executar); input.addEventListener('keydown', (e) => { if(e.key === 'Enter') input.blur(); }); };
+window.editarCampo = (el, field, type) => { if (el.querySelector('input')) return; editandoId = field; const valorAtual = el.innerText; el.innerHTML = `<input id="inputEdit" class="inline-input" type="${type}" value="${valorAtual}">`; const input = document.getElementById('inputEdit'); input.focus(); const salvar = async () => { let novoValor = input.value; if (type === 'number') novoValor = Number(novoValor); el.innerHTML = novoValor; editandoId = null; try { await updateDoc(doc(db, "fichas", id), { [field]: novoValor }); } catch (e) { console.error(e); el.innerText = valorAtual; } }; input.addEventListener('blur', salvar); input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); }); };
+window.togglePericia = async (skillName, tipo) => { const pericias = ficha.pericias || {}; if (!pericias[skillName]) pericias[skillName] = { t: false, m: false }; pericias[skillName][tipo] = !pericias[skillName][tipo]; await updateDoc(doc(db, "fichas", id), { pericias: pericias }); };
+window.upStat = async (key, val) => { const st = ficha[key]; const novo = Math.max(0, Math.min(st.max, Number(st.atual)+val)); await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo }); };
+window.irParaShikigamis = () => { window.location = `shikigamis.html?charId=${id}`; };
+window.irParaFeiticos = () => { window.location = `feiticos.html?id=${id}`; };
+window.abrirConfig = () => { document.getElementById('configModal').style.display = 'block'; document.getElementById('editImgUrl').value = ficha.imagem || ""; };
+window.salvarImg = async () => { await updateDoc(doc(db, "fichas", id), { imagem: document.getElementById('editImgUrl').value }); alert("Imagem atualizada!"); };
+window.excluirPersonagem = async () => { if(prompt("Digite DELETAR para confirmar:")==="DELETAR") { await deleteDoc(doc(db, "fichas", id)); window.location="index.html"; } };
 </script>
 </body>
 </html>
