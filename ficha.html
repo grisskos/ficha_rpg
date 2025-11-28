@@ -13,25 +13,15 @@
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  /* === LAYOUT 3 COLUNAS === */
-  .main-layout { 
-    display: grid; 
-    grid-template-columns: 280px 1fr 300px; /* Sidebar | Meio | Perícias */
-    gap: 20px; 
-    max-width: 1600px; 
-    margin: 0 auto; 
-    padding-bottom: 80px; 
-  }
-  
-  /* Responsividade */
-  @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } } /* Esconde 3ª col e joga pra baixo se precisar, ou ajusta */
-  @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } } /* Mobile: Tudo empilhado */
+  /* Layout Responsivo */
+  .main-layout { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; max-width: 1600px; margin: 0 auto; padding-bottom: 80px; }
+  @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } }
+  @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
 
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
-  
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; }
 
-  /* Cabeçalho do Personagem */
+  /* Cabeçalho */
   .char-header { text-align: center; }
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
@@ -41,41 +31,18 @@
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* TOKENS DE SHIKIGAMI */
-  .shiki-container {
-    display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap;
-    border-top: 1px solid #222; padding-top: 15px;
-  }
-  .shiki-token {
-    width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy);
-    background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s;
-  }
+  /* Tokens */
+  .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
+  .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
-  .shiki-add {
-    width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444;
-    display: flex; align-items: center; justify-content: center; color: #555;
-    cursor: pointer; font-size: 1.2rem; transition: 0.2s;
-  }
+  .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* EDIÇÃO INLINE */
-  .editable { 
-    cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; 
-    display: inline-block; min-width: 20px; text-align: center;
-  }
+  /* Inputs e Edição */
+  .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
-  
-  .inline-input { 
-    background: #000; color: white; border: 2px solid var(--primary); 
-    border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; 
-    width: 80px; text-align: center; outline: none;
-  }
-
-  /* Math Input */
-  .math-input {
-    width: 40px; background: #fff; color: #000; border: none; 
-    border-radius: 3px; text-align: center; font-weight: bold; outline: none;
-  }
+  .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
+  .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
 
   /* Atributos */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -84,45 +51,91 @@
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
 
-  /* Barras de Status */
+  /* Barras */
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
   .bar-fill { height: 100%; transition: width 0.3s; }
-  
   .c-vida { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
   .c-ener { background: var(--energy); box-shadow: 0 0 8px var(--energy); }
   .c-vigo { background: var(--vigor); box-shadow: 0 0 8px var(--vigor); }
   .c-inte { background: var(--integridade); box-shadow: 0 0 8px var(--integridade); }
-
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
   .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
   .btn-mini:hover { border-color: white; color: white; background: #333; }
-  
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* COMBATE & RESISTÊNCIAS */
-  .section-header { padding-bottom: 10px; border-bottom: 1px solid #333; margin-bottom: 10px; color: var(--primary); margin-top: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
-  
-  .combat-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #222; }
-  .combat-label { font-size: 0.9rem; color: #eee; flex-grow: 1; }
-  .combat-controls { display: flex; align-items: center; gap: 8px; }
-  .combat-total { font-weight: bold; font-size: 1.1rem; color: white; width: 35px; text-align: right; }
-  
-  .btn-toggle-attr { background: #222; border: 1px solid #555; color: #aaa; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; cursor: pointer; min-width: 35px; text-align: center; }
-  .btn-toggle-attr:hover { color: white; border-color: white; }
-  
-  .bonus-input { background: #111; border: 1px solid #444; color: #aaa; width: 30px; text-align: center; padding: 2px; border-radius: 4px; font-size: 0.8rem; }
+  /* ========================================= */
+  /* NOVO ESTILO DE COMBATE (Cards em Grid) */
+  /* ========================================= */
+  .section-header { 
+    background: #111; color: var(--primary); padding: 8px; text-align: center; 
+    border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #333;
+  }
+
+  .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; }
+  .cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+  @media (max-width: 600px) {
+    .cols-3 { grid-template-columns: 1fr; } /* Empilha ataques no mobile */
+    .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } /* Scroll nas resistências */
+    .combat-card { min-width: 80px; }
+  }
+
+  .combat-card {
+    background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px;
+    display: flex; flex-direction: column; overflow: hidden; text-align: center;
+  }
+
+  /* Cabeçalho do Card (Vermelho) */
+  .cc-header {
+    background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px;
+  }
+
+  /* Corpo do Card (Número Grande) */
+  .cc-body {
+    padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1;
+    background: #1a1a1a;
+  }
+
+  /* Rodapé do Card (Inputs) */
+  .cc-footer {
+    background: #000; padding: 5px; display: flex; justify-content: center; align-items: center; gap: 5px; border-top: 1px solid #333;
+  }
+
+  /* Botões Específicos */
+  .btn-toggle-attr { 
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); 
+    color: white; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; cursor: pointer; margin-top: 2px;
+  }
+  .btn-toggle-attr:hover { background: white; color: var(--primary); }
+
+  .bonus-input { 
+    background: #222; border: 1px solid #444; color: #aaa; width: 30px; text-align: center; 
+    padding: 2px; border-radius: 4px; font-size: 0.8rem; 
+  }
   .bonus-input:focus { border-color: var(--energy); color: white; outline: none; }
 
-  .btn-train { width: 20px; height: 20px; border: 1px solid #444; background: #111; color: #444; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; border-radius: 3px; cursor: pointer; }
-  .btn-train.active { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); font-weight: bold; }
+  .btn-train { 
+    width: 20px; height: 20px; border: 1px solid #444; background: #222; color: #666; 
+    font-size: 0.7rem; display: flex; align-items: center; justify-content: center; 
+    border-radius: 3px; cursor: pointer; font-weight: bold;
+  }
+  .btn-train.active { background: var(--energy); border-color: var(--energy); color: #000; }
 
-  select.mini-select { background: #111; border: 1px solid #444; color: #ccc; font-size: 0.7rem; padding: 2px; border-radius: 4px; max-width: 60px; }
+  select.mini-select { 
+    background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; 
+    max-width: 80px; margin-top: 2px; 
+  }
+  select.mini-select option { background: #222; color: #fff; }
 
-  /* Perícias (Coluna Direita) */
-  .skills-card { padding: 0; overflow: hidden; height: 100%; } /* Full height */
+  /* Perícias */
+  .skills-card { padding: 0; overflow: hidden; height: 100%; }
+  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
   .skill-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
   .skill-row:hover { background: #1b1b1b; }
   .sk-name { flex-grow: 1; color: #eee; }
@@ -181,14 +194,12 @@
 
   <div class="col-center">
     
-    <div class="card">
-      <h3 class="section-header">⚔️ Testes de Ataque</h3>
-      <div id="combatAttacksArea"></div>
-    </div>
+    <div class="card" style="padding:10px;">
+      <h3 class="section-header">Jogadas de Ataque</h3>
+      <div id="combatAttacksArea" class="combat-grid cols-3"></div>
 
-    <div class="card">
-      <h3 class="section-header">🛡️ Testes de Resistência</h3>
-      <div id="combatResistArea"></div>
+      <h3 class="section-header" style="margin-top:20px;">Testes de Resistência</h3>
+      <div id="combatResistArea" class="combat-grid cols-5"></div>
     </div>
 
     <div class="card list-box">
@@ -256,7 +267,6 @@ const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligenci
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
-    // Safety Checks
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.shikigamis) ficha.shikigamis = [];
@@ -272,7 +282,6 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
 function renderFicha() {
   const f = ficha;
   
-  // Header
   const nomeEl = document.getElementById('nomeDisplay');
   if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
   
@@ -284,7 +293,7 @@ function renderFicha() {
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
   `;
 
-  // Tokens Shikigami
+  // Tokens
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
   if(f.shikigamis && f.shikigamis.length > 0) {
@@ -311,7 +320,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // Stats (Barras)
+  // Stats
   const areaStats = document.getElementById('statsArea');
   areaStats.innerHTML = "";
   const statsMap = [
@@ -321,6 +330,7 @@ function renderFicha() {
   statsMap.forEach(s => {
     const st = f[s.k] || {atual:0, max:0};
     const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
+    
     areaStats.innerHTML += `
       <div class="stat-row">
         <div class="stat-head">
@@ -339,7 +349,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // === CÁLCULOS GERAIS ===
+  // === RENDERIZAÇÃO DO COMBATE (ESTILO CARD) ===
   const nivel = f.nivel || 1;
   const metadeNivel = Math.floor(nivel / 2);
   const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
@@ -348,42 +358,42 @@ function renderFicha() {
   const modDes = Math.floor(((f.atributos?.destreza || 10) - 10) / 2);
   const cData = f.combate || {};
 
-  // === 1. ATAQUES (COLUNA DO MEIO) ===
   const attacksArea = document.getElementById('combatAttacksArea');
   attacksArea.innerHTML = "";
 
-  // Ataque Corpo a Corpo
+  // 1. Corpo a Corpo
   const cCorpo = cData.corpo || {};
   const usaDes = cCorpo.usaDes || false;
   const attrCorpo = usaDes ? modDes : modFor;
   const totCorpo = attrCorpo + metadeNivel + (cCorpo.treino ? bonusTreino : 0) + (cCorpo.outros || 0);
   
   attacksArea.innerHTML += `
-    <div class="combat-row">
-      <span class="combat-label">Corpo a Corpo</span>
-      <div class="combat-controls">
+    <div class="combat-card">
+      <div class="cc-header">
+        Corpo a Corpo
         <div class="btn-toggle-attr" onclick="toggleMeleeAttr()">${usaDes?'DES':'FOR'}</div>
+      </div>
+      <div class="cc-body">${totCorpo>=0?'+':''}${totCorpo}</div>
+      <div class="cc-footer">
         <div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div>
         <input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)">
-        <span class="combat-total">${totCorpo>=0?'+':''}${totCorpo}</span>
       </div>
     </div>`;
 
-  // Ataque Distância
+  // 2. Distância
   const cDist = cData.distancia || {};
   const totDist = modDes + metadeNivel + (cDist.treino ? bonusTreino : 0) + (cDist.outros || 0);
   attacksArea.innerHTML += `
-    <div class="combat-row">
-      <span class="combat-label">Distância</span>
-      <div class="combat-controls">
-        <span style="font-size:0.7rem; color:#666;">DES</span>
+    <div class="combat-card">
+      <div class="cc-header">Distância</div>
+      <div class="cc-body">${totDist>=0?'+':''}${totDist}</div>
+      <div class="cc-footer">
         <div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div>
         <input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)">
-        <span class="combat-total">${totDist>=0?'+':''}${totDist}</span>
       </div>
     </div>`;
 
-  // Ataque Mágico/Especial
+  // 3. Mágico
   const cMagic = cData.magico || {};
   const attrKey = cMagic.atributo || 'inteligencia';
   const valMagic = (f.atributos && f.atributos[attrKey]) ? f.atributos[attrKey] : 10;
@@ -391,25 +401,27 @@ function renderFicha() {
   const totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0);
   
   attacksArea.innerHTML += `
-    <div class="combat-row">
-      <span class="combat-label">Mágico/Especial</span>
-      <div class="combat-controls">
+    <div class="combat-card">
+      <div class="cc-header">
+        Amaldiçoado
         <select class="mini-select" onchange="setMagicAttr(this.value)">
           ${Object.keys(ATR_SHORT).map(k => `<option value="${k}" ${k===attrKey?'selected':''}>${ATR_SHORT[k]}</option>`).join('')}
         </select>
-        <span style="font-size:0.7rem; color:var(--energy); font-weight:bold;">[T]</span>
+      </div>
+      <div class="cc-body">${totMagic>=0?'+':''}${totMagic}</div>
+      <div class="cc-footer">
+        <span style="font-size:0.7rem; color:var(--energy);">[T]</span>
         <input class="bonus-input" placeholder="+" value="${cMagic.outros||''}" onchange="setCombatOther('magico', this.value)">
-        <span class="combat-total">${totMagic>=0?'+':''}${totMagic}</span>
       </div>
     </div>`;
 
-  // === 2. RESISTÊNCIAS (COLUNA DO MEIO) ===
+  // === RESISTÊNCIAS ===
   const resistArea = document.getElementById('combatResistArea');
   resistArea.innerHTML = "";
   const resistencias = [
     { k: 'astucia', l: 'Astúcia', a: 'inteligencia' },
     { k: 'fortitude', l: 'Fortitude', a: 'constituicao' },
-    { k: 'integridade', l: 'Integridade', a: 'constituicao' },
+    { k: 'integridade', l: 'Integ.', a: 'constituicao' },
     { k: 'reflexos', l: 'Reflexos', a: 'destreza' },
     { k: 'vontade', l: 'Vontade', a: 'sabedoria' }
   ];
@@ -421,18 +433,17 @@ function renderFicha() {
     const rTotal = rMod + metadeNivel + (rData.treino ? bonusTreino : 0) + (rData.outros || 0);
 
     resistArea.innerHTML += `
-      <div class="combat-row">
-        <span class="combat-label">${res.l}</span>
-        <div class="combat-controls">
-          <span style="font-size:0.7rem; color:#666;">${ATR_SHORT[res.a]}</span>
+      <div class="combat-card">
+        <div class="cc-header">${res.l}</div>
+        <div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div>
+        <div class="cc-footer">
           <div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div>
           <input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)">
-          <span class="combat-total">${rTotal>=0?'+':''}${rTotal}</span>
         </div>
       </div>`;
   });
 
-  // === 3. PERÍCIAS (COLUNA DIREITA) ===
+  // Perícias e Listas
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
   const userPericias = f.pericias || {}; 
@@ -458,13 +469,11 @@ function renderFicha() {
       </div>`;
   });
 
-  // Listas de Texto
   document.getElementById('ataquesList').innerHTML = (f.ataques||[]).map(i=>`<li>${i}</li>`).join('');
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
-// === LÓGICA DE DADOS E EVENTOS ===
-
+// LÓGICA DE DADOS
 window.toggleCombatTrain = async (key) => {
   const combate = ficha.combate || {};
   if (!combate[key]) combate[key] = { treino: false, outros: 0 };
@@ -550,11 +559,9 @@ window.upStat = async (key, val) => {
   await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo });
 };
 
-// Navegação
 window.irParaShikigamis = () => { window.location = `shikigamis.html?charId=${id}`; };
 window.irParaFeiticos = () => { window.location = `feiticos.html?id=${id}`; };
 
-// Configurações
 window.abrirConfig = () => {
   document.getElementById('configModal').style.display = 'block';
   document.getElementById('editImgUrl').value = ficha.imagem || "";
