@@ -13,7 +13,7 @@
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  /* === LAYOUT === */
+  /* LAYOUT */
   .main-layout { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; max-width: 1600px; margin: 0 auto; padding-bottom: 80px; }
   @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } }
   @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
@@ -21,7 +21,7 @@
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; position: relative; }
 
-  /* HEADER & SIDEBAR */
+  /* HEADER */
   .char-header { text-align: center; }
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
@@ -30,46 +30,39 @@
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* TOKENS SHIKIGAMI */
+  /* SHIKIGAMIS */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* EDIÇÃO INLINE */
+  /* UTILS */
   .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
   .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
 
-  /* ATRIBUTOS & BARRAS */
+  /* ATRIBUTOS */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
 
+  /* BARRAS */
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
   .bar-fill { height: 100%; transition: width 0.3s; }
-  .c-vida { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
-  .c-ener { background: var(--energy); box-shadow: 0 0 8px var(--energy); }
-  .c-vigo { background: var(--vigor); box-shadow: 0 0 8px var(--vigor); }
-  .c-inte { background: var(--integridade); box-shadow: 0 0 8px var(--integridade); }
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
   .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
   .btn-mini:hover { border-color: white; color: white; background: #333; }
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* COMBATE (CARDS) */
-  .section-header { 
-    background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333;
-    border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; 
-    display: flex; justify-content: space-between; align-items: center;
-  }
+  /* COMBATE */
+  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
   .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
   .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -107,7 +100,7 @@
   .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
   .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
 
-  /* APTIDÕES (ESTILO NOVO) */
+  /* APTIDÕES */
   .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
   .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .aptidao-header:hover { background: #2a2a2a; }
@@ -117,7 +110,6 @@
   .nivel-row.unlocked { color: #fff; } 
   .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
   .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  /* Controles Mestre */
   .gm-controls { display: none; margin-left: auto; gap: 5px; } 
   .gm-visible .gm-controls { display: flex; }
   .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
@@ -142,6 +134,10 @@
   .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
 
+  /* LISTAS */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; }
+  .list-box li { margin-bottom: 5px; }
+
   /* MODALS */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
@@ -160,7 +156,6 @@
 <body>
 
 <div class="main-layout">
-  
   <div class="col-side">
     <div class="card char-header">
       <img id="charImg" class="char-img" src="">
@@ -168,23 +163,14 @@
       <div id="badges" class="badges"></div>
       <div id="shikiTokens" class="shiki-container"></div>
     </div>
-
-    <div class="card">
-      <div id="atributosArea" class="attr-grid"></div>
-      <p style="text-align:center; font-size:0.7rem; color:#666; margin-bottom:0;">Clique no número pequeno para editar</p>
-    </div>
-
-    <div class="card">
-      <div id="statsArea"></div>
-    </div>
-    
+    <div class="card"><div id="atributosArea" class="attr-grid"></div><p style="text-align:center;font-size:0.7rem;color:#666;margin:0;">Clique para editar</p></div>
+    <div class="card"><div id="statsArea"></div></div>
     <button class="btn-nav btn-summon" onclick="irParaShikigamis()">🐺 Invocações</button>
     <button class="btn-nav btn-tech" onclick="irParaFeiticos()">⚡ Técnicas & Artes</button>
     <button class="btn-mini" style="width:100%; padding:10px; font-size:1rem; margin-top:10px;" onclick="window.location='index.html'">Voltar para Lista</button>
   </div>
 
   <div class="col-center">
-    
     <div class="card" style="padding:10px;">
       <h3 class="section-header">Jogadas de Ataque</h3>
       <div id="combatAttacksArea" class="combat-grid cols-3"></div>
@@ -197,13 +183,8 @@
         <span style="flex-grow:1; text-align:center;">Inventário</span>
         <button class="btn-icon-sm" onclick="abrirItemModal()" title="Adicionar Item">+</button>
       </div>
-      
-      <div class="load-bar-container">
-        <div id="loadFill" class="load-fill"></div>
-        <div id="loadText" class="load-text">0 / 8 Espaços</div>
-      </div>
+      <div class="load-bar-container"><div id="loadFill" class="load-fill"></div><div id="loadText" class="load-text">0 / 8 Espaços</div></div>
       <div id="overburdenMsg" class="overburden-warning">⚠ SOBRECARREGADO</div>
-
       <div id="inventoryGrid" class="inv-grid"></div>
     </div>
     
@@ -225,67 +206,36 @@
       <div id="skillsList"></div>
     </div>
   </div>
-
 </div>
 
 <button class="fab-config" onclick="abrirConfig()">⚙️</button>
 
 <div id="configModal" class="modal">
   <div class="modal-content">
-    <h2 style="color:var(--primary); margin-top:0;">Configurações</h2>
-    <label>Imagem (URL)</label>
-    <input id="editImgUrl" style="margin-bottom:15px;">
+    <h2 style="color:var(--primary);">Configurações</h2>
+    <label>Imagem (URL)</label><input id="editImgUrl" style="margin-bottom:15px;">
     <button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button>
-    <br><br>
-    <button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Fechar</button>
+    <br><br><button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer;">Fechar</button>
     <button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button>
   </div>
 </div>
 
 <div id="itemModal" class="modal">
   <div class="modal-content">
-    <h2 id="itemModalTitle" style="color:var(--primary); margin-top:0;">Novo Item</h2>
-    
+    <h2 id="itemModalTitle" style="color:var(--primary);">Novo Item</h2>
     <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
       <div class="form-group"><label>Nome</label><input id="itNome"></div>
-      <div class="form-group"><label>Tipo</label>
-        <select id="itTipo">
-          <option value="Arma">Arma</option>
-          <option value="Uniforme">Uniforme</option>
-          <option value="Item">Item</option>
-        </select>
-      </div>
+      <div class="form-group"><label>Tipo</label><select id="itTipo"><option value="Arma">Arma</option><option value="Uniforme">Uniforme</option><option value="Item">Item</option></select></div>
     </div>
-
     <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
-      <div class="form-group"><label>Grau</label>
-        <select id="itGrau">
-          <option value="4">Grau 4</option>
-          <option value="3">Grau 3</option>
-          <option value="2">Grau 2</option>
-          <option value="1">Grau 1</option>
-          <option value="0">Especial</option>
-        </select>
-      </div>
+      <div class="form-group"><label>Grau</label><select id="itGrau"><option value="4">Grau 4</option><option value="3">Grau 3</option><option value="2">Grau 2</option><option value="1">Grau 1</option><option value="0">Especial</option></select></div>
       <div class="form-group"><label>Espaços</label><input type="number" id="itEspacos" value="1"></div>
       <div class="form-group"><label>Bônus</label><input id="itBonus" placeholder="+2 CA"></div>
     </div>
-
     <div class="form-group"><label>Imagem (URL)</label><input id="itImg" placeholder="http://..."></div>
     <div class="form-group"><label>Descrição Geral</label><textarea id="itDesc" style="height:60px;"></textarea></div>
-
-    <div class="list-adder">
-      <label>Propriedades</label>
-      <div id="propList"></div>
-      <button class="btn-add-item" onclick="addPropField()">+ Propriedade</button>
-    </div>
-
-    <div class="list-adder">
-      <label>Encantamentos</label>
-      <div id="encantList"></div>
-      <button class="btn-add-item" onclick="addEncantField()">+ Encantamento</button>
-    </div>
-
+    <div class="list-adder"><label>Propriedades</label><div id="propList"></div><button class="btn-add-item" onclick="addPropField()">+ Propriedade</button></div>
+    <div class="list-adder"><label>Encantamentos</label><div id="encantList"></div><button class="btn-add-item" onclick="addEncantField()">+ Encantamento</button></div>
     <div style="display:flex; gap:10px; margin-top:20px;">
       <button onclick="salvarItem()" style="background:var(--primary); flex-grow:1; padding:10px; border:none; color:white; cursor:pointer;">Salvar Item</button>
       <button onclick="excluirItem()" id="btnExcluirItem" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer; display:none;">Excluir</button>
@@ -296,7 +246,24 @@
 
 <script type="module">
 import { db, auth, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
-import { APTIDOES_BASE } from "./aptidoes_db.js";
+
+// BANCO DE DADOS DE APTIDÕES (INTEGRADO PARA EVITAR ERROS)
+const APTIDOES_BASE = [
+  { nome: "Liberação de Energia", maxNivel: 10, niveis: ["NV 1 - Limite de PE por turno: +1", "NV 2 - Limite de PE por turno: +1", "NV 3 - Ganha 1 Característica Única de Aura", "NV 4 - Limite de PE por turno: +1", "NV 5 - Limite de PE por turno: +1", "NV 6 - Ganha 1 Característica Única de Aura", "NV 7 - Limite de PE por turno: +1", "NV 8 - Limite de PE por turno: +1", "NV 9 - Ganha 1 Característica Única de Aura", "NV 10 - Aura estabilizada. Não gasta mais 1 PE/turno. Ganha Característica Especial. Limite PE: +1"] },
+  { nome: "Proteção", maxNivel: 8, niveis: ["NV 1 - +1 Redução de Dano.", "NV 2 - +1 Redução, +1 Dano.", "NV 3 - +1 Redução, +1 Dano.", "NV 4 - +2 Redução, +2 Dano. Custo: 2 PE/turno.", "NV 5 - +2 Redução, +2 Dano.", "NV 6 - Redução 1+X, Dano X (X=Metade Treino). Custo: 3 PE/turno.", "NV 7 - Redução Y+X, Dano Y+X. Custo: 4 PE/turno.", "NV 8 - Resistência Física, Dano X+Y. Custo: 5 PE/turno."] },
+  { nome: "Projeção", maxNivel: 5, niveis: ["NV 1 - Ataque 1d8. Crítico 20.", "NV 2 - Soma Atributo Mental. Imbuir objeto (+1d6).", "NV 3 - Soma Treinamento. Dano 1d10. Imbuir (+1d8+Mental). Custo 2 PE.", "NV 4 - Dano 2d8. Ignora RD (Treino). Imbuir (+2d6+Mental). Custo 3 PE.", "NV 5 - Dano 3d10. Ignora RD (Treino+Mental). Imbuir (+3d8+Mental). Custo 4 PE."] },
+  { nome: "Criação", maxNivel: 5, niveis: ["NV 1 - Paredes 1x1. Vida = Metade Nível x Treino. Custo 1 PE.", "NV 2 - Soma Atributo Mental na Vida.", "NV 3 - Paredes 3x3, formatos variáveis. Custo 2 PE.", "NV 4 - Vida = Nível x Treino + Mental. Maleáveis.", "NV 5 - Vida = Nível x Treino + 2x Mental. Imune ao 1º ataque. Custo 4 PE."] },
+  { nome: "Concentração", maxNivel: 5, niveis: ["NV 1 - Aumenta dado de dano em 1 nível. Custo 2 PE.", "NV 2 - Soma modificador do maior atributo.", "NV 3 - +1 dado adicional no dano. Custo 3 PE.", "NV 4 - Aumenta dado em 2 níveis. Custo 4 PE.", "NV 5 - Maximiza dados (qtd igual Treinamento). Custo 5 PE."] },
+  { nome: "Transformação", maxNivel: 5, niveis: ["NV 1 - Líquida (+1 CA/Ref), Sólida (+1 RD/Fort), Gasosa (+1 Dano/Integ).", "NV 2 - Bônus aumenta para +2.", "NV 3 - Bônus aumenta para +3. Custo 3 PE/turno.", "NV 4 - Bônus aumenta para +4.", "NV 5 - Estado Máximo. Custo 4 PE/turno."] },
+  { nome: "Aura Elemental", maxNivel: 5, niveis: ["NV 1 - Mudar tipo de dano por Treinamento turnos.", "NV 2 - Transformar objeto/efeito. +1d6 dano elemental. Duração Cena.", "NV 3 - Transformar aura do alvo (Teste Res). Soma Mental no dano.", "NV 4 - Elemento passivo. Segundo elemento disponível.", "NV 5 - Causa 2d10 + Mental de dano elemental."] },
+  { nome: "Molde", maxNivel: 5, niveis: ["NV 1 - Moldar 1x1 (pilar, lâmina). Dur: Treino turnos. Custo 2 PE.", "NV 2 - +1 Vida, formas mais complexas.", "NV 3 - Moldar 3x3 com partes móveis.", "NV 4 - Criar mecanismos (portas, alavancas).", "NV 5 - Ganha característica extra (afiada, etc). Imune 1º ataque."] },
+  { nome: "Intensificação", maxNivel: 5, niveis: ["NV 1 - +1 Dano/Defesa. Custo 1 PE.", "NV 2 - +2 Dano/Defesa, +1 Alcance. Custo 1 PE.", "NV 3 - +1 + Metade Treino. Ignora RD (Metade Treino). Custo 2 PE.", "NV 4 - +1 Nível Dano ou Modificador na Defesa. Custo 3 PE.", "NV 5 - Dano Bônus X+Y. Sacrificar energia para +2 Níveis Dano. Custo 5 PE."] },
+  { nome: "Solidificação", maxNivel: 5, niveis: ["NV 1 - +1 Redução. PV Temp = Treinamento.", "NV 2 - +2 Redução. +1 Dano energético.", "NV 3 - Redução 1+X. Res. Física X. PV Temp = Treino + Mental. Custo 2 PE.", "NV 4 - Redução Y+X. Redução extra contra críticos.", "NV 5 - Res. Física e Dano X+Y. Imunidade a 1 efeito negativo. Custo 4 PE."] },
+  { nome: "Encasular", maxNivel: 5, niveis: ["NV 1 - Bolha 1x1. Reduz mobilidade, concede RD. Dur: Treino turnos.", "NV 2 - Bolha ganha HP. Inimigos: Desvantagem física. Custo 2 PE.", "NV 3 - Dano periódico. À prova de som.", "NV 4 - Múltiplos alvos ou 3x3. Absorve 1 ataque. Custo 3 PE.", "NV 5 - Quase impenetrável. Bloqueia feitiços. Custo 4 PE."] },
+  { nome: "Redirecionar", maxNivel: 5, niveis: ["NV 1 - Curvar ataque de projeção. Custo 1 PE.", "NV 2 - Redirecionar projéteis curtos. Desvantagem no atacante. Custo 1 PE.", "NV 3 - Redirecionar efeitos de área/origem externa. Custo 2 PE.", "NV 4 - Criar nós de redirecionamento automático.", "NV 5 - Refletir habilidade para o remetente. Custo 5 PE."] },
+  { nome: "Esconder", maxNivel: 5, niveis: ["NV 1 - Indetectável por métodos simples.", "NV 2 - Projetar isca falsa. Treinamento em Furtividade.", "NV 3 - Ocultação completa. Duplicar assinatura (eco).", "NV 4 - Mascarar grupo (Raio = Metade Nível).", "NV 5 - Indetectável total. Assumir assinatura de outro."] },
+  { nome: "Perturbação", maxNivel: 5, niveis: ["NV 1 - Alvo -1 em testes de energia.", "NV 2 - Teste de Vontade para conjurar. Falha = Interrompido.", "NV 3 - Zona de perturbação 3x3. Reduz eficácia, dano periódico.", "NV 4 - Interromper recarga de poderes.", "NV 5 - Anular habilidade (cooldown) ou inverter efeito (buff->debuff)."] }
+];
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
@@ -318,7 +285,7 @@ const PERICIAS_DEF = [
 ];
 const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligencia:"INT", sabedoria:"SAB", presenca:"PRE" };
 
-// CHECK MESTRE
+// Check Mestre
 auth.onAuthStateChanged(user => {
   if(user && user.email === MESTRE_EMAIL) {
     isMestre = true;
@@ -330,11 +297,14 @@ auth.onAuthStateChanged(user => {
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
-    // Safety
+    // Safety Init
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.shikigamis) ficha.shikigamis = [];
     if (!ficha.vida) ficha.vida = { atual: 10, max: 10 };
+    if (!ficha.energia) ficha.energia = { atual: 10, max: 10 };
+    if (!ficha.vigor) ficha.vigor = { atual: 5, max: 5 };
+    if (!ficha.integridade) ficha.integridade = { atual: 100, max: 100 };
     if (!ficha.combate) ficha.combate = {}; 
     if (!ficha.inventario) ficha.inventario = []; 
     if (!ficha.progressoAptidoes) ficha.progressoAptidoes = {};
@@ -396,7 +366,8 @@ function renderFicha() {
     {k:'vigor', l:'Vigor', c:'c-vigo'}, {k:'integridade', l:'Integ.', c:'c-inte'}
   ];
   statsMap.forEach(s => {
-    const st = f[s.k] || {atual:0, max:0};
+    const st = f[s.k];
+    if(!st) return; 
     const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
     areaStats.innerHTML += `
       <div class="stat-row">
@@ -514,18 +485,17 @@ function renderFicha() {
   // === RENDERIZAÇÃO DAS APTIDÕES (MASTER SYSTEM) ===
   const containerApt = document.getElementById('listaAptidoes');
   containerApt.innerHTML = "";
-  // Junta as Aptidões Base + Customizadas da Ficha
   const todasAptidoes = [...APTIDOES_BASE, ...(ficha.aptidoesCustom || [])];
 
   todasAptidoes.forEach((apt, index) => {
     const nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
-    if (!isMestre && nivelAtual === 0) return; // Esconde se não tem
+    if (!isMestre && nivelAtual === 0) return;
 
     let niveisHtml = "";
     apt.niveis.forEach((desc, idx) => {
       const lvl = idx + 1;
       const isUnlocked = lvl <= nivelAtual;
-      if (!isMestre && !isUnlocked) return; // Player vê só desbloqueado
+      if (!isMestre && !isUnlocked) return;
 
       const controls = isMestre ? `
         <div class="gm-controls">
@@ -577,7 +547,7 @@ function renderFicha() {
   });
 }
 
-// === FUNÇÕES DO MESTRE (APTIDÕES) ===
+// === FUNÇÕES ===
 window.setAptidao = async (nomeApt, novoNivel) => {
   if (!isMestre) return;
   const progresso = ficha.progressoAptidoes || {};
@@ -599,7 +569,6 @@ window.addNovaAptidao = async () => {
   alert("Aptidão criada! Edite os níveis direto no banco se precisar de detalhes, ou use o padrão.");
 };
 
-// === INVENTÁRIO (MODAL) ===
 window.abrirItemModal = (index = -1) => {
   editingItemIndex = index;
   document.getElementById('itemModal').style.display = 'block';
@@ -677,7 +646,6 @@ window.excluirItem = async () => {
   document.getElementById('itemModal').style.display = 'none';
 };
 
-// Utils & Globals
 window.toggleCombatTrain = async (key) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].treino = !combate[key].treino; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
 window.setCombatOther = async (key, val) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].outros = Number(val); await updateDoc(doc(db, "fichas", id), { combate: combate }); };
 window.toggleMeleeAttr = async () => { const combate = ficha.combate || {}; if (!combate.corpo) combate.corpo = { treino: false, outros: 0, usaDes: false }; combate.corpo.usaDes = !combate.corpo.usaDes; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
