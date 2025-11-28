@@ -5,24 +5,177 @@
 <title>Ficha RPG</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  :root { --bg: #0f0f0f; --card: #141414; --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; --text: #f1f1f1; --dim: #888; --apice: #f4d35e; --corpo: #9d4edd; }
+  :root { 
+    --bg: #0f0f0f; --card: #141414; 
+    --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; 
+    --apice: #f4d35e; --corpo: #9d4edd;
+    --text: #f1f1f1; --dim: #888;
+  }
+  
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
+  
+  /* === LAYOUT === */
   .main-layout { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; max-width: 1600px; margin: 0 auto; padding-bottom: 80px; }
   @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } }
   @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
+
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; position: relative; }
-  /* ... (Mantenha todo o CSS anterior, incluindo estilos de modal, cards, etc) ... */
+
+  /* HEADER */
+  .char-header { text-align: center; }
+  .transf-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+  .transf-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #444; background: #222; color: #555; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+  .transf-btn.locked { opacity: 0.5; cursor: not-allowed; }
+  .transf-btn.unlocked { border-color: #fff; color: #fff; box-shadow: 0 0 5px rgba(255,255,255,0.2); }
+  .transf-btn.apice.unlocked { border-color: var(--apice); color: var(--apice); }
+  .transf-btn.apice.active { background: var(--apice); color: #000; box-shadow: 0 0 15px var(--apice); animation: pulse 2s infinite; }
+  .transf-btn.corpo.unlocked { border-color: var(--corpo); color: var(--corpo); }
+  .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+  .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
+  .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
+  .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+  .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
+  .b-lvl { color: white; border-color: white; font-weight: bold; }
+  .b-cls { color: var(--primary); border-color: var(--primary); }
+  .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
+
+  /* TOKENS & UTILS */
+  .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
+  .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
+  .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
+  .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+  .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
+  .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
+  .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
+  .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
+  .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
+
+  /* ATRIBUTOS & BARRAS */
+  .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
+  .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
+  .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
+  .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
+  .stat-row { margin-bottom: 12px; }
+  .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
+  .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; transition: width 0.3s; }
+  .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
+  .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .btn-mini:hover { border-color: white; color: white; background: #333; }
+  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
+  .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
+
+  /* COMBATE */
+  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+  .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; } .cols-3 { grid-template-columns: repeat(3, 1fr); } .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
+  .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
+  .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
+  .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
+  .cc-footer { background: #000; padding: 5px; display: flex; justify-content: center; align-items: center; gap: 5px; border-top: 1px solid #333; }
+  .btn-toggle-attr { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); color: white; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; cursor: pointer; margin-top: 2px; }
+  .bonus-input { background: #222; border: 1px solid #444; color: #aaa; width: 30px; text-align: center; padding: 2px; border-radius: 4px; font-size: 0.8rem; }
+  .btn-train { width: 20px; height: 20px; border: 1px solid #444; background: #222; color: #666; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; border-radius: 3px; cursor: pointer; font-weight: bold; }
+  .btn-train.active { background: var(--energy); border-color: var(--energy); color: #000; }
+  select.mini-select { background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; max-width: 80px; margin-top: 2px; }
+  select.mini-select option { background: #222; color: #fff; }
+
+  /* VALORES ADICIONAIS */
+  .derived-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .derived-box { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 10px; text-align: center; }
+  .derived-label { font-size: 0.7rem; color: var(--energy); font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+  .derived-value { font-size: 1.6rem; font-weight: bold; color: #fff; }
+  .derived-calc { display: flex; justify-content: center; margin-top: 5px; }
+  .derived-calc input { background: #111; border: 1px solid #444; color: #aaa; width: 40px; text-align: center; border-radius: 3px; font-size: 0.8rem; }
+  .derived-calc input:focus { border-color: var(--energy); color: white; outline: none; }
+
+  /* INVENTÁRIO */
+  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .inv-card { background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
+  .inv-card:hover { border-color: white; transform: translateY(-3px); }
+  .inv-card.grade-4 { border-left: 3px solid #888; } .inv-card.grade-3 { border-left: 3px solid #4cc9f0; } .inv-card.grade-2 { border-left: 3px solid #4361ee; } .inv-card.grade-1 { border-left: 3px solid #f72585; } .inv-card.grade-0 { border-left: 3px solid #ff9e00; box-shadow: 0 0 5px #ff9e00; }
+  .inv-img { width: 100%; height: 80px; object-fit: cover; background: #000; }
+  .inv-body { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }
+  .inv-title { font-weight: bold; font-size: 0.9rem; color: #fff; line-height: 1.1; }
+  .inv-type { font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
+  .inv-stats { font-size: 0.75rem; color: var(--energy); font-weight: bold; margin-top: auto; }
+  .inv-slots { font-size: 0.7rem; color: #666; text-align: right; margin-top: 5px; }
+  .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 20px; position: relative; margin-bottom: 15px; overflow: hidden; }
+  .load-fill { height: 100%; width: 0%; background: #2a9d8f; transition: 0.3s; }
+  .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
+  .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
+  .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
+
+  /* APTIDÕES & HABILIDADES CLASSE */
+  .aptidao-box, .class-ability-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
+  .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .aptidao-header:hover { background: #2a2a2a; }
+  .aptidao-body { display: none; padding: 10px; background: #151515; }
+  .aptidao-body.open { display: block; }
+  .aptidao-desc { font-style: italic; color: #aaa; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; white-space: pre-wrap; }
+  .nivel-row { display: flex; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #555; }
+  .nivel-row.unlocked { color: #fff; } 
+  .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
+  .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
   
-  /* ESTILO PARA HABILIDADES DE CLASSE */
-  .class-ability-box { margin-bottom: 10px; border-left: 3px solid var(--primary); padding-left: 10px; }
+  /* Habilidades de Classe Estilo */
+  .class-ability-box { border-left: 4px solid var(--primary); padding: 10px; background: #151515; }
   .class-ability-name { font-weight: bold; color: #fff; font-size: 0.95rem; }
-  .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 2px; white-space: pre-wrap; }
-  .class-select { background: #111; border: 1px solid #444; color: #ccc; padding: 5px; border-radius: 4px; width: 100%; margin-top: 5px; }
-  
-  /* BOTÃO DE ORIGEM */
-  .btn-add-origin { width: 100%; border: 1px dashed #555; background: transparent; color: #666; padding: 5px; cursor: pointer; margin-top: 10px; }
+  .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 5px; white-space: pre-wrap; }
+  .class-select { background: #000; border: 1px solid #444; color: #ccc; padding: 5px; border-radius: 4px; width: 100%; margin-top: 5px; font-family: inherit; }
+
+  /* Botões Mestre */
+  .gm-controls { display: none; margin-left: auto; gap: 5px; } 
+  .gm-visible .gm-controls { display: flex; }
+  .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+  .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
+  .btn-edit-apt:hover { color: var(--primary); }
+
+  /* Botão Origem */
+  .btn-add-origin { width: 100%; border: 1px dashed #555; background: transparent; color: #666; padding: 8px; cursor: pointer; margin-top: 5px; border-radius: 5px; }
   .btn-add-origin:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* PERÍCIAS & NAV */
+  .skills-card { padding: 0; overflow: hidden; height: 100%; }
+  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+  .skill-row { display: flex; align-items: center; padding: 4px 10px; border-bottom: 1px solid #222; font-size: 0.8rem; }
+  .skill-row:hover { background: #1b1b1b; }
+  .sk-name { flex-grow: 1; color: #999; font-weight: 500; }
+  .sk-attr { font-size: 0.65rem; color: #444; width: 30px; text-transform: uppercase; font-weight: bold; }
+  .sk-total { font-weight: bold; color: white; width: 30px; text-align: right; margin-right: 10px; font-size: 0.9rem; }
+  .sk-btn-group { display: flex; gap: 3px; align-items: center; }
+  .sk-btn { width: 20px; height: 20px; border-radius: 3px; border: 1px solid #333; background: #111; color: #555; font-size: 0.6rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+  .sk-btn:hover { border-color: #777; color: #aaa; }
+  .sk-btn.active-t { background: rgba(88, 232, 218, 0.1); border-color: var(--energy); color: var(--energy); }
+  .sk-btn.active-m { background: rgba(230, 57, 70, 0.1); border-color: var(--primary); color: var(--primary); }
+
+  .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
+  .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
+  .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
+  .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
+  .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* LISTAS */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; } .list-box li { margin-bottom: 5px; }
+
+  /* MODALS */
+  .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
+  .fab-config:hover { background: var(--primary); border-color: var(--primary); }
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; overflow-y: auto; }
+  .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 600px; margin: 20px auto; border: 1px solid #444; }
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.8rem; font-weight: bold; }
+  input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; box-sizing: border-box; font-family: inherit; }
+  textarea { height: 80px; resize: vertical; }
+  .list-adder { margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
+  .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
+  .btn-del-item { background: transparent; border: none; color: #d00000; cursor: pointer; font-size: 1.2rem; line-height: 1; }
+  .btn-add-item { background: #222; border: 1px solid #444; color: #ccc; width: 100%; padding: 5px; cursor: pointer; margin-top: 5px; }
 </style>
 </head>
 <body>
@@ -56,12 +209,9 @@
     </div>
 
     <div class="card">
-      <h3 class="section-header">Habilidades de Classe & Origem</h3>
-      
+      <h3 class="section-header" style="margin-bottom:10px;">Habilidades de Classe & Origem</h3>
       <div id="classAbilitiesList"></div>
-      
       <hr style="border-color:#222; margin:15px 0;">
-      
       <h4 style="margin:0 0 10px 0; color:var(--vigor); font-size:0.9rem;">Origem</h4>
       <div id="originAbilitiesList"></div>
       <button class="btn-add-origin" onclick="addOrigem()">+ Habilidade de Origem</button>
@@ -112,10 +262,61 @@
   </div>
 </div>
 
+<button class="fab-config" onclick="abrirConfig()">⚙️</button>
+
+<div id="configModal" class="modal">
+  <div class="modal-content">
+    <h2 style="color:var(--primary);">Configurações</h2>
+    <label>Imagem (URL)</label><input id="editImgUrl" style="margin-bottom:15px;">
+    <button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button>
+    <br><br><button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer;">Fechar</button>
+    <button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button>
+  </div>
+</div>
+
+<div id="itemModal" class="modal">
+  <div class="modal-content">
+    <h2 id="itemModalTitle" style="color:var(--primary);">Novo Item</h2>
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+      <div class="form-group"><label>Nome</label><input id="itNome"></div>
+      <div class="form-group"><label>Tipo</label><select id="itTipo"><option value="Arma">Arma</option><option value="Uniforme">Uniforme</option><option value="Item">Item</option></select></div>
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+      <div class="form-group"><label>Grau</label><select id="itGrau"><option value="4">Grau 4</option><option value="3">Grau 3</option><option value="2">Grau 2</option><option value="1">Grau 1</option><option value="0">Especial</option></select></div>
+      <div class="form-group"><label>Espaços</label><input type="number" id="itEspacos" value="1"></div>
+      <div class="form-group"><label>Bônus</label><input id="itBonus" placeholder="+2 CA"></div>
+    </div>
+    <div class="form-group"><label>Imagem (URL)</label><input id="itImg" placeholder="http://..."></div>
+    <div class="form-group"><label>Descrição Geral</label><textarea id="itDesc" style="height:60px;"></textarea></div>
+    <div class="list-adder"><label>Propriedades</label><div id="propList"></div><button class="btn-add-item" onclick="addPropField()">+ Propriedade</button></div>
+    <div class="list-adder"><label>Encantamentos</label><div id="encantList"></div><button class="btn-add-item" onclick="addEncantField()">+ Encantamento</button></div>
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button onclick="salvarItem()" style="background:var(--primary); flex-grow:1; padding:10px; border:none; color:white; cursor:pointer;">Salvar Item</button>
+      <button onclick="excluirItem()" id="btnExcluirItem" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer; display:none;">Excluir</button>
+    </div>
+    <button onclick="document.getElementById('itemModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button>
+  </div>
+</div>
+
+<div id="aptidaoEditorModal" class="modal">
+  <div class="modal-content">
+    <h2 style="color:var(--energy);">Editor de Aptidão</h2>
+    <div class="form-group"><label>Nome da Aptidão</label><input id="editAptNome"></div>
+    <div class="form-group"><label>Descrição Geral</label><textarea id="editAptDesc" style="height:80px;"></textarea></div>
+    <div class="form-group"><label>Nível Máximo (0 = Passiva)</label><input type="number" id="editAptMax" min="0" max="20" onchange="renderLevelInputs()"></div>
+    <div id="editAptLevelsContainer" style="margin-top:10px; display:flex; flex-direction:column; gap:5px;"></div>
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button onclick="salvarAptidaoCustom()" style="background:var(--energy); flex-grow:1; padding:10px; border:none; color:#000; cursor:pointer; font-weight:bold;">Salvar</button>
+      <button onclick="excluirAptidaoCustom()" id="btnExcluirApt" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer;">Excluir</button>
+    </div>
+    <button onclick="document.getElementById('aptidaoEditorModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button>
+  </div>
+</div>
+
 <script type="module">
 import { db, auth, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
 import { APTIDOES_BASE } from "./aptidoes_db.js";
-import { HABILIDADES_CLASSE } from "./classes_db.js"; // IMPORTA O NOVO ARQUIVO
+import { HABILIDADES_CLASSE } from "./classes_db.js";
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
@@ -127,7 +328,16 @@ let editingAptIndex = -1;
 const MESTRE_EMAIL = "grisskos@fake.com";
 let isMestre = false;
 
-// ... (Definições de Perícias e Atributos mantidas) ...
+const PERICIAS_DEF = [
+  { n: "Atletismo", a: "forca" }, { n: "Acrobacia", a: "destreza" }, { n: "Furtividade", a: "destreza" },
+  { n: "Prestidigitação", a: "destreza" }, { n: "Feitiçaria", a: "inteligencia" }, { n: "História", a: "inteligencia" },
+  { n: "Investigação", a: "inteligencia" }, { n: "Ofício 1", a: "inteligencia" }, { n: "Tecnologia", a: "inteligencia" },
+  { n: "Teologia", a: "inteligencia" }, { n: "Direção", a: "sabedoria" }, { n: "Intuição", a: "sabedoria" },
+  { n: "Medicina", a: "sabedoria" }, { n: "Ocultismo", a: "sabedoria" }, { n: "Percepção", a: "sabedoria" },
+  { n: "Sobrevivência", a: "sabedoria" }, { n: "Enganação", a: "presenca" }, { n: "Intimidação", a: "presenca" },
+  { n: "Performance", a: "presenca" }, { n: "Persuasão", a: "presenca" }
+];
+const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligencia:"INT", sabedoria:"SAB", presenca:"PRE" };
 
 auth.onAuthStateChanged(user => {
   if(user && user.email === MESTRE_EMAIL) {
@@ -139,8 +349,22 @@ auth.onAuthStateChanged(user => {
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
-    // Safety Checks
-    if (!ficha.escolhasClasse) ficha.escolhasClasse = {}; // Salva o que o player escolheu nos dropdowns
+    if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
+    if (!ficha.pericias) ficha.pericias = {};
+    if (!ficha.shikigamis) ficha.shikigamis = [];
+    if (!ficha.vida) ficha.vida = { atual: 10, max: 10 };
+    if (!ficha.energia) ficha.energia = { atual: 10, max: 10 };
+    if (!ficha.vigor) ficha.vigor = { atual: 5, max: 5 };
+    if (!ficha.integridade) ficha.integridade = { atual: 100, max: 100 };
+    if (!ficha.combate) ficha.combate = {}; 
+    if (!ficha.inventario) ficha.inventario = []; 
+    if (!ficha.progressoAptidoes) ficha.progressoAptidoes = {};
+    if (!ficha.transfUnlocked) ficha.transfUnlocked = { apice: false, corpo: false };
+    if (!ficha.transfActive) ficha.transfActive = null; 
+    if (!ficha.sequelas) ficha.sequelas = { exaustao: false, corrupcao: false };
+    if (!ficha.aptidoesCustom) ficha.aptidoesCustom = [];
+    if (!ficha.derivados) ficha.derivados = { defesa:0, atencao:0, iniciativa:0, deslocamento:0 };
+    if (!ficha.escolhasClasse) ficha.escolhasClasse = {};
     if (!ficha.habilidadesOrigem) ficha.habilidadesOrigem = [];
     
     if(!editandoId) renderFicha(); 
@@ -148,12 +372,192 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
 });
 
 function renderFicha() {
-  // ... (Renderização de Header, Atributos, Stats, Combate, Inventário, Aptidões, Perícias mantidas) ...
+  const f = ficha;
   
+  const nomeEl = document.getElementById('nomeDisplay');
+  if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
+  document.getElementById('charImg').src = f.imagem || "";
+
+  document.getElementById('badges').innerHTML = `
+    <span class="badge b-lvl">NVL <span class="editable" onclick="editarCampo(this, 'nivel', 'number')">${f.nivel||1}</span></span>
+    <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
+  `;
+
+  const btnApice = document.getElementById('btnApice');
+  const btnCorpo = document.getElementById('btnCorpo');
+  const divSequela = document.getElementById('statusSequela');
+  
+  btnApice.className = "transf-btn apice locked"; btnCorpo.className = "transf-btn corpo locked"; divSequela.innerHTML = "";
+  if(f.transfUnlocked.apice) { btnApice.classList.remove('locked'); btnApice.classList.add('unlocked'); if(f.transfActive === 'apice') btnApice.classList.add('active'); }
+  if(f.transfUnlocked.corpo) { btnCorpo.classList.remove('locked'); btnCorpo.classList.add('unlocked'); if(f.transfActive === 'corpo') btnCorpo.classList.add('active'); }
+  if(f.sequelas.exaustao) divSequela.innerHTML += `<span class="sequela-tag">⚠ EXAUSTÃO (-2 Físico)</span>`;
+  if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO (HP Max Reduzido)</span>`;
+
+  const shikiArea = document.getElementById('shikiTokens');
+  shikiArea.innerHTML = "";
+  if(f.shikigamis.length > 0) {
+    f.shikigamis.forEach(s => shikiArea.innerHTML += `<img src="${s.imagem||''}" class="shiki-token" onclick="irParaShikigamis()">`);
+    if(f.shikigamis.length < 20) shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()">+</div>`;
+  } else { shikiArea.innerHTML += `<div class="shiki-add" onclick="irParaShikigamis()">+</div>`; }
+
+  const areaAttr = document.getElementById('atributosArea');
+  areaAttr.innerHTML = "";
+  Object.keys(ATR_SHORT).forEach(key => {
+    const val = f.atributos[key] || 10;
+    const mod = Math.floor((val - 10) / 2);
+    areaAttr.innerHTML += `<div class="attr-box"><span class="attr-lbl">${ATR_SHORT[key]}</span><span class="attr-val">${mod>=0?'+':''}${mod}</span><span class="attr-raw editable" onclick="editarCampo(this, 'atributos.${key}', 'number')">${val}</span></div>`;
+  });
+
+  const areaStats = document.getElementById('statsArea');
+  areaStats.innerHTML = "";
+  const statsMap = [{k:'vida', l:'Vida', color:'var(--primary)'}, {k:'energia', l:'Energia', color:'var(--energy)'}, {k:'vigor', l:'Vigor', color:'var(--vigor)'}, {k:'integridade', l:'Integ.', color:'var(--integridade)'}];
+  statsMap.forEach(s => {
+    const st = f[s.k] || {atual:0, max:0};
+    const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
+    areaStats.innerHTML += `<div class="stat-row"><div class="stat-head"><span>${s.l}</span><div><span class="editable" onclick="editarCampo(this, '${s.k}.atual', 'number')">${st.atual}</span> / <span class="editable" onclick="editarCampo(this, '${s.k}.max', 'number')">${st.max}</span></div></div><div class="bar-bg"><div class="bar-fill" style="width:${pct}%; background:${s.color}; box-shadow: 0 0 8px ${s.color};"></div></div><div class="stat-ctrl"><div class="btn-calc" onclick="mathStat(this, '${s.k}')">🔢</div><div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div><div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div></div></div>`;
+  });
+
+  const nivel = f.nivel || 1;
+  const metadeNivel = Math.floor(nivel / 2);
+  const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
+  const modFor = Math.floor((f.atributos.forca - 10) / 2);
+  const modDes = Math.floor((f.atributos.destreza - 10) / 2);
+  const cData = f.combate;
+
+  let bonusPhysSkill_Apice = f.transfUnlocked.apice ? bonusTreino : 0;
+  let bonusMagicSkill_Corpo = f.transfUnlocked.corpo ? bonusTreino : 0;
+  if (f.sequelas.exaustao) bonusPhysSkill_Apice -= 2;
+
+  renderDerivados();
   renderHabilidadesClasse();
+
+  const attacksArea = document.getElementById('combatAttacksArea');
+  attacksArea.innerHTML = "";
+  
+  const cCorpo = cData.corpo || {};
+  const attrCorpo = cCorpo.usaDes ? modDes : modFor;
+  let totCorpo = attrCorpo + metadeNivel + (cCorpo.treino ? bonusTreino : 0) + (cCorpo.outros || 0);
+  attacksArea.innerHTML += `<div class="combat-card"><div class="cc-header">Corpo a Corpo <div class="btn-toggle-attr" onclick="toggleMeleeAttr()">${cCorpo.usaDes?'DES':'FOR'}</div></div><div class="cc-body">${totCorpo>=0?'+':''}${totCorpo}</div><div class="cc-footer"><div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div><input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)"></div></div>`;
+
+  const cDist = cData.distancia || {};
+  let totDist = modDes + metadeNivel + (cDist.treino ? bonusTreino : 0) + (cDist.outros || 0);
+  attacksArea.innerHTML += `<div class="combat-card"><div class="cc-header">Distância</div><div class="cc-body">${totDist>=0?'+':''}${totDist}</div><div class="cc-footer"><div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div><input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)"></div></div>`;
+
+  const cMagic = cData.magico || {};
+  const valMagic = f.atributos[cMagic.atributo || 'inteligencia'];
+  const modMagic = Math.floor((valMagic - 10) / 2);
+  let totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0);
+  if (f.transfActive === 'corpo' || f.transfUnlocked.corpo) totMagic += bonusMagicSkill_Corpo;
+  attacksArea.innerHTML += `<div class="combat-card"><div class="cc-header">Amaldiçoado <select class="mini-select" onchange="setMagicAttr(this.value)">${Object.keys(ATR_SHORT).map(k => `<option value="${k}" ${k===(cMagic.atributo||'inteligencia')?'selected':''}>${ATR_SHORT[k]}</option>`).join('')}</select></div><div class="cc-body">${totMagic>=0?'+':''}${totMagic}</div><div class="cc-footer"><span style="font-size:0.7rem; color:var(--energy);">[T]</span><input class="bonus-input" placeholder="+" value="${cMagic.outros||''}" onchange="setCombatOther('magico', this.value)"></div></div>`;
+
+  const resistArea = document.getElementById('combatResistArea');
+  resistArea.innerHTML = "";
+  const resistencias = [{ k: 'astucia', l: 'Astúcia', a: 'inteligencia' }, { k: 'fortitude', l: 'Fortitude', a: 'constituicao' }, { k: 'integridade', l: 'Integ.', a: 'constituicao' }, { k: 'reflexos', l: 'Reflexos', a: 'destreza' }, { k: 'vontade', l: 'Vontade', a: 'sabedoria' }];
+  resistencias.forEach(res => {
+    const rData = cData[res.k] || {};
+    const rMod = Math.floor((f.atributos[res.a] - 10) / 2);
+    let rTotal = rMod + metadeNivel + (rData.treino ? bonusTreino : 0) + (rData.outros || 0);
+    if (['fortitude','reflexos','integridade'].includes(res.k)) rTotal += bonusPhysSkill_Apice;
+    resistArea.innerHTML += `<div class="combat-card"><div class="cc-header">${res.l}</div><div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div><div class="cc-footer"><div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div><input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)"></div></div>`;
+  });
+
+  const strMod = Math.floor((f.atributos.forca - 10) / 2);
+  const limit = 8 + (strMod * 2); 
+  const hardLimit = limit * 2;
+  const currentLoad = (f.inventario || []).reduce((acc, item) => acc + (Number(item.espacos)||0), 0);
+  document.getElementById('loadFill').style.width = Math.min(100, (currentLoad / hardLimit) * 100) + '%';
+  document.getElementById('loadText').innerText = `${currentLoad} / ${limit} Espaços`;
+  document.getElementById('overburdenMsg').style.display = currentLoad > limit ? 'block' : 'none';
+  
+  const invGrid = document.getElementById('inventoryGrid');
+  invGrid.innerHTML = "";
+  (f.inventario || []).forEach((item, idx) => {
+    const gradeClass = `grade-${item.grau || 4}`;
+    const imgUrl = item.imagem || 'https://via.placeholder.com/150?text=Item';
+    invGrid.innerHTML += `<div class="inv-card ${gradeClass}" onclick="abrirItemModal(${idx})"><img src="${imgUrl}" class="inv-img"><div class="inv-body"><div class="inv-title">${item.nome}</div><div class="inv-type">${item.tipo} • Grau ${['Esp','1','2','3','4'][item.grau]}</div><div class="inv-stats">${item.bonus || ''}</div><div class="inv-slots">${item.espacos} 📦</div></div></div>`;
+  });
+
+  const containerApt = document.getElementById('listaAptidoes');
+  containerApt.innerHTML = "";
+  const todasAptidoes = [...APTIDOES_BASE, ...(ficha.aptidoesCustom || [])];
+
+  todasAptidoes.forEach((apt, index) => {
+    let nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
+    if (apt.nome === "Ápice Humano" && f.transfUnlocked.apice) nivelAtual = 1;
+    if (apt.nome === "Corpo Amaldiçoado" && f.transfUnlocked.corpo) nivelAtual = 1;
+
+    let isOpenClass = ''; 
+    if (!isMestre && nivelAtual === 0) return;
+
+    let niveisHtml = "";
+    if(apt.niveis) {
+      apt.niveis.forEach((desc, idx) => {
+        const lvl = idx + 1;
+        const isUnlocked = lvl <= nivelAtual;
+        if (!isMestre && !isUnlocked) return;
+        const controls = isMestre ? `<div class="gm-controls"><div class="btn-gm" onclick="setAptidao('${apt.nome}', ${lvl})">🔓</div><div class="btn-gm" style="border-color:#d00000;color:#d00000;" onclick="setAptidao('${apt.nome}', ${lvl-1})">🔒</div></div>` : "";
+        niveisHtml += `<div class="nivel-row ${isUnlocked ? 'unlocked' : ''}"><div class="nivel-check"></div><div style="flex-grow:1;">${desc}</div>${controls}</div>`;
+      });
+    }
+
+    let editBtn = "";
+    if (isMestre && index >= APTIDOES_BASE.length) {
+      const realIndex = index - APTIDOES_BASE.length;
+      editBtn = `<button class="btn-edit-apt" onclick="abrirEditorAptidao(${realIndex})">✎</button>`;
+    }
+
+    containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body ${isOpenClass}"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
+  });
+
+  const listaSkills = document.getElementById('skillsList');
+  listaSkills.innerHTML = "";
+  const PHYS_ATTRS = ['forca', 'destreza', 'constituicao'];
+  PERICIAS_DEF.forEach(p => {
+    const attrVal = f.atributos[p.a] || 10;
+    const modAttr = Math.floor((attrVal - 10) / 2);
+    const saved = (f.pericias||{})[p.n] || { t: false, m: false, bonus: 0 };
+    let total = modAttr + metadeNivel;
+    if (saved.t) total += bonusTreino;
+    if (saved.m) total += 1;
+    total += Number(saved.bonus || 0);
+    if (f.transfUnlocked.apice && PHYS_ATTRS.includes(p.a)) total += bonusPhysSkill_Apice;
+
+    listaSkills.innerHTML += `<div class="skill-row"><span class="sk-name">${p.n}</span><span class="sk-attr">${ATR_SHORT[p.a]}</span><span class="sk-total">${total>=0?'+':''}${total}</span><div class="sk-btn-group"><input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)"><div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div><div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div></div></div>`;
+  });
 }
 
-// === NOVA FUNÇÃO: RENDERIZAR HABILIDADES DE CLASSE ===
+function renderDerivados() {
+  const desMod = Math.floor((ficha.atributos.destreza - 10) / 2);
+  const sabMod = Math.floor((ficha.atributos.sabedoria - 10) / 2);
+  const metadeNivel = Math.floor((ficha.nivel || 1) / 2);
+  const bonusTreino = 2 + Math.floor(((ficha.nivel||1)-1)/4);
+  
+  const defBonus = Number(ficha.derivados.defesa || 0);
+  const defesa = 10 + desMod + metadeNivel + defBonus;
+  document.getElementById('valDefesa').innerText = defesa;
+  document.getElementById('bonusDef').value = ficha.derivados.defesa || "";
+
+  const pSaved = (ficha.pericias && ficha.pericias["Percepção"]) || {t:false, m:false, bonus:0};
+  let percTotal = sabMod + metadeNivel + Number(pSaved.bonus || 0);
+  if(pSaved.t) percTotal += bonusTreino;
+  if(pSaved.m) percTotal += 1;
+  
+  const atencaoBonus = Number(ficha.derivados.atencao || 0);
+  const atencao = 10 + percTotal + atencaoBonus;
+  document.getElementById('valAtencao').innerText = atencao;
+  document.getElementById('bonusAtencao').value = ficha.derivados.atencao || "";
+
+  const iniBonus = Number(ficha.derivados.iniciativa || 0);
+  const iniciativa = desMod + iniBonus;
+  document.getElementById('valIniciativa').innerText = (iniciativa>=0?'+':'') + iniciativa;
+  document.getElementById('bonusIniciativa').value = ficha.derivados.iniciativa || "";
+
+  const desBonus = Number(ficha.derivados.deslocamento || 0);
+  const desloc = 9 + desBonus;
+  document.getElementById('valDesloc').innerText = desloc + "m";
+  document.getElementById('bonusDesloc').value = ficha.derivados.deslocamento || "";
+}
+
 function renderHabilidadesClasse() {
   const container = document.getElementById('classAbilitiesList');
   container.innerHTML = "";
@@ -161,39 +565,36 @@ function renderHabilidadesClasse() {
   const classe = ficha.classe;
   const nivel = Number(ficha.nivel || 1);
   
-  if (!HABILIDADES_CLASSE[classe]) return; // Se classe não tiver no DB, não faz nada
+  if (HABILIDADES_CLASSE[classe]) {
+    HABILIDADES_CLASSE[classe].forEach((hab, idx) => {
+      if (hab.nivel > nivel) return; 
 
-  HABILIDADES_CLASSE[classe].forEach((hab, idx) => {
-    if (hab.nivel > nivel) return; // Só mostra se tiver nível
-
-    let content = "";
-    
-    if (hab.tipo === "escolha") {
-      // É um dropdown
-      const savedChoice = (ficha.escolhasClasse || {})[idx] || "";
-      const options = hab.opcoes.map(op => `<option value="${op}" ${op===savedChoice?'selected':''}>${op}</option>`).join('');
+      let content = "";
       
-      content = `
-        <div class="class-ability-box">
-          <div class="class-ability-name">${hab.nome}</div>
-          <select class="class-select" onchange="salvarEscolhaClasse(${idx}, this.value)">
-            <option value="">-- Escolha uma opção --</option>
-            ${options}
-          </select>
-        </div>`;
-    } else {
-      // É texto fixo
-      content = `
-        <div class="class-ability-box">
-          <div class="class-ability-name">${hab.nome}</div>
-          <div class="class-ability-desc">${hab.desc}</div>
-        </div>`;
-    }
-    
-    container.innerHTML += content;
-  });
+      if (hab.tipo === "escolha") {
+        const savedChoice = (ficha.escolhasClasse || {})[idx] || "";
+        const options = hab.opcoes.map(op => `<option value="${op}" ${op===savedChoice?'selected':''}>${op}</option>`).join('');
+        
+        content = `
+          <div class="class-ability-box">
+            <div class="class-ability-name">${hab.nome}</div>
+            <select class="class-select" onchange="salvarEscolhaClasse(${idx}, this.value)">
+              <option value="">-- Escolha uma opção --</option>
+              ${options}
+            </select>
+          </div>`;
+      } else {
+        content = `
+          <div class="class-ability-box">
+            <div class="class-ability-name">${hab.nome}</div>
+            <div class="class-ability-desc">${hab.desc}</div>
+          </div>`;
+      }
+      
+      container.innerHTML += content;
+    });
+  }
 
-  // Renderizar Origem (Manual)
   const originContainer = document.getElementById('originAbilitiesList');
   originContainer.innerHTML = "";
   (ficha.habilidadesOrigem || []).forEach((h, i) => {
@@ -242,8 +643,41 @@ window.editarOrigem = async (index) => {
   }
 };
 
-// ... (Resto das funções mantidas) ...
+window.setDerivadoBonus = async (key, val) => {
+  const derivados = ficha.derivados || {};
+  derivados[key] = Number(val);
+  await updateDoc(doc(db, "fichas", id), { derivados: derivados });
+};
 
+window.toggleTransformacao = async (tipo) => { if (!ficha.transfUnlocked[tipo]) return; let novoEstado = null; if (ficha.transfActive === tipo) { novoEstado = null; if (tipo === 'apice') await aplicarSequela('exaustao'); if (tipo === 'corpo') await aplicarSequela('corrupcao'); } else { novoEstado = tipo; } await updateDoc(doc(db, "fichas", id), { transfActive: novoEstado }); };
+async function aplicarSequela(tipo) { const seq = ficha.sequelas || {}; seq[tipo] = true; if (tipo === 'corrupcao') { const dano = (ficha.nivel || 1) * 2; const novoMax = Math.max(1, (ficha.vida.max - dano)); const novoAtual = Math.min(ficha.vida.atual, novoMax); await updateDoc(doc(db, "fichas", id), { sequelas: seq, "vida.max": novoMax, "vida.atual": novoAtual }); alert(`Transformação cessou. -${dano} Vida Máxima.`); } else { await updateDoc(doc(db, "fichas", id), { sequelas: seq }); alert("Transformação cessou. Exaustão aplicada."); } }
+window.gmUnlock = async (tipo) => { const unlocked = ficha.transfUnlocked || {}; unlocked[tipo] = true; await updateDoc(doc(db, "fichas", id), { transfUnlocked: unlocked }); };
+window.gmClearDebuff = async () => { await updateDoc(doc(db, "fichas", id), { sequelas: { exaustao: false, corrupcao: false } }); alert("Sequelas removidas."); };
+window.setSkillBonus = async (skillName, val) => { const pericias = ficha.pericias || {}; if (!pericias[skillName]) pericias[skillName] = { t: false, m: false, bonus: 0 }; pericias[skillName].bonus = Number(val); await updateDoc(doc(db, "fichas", id), { pericias: pericias }); };
+window.setAptidao = async (nomeApt, novoNivel) => { if (!isMestre) return; const progresso = ficha.progressoAptidoes || {}; progresso[nomeApt] = novoNivel; await updateDoc(doc(db, "fichas", id), { progressoAptidoes: progresso }); };
+window.addNovaAptidao = async () => { if (!isMestre) return; const nome = prompt("Nome da Nova Aptidão:"); if (!nome) return; const nova = { nome: nome, maxNivel: 5, descricao: "Descrição...", niveis: ["NV 1...", "NV 2...", "NV 3...", "NV 4...", "NV 5..."] }; const custom = ficha.aptidoesCustom || []; custom.push(nova); await updateDoc(doc(db, "fichas", id), { aptidoesCustom: custom }); alert("Criada!"); };
+window.abrirEditorAptidao = (index) => { editingAptIndex = index; const modal = document.getElementById('aptidaoEditorModal'); if(index > -1) { const apt = ficha.aptidoesCustom[index]; document.getElementById('editAptNome').value = apt.nome; document.getElementById('editAptDesc').value = apt.descricao; document.getElementById('editAptMax').value = apt.maxNivel; renderLevelInputs(apt.niveis); document.getElementById('btnExcluirApt').style.display = 'block'; } else { document.getElementById('editAptNome').value = ""; document.getElementById('editAptDesc').value = ""; document.getElementById('editAptMax').value = 5; renderLevelInputs(); document.getElementById('btnExcluirApt').style.display = 'none'; } modal.style.display = 'flex'; };
+window.renderLevelInputs = (existingLevels = []) => { const max = Number(document.getElementById('editAptMax').value); const container = document.getElementById('editAptLevelsContainer'); container.innerHTML = ""; for(let i=0; i<max; i++) { const val = existingLevels[i] || ""; container.innerHTML += `<input class="inline-input" style="width:100%; text-align:left;" placeholder="Descrição Nível ${i+1}" value="${val}">`; } };
+window.salvarAptidaoCustom = async () => { const max = Number(document.getElementById('editAptMax').value); const niveis = []; document.querySelectorAll('#editAptLevelsContainer input').forEach(input => niveis.push(input.value)); const novaApt = { nome: document.getElementById('editAptNome').value, descricao: document.getElementById('editAptDesc').value, maxNivel: max, niveis: niveis }; if(!ficha.aptidoesCustom) ficha.aptidoesCustom = []; if(editingAptIndex === -1) ficha.aptidoesCustom.push(novaApt); else ficha.aptidoesCustom[editingAptIndex] = novaApt; await updateDoc(doc(db, "fichas", id), { aptidoesCustom: ficha.aptidoesCustom }); document.getElementById('aptidaoEditorModal').style.display = 'none'; };
+window.excluirAptidaoCustom = async () => { if(editingAptIndex === -1 || !confirm("Excluir?")) return; ficha.aptidoesCustom.splice(editingAptIndex, 1); await updateDoc(doc(db, "fichas", id), { aptidoesCustom: ficha.aptidoesCustom }); document.getElementById('aptidaoEditorModal').style.display = 'none'; };
+window.abrirItemModal = (index = -1) => { editingItemIndex = index; document.getElementById('itemModal').style.display = 'block'; document.getElementById('propList').innerHTML = ""; document.getElementById('encantList').innerHTML = ""; document.getElementById('btnExcluirItem').style.display = index === -1 ? 'none' : 'block'; document.getElementById('itemModalTitle').innerText = index === -1 ? 'Novo Item' : 'Editar Item'; if (index > -1) { const item = ficha.inventario[index]; document.getElementById('itNome').value = item.nome; document.getElementById('itTipo').value = item.tipo; document.getElementById('itGrau').value = item.grau; document.getElementById('itEspacos').value = item.espacos; document.getElementById('itBonus').value = item.bonus; document.getElementById('itImg').value = item.imagem; document.getElementById('itDesc').value = item.descricao; (item.propriedades || []).forEach(p => addPropField(p.nome, p.desc)); (item.encantamentos || []).forEach(e => addEncantField(e.nome, e.desc)); } else { document.getElementById('itNome').value = ""; document.getElementById('itEspacos').value = 1; document.getElementById('itBonus').value = ""; document.getElementById('itImg').value = ""; document.getElementById('itDesc').value = ""; } };
+window.addPropField = (nome = "", desc = "") => { const div = document.createElement('div'); div.className = 'dynamic-list-item'; div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="prop-name"><textarea placeholder="Descrição" class="prop-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`; document.getElementById('propList').appendChild(div); };
+window.addEncantField = (nome = "", desc = "") => { const div = document.createElement('div'); div.className = 'dynamic-list-item'; div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="encant-name" style="border-color:var(--energy);"><textarea placeholder="Descrição" class="encant-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`; document.getElementById('encantList').appendChild(div); };
+window.salvarItem = async () => { const novoItem = { nome: document.getElementById('itNome').value || "Item", tipo: document.getElementById('itTipo').value, grau: document.getElementById('itGrau').value, espacos: Number(document.getElementById('itEspacos').value), bonus: document.getElementById('itBonus').value, imagem: document.getElementById('itImg').value, descricao: document.getElementById('itDesc').value, propriedades: [], encantamentos: [] }; document.querySelectorAll('#propList .dynamic-list-item').forEach(el => { novoItem.propriedades.push({ nome: el.querySelector('.prop-name').value, desc: el.querySelector('.prop-desc').value }); }); document.querySelectorAll('#encantList .dynamic-list-item').forEach(el => { novoItem.encantamentos.push({ nome: el.querySelector('.encant-name').value, desc: el.querySelector('.encant-desc').value }); }); if (!ficha.inventario) ficha.inventario = []; if (editingItemIndex === -1) ficha.inventario.push(novoItem); else ficha.inventario[editingItemIndex] = novoItem; await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario }); document.getElementById('itemModal').style.display = 'none'; };
+window.excluirItem = async () => { if (editingItemIndex === -1) return; if (!confirm("Excluir?")) return; ficha.inventario.splice(editingItemIndex, 1); await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario }); document.getElementById('itemModal').style.display = 'none'; };
+window.toggleCombatTrain = async (key) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].treino = !combate[key].treino; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.setCombatOther = async (key, val) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].outros = Number(val); await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.toggleMeleeAttr = async () => { const combate = ficha.combate || {}; if (!combate.corpo) combate.corpo = { treino: false, outros: 0, usaDes: false }; combate.corpo.usaDes = !combate.corpo.usaDes; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.setMagicAttr = async (attr) => { const combate = ficha.combate || {}; if (!combate.magico) combate.magico = { outros: 0, atributo: 'inteligencia' }; combate.magico.atributo = attr; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
+window.mathStat = (el, key) => { if(el.querySelector('input')) return; const originalHtml = el.innerHTML; el.innerHTML = ''; const input = document.createElement('input'); input.placeholder = "+/-"; input.className = 'math-input'; input.type = 'text'; el.appendChild(input); input.focus(); const executar = async () => { const val = input.value.trim(); if(!val) { el.innerHTML = originalHtml; return; } const num = Number(val); if(isNaN(num)) { el.innerHTML = originalHtml; return; } const st = ficha[key]; let novo = Number(st.atual) + num; novo = Math.max(0, Math.min(st.max, novo)); await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo }); el.innerHTML = originalHtml; }; input.addEventListener('blur', executar); input.addEventListener('keydown', (e) => { if(e.key === 'Enter') input.blur(); }); };
+window.editarCampo = (el, field, type) => { if (el.querySelector('input')) return; editandoId = field; const valorAtual = el.innerText; el.innerHTML = `<input id="inputEdit" class="inline-input" type="${type}" value="${valorAtual}">`; const input = document.getElementById('inputEdit'); input.focus(); const salvar = async () => { let novoValor = input.value; if (type === 'number') novoValor = Number(novoValor); el.innerHTML = novoValor; editandoId = null; try { await updateDoc(doc(db, "fichas", id), { [field]: novoValor }); } catch (e) { console.error(e); el.innerText = valorAtual; } }; input.addEventListener('blur', salvar); input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); }); };
+window.togglePericia = async (skillName, tipo) => { const pericias = ficha.pericias || {}; if (!pericias[skillName]) pericias[skillName] = { t: false, m: false }; pericias[skillName][tipo] = !pericias[skillName][tipo]; await updateDoc(doc(db, "fichas", id), { pericias: pericias }); };
+window.upStat = async (key, val) => { const st = ficha[key]; const novo = Math.max(0, Math.min(st.max, Number(st.atual)+val)); await updateDoc(doc(db, "fichas", id), { [`${key}.atual`]: novo }); };
+window.irParaShikigamis = () => { window.location = `shikigamis.html?charId=${id}`; };
+window.irParaFeiticos = () => { window.location = `feiticos.html?id=${id}`; };
+window.abrirConfig = () => { document.getElementById('configModal').style.display = 'block'; document.getElementById('editImgUrl').value = ficha.imagem || ""; };
+window.salvarImg = async () => { await updateDoc(doc(db, "fichas", id), { imagem: document.getElementById('editImgUrl').value }); alert("Imagem atualizada!"); };
+window.excluirPersonagem = async () => { if(prompt("Digite DELETAR para confirmar:")==="DELETAR") { await deleteDoc(doc(db, "fichas", id)); window.location="index.html"; } };
 </script>
 </body>
 </html>
