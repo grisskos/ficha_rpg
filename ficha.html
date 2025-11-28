@@ -33,12 +33,24 @@
   .transf-btn.corpo.unlocked { border-color: var(--corpo); color: var(--corpo); }
   .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); animation: pulse 2s infinite; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+  
+  /* ANIMAÇÃO DE CRÍTICO (ALMA) */
+  @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
+
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-  .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
+  .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; cursor: help; }
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
+  
+  /* ESTADOS DA ALMA (CSS) */
+  .soul-stable { border-color: var(--integridade); color: var(--integridade); }
+  .soul-damaged { border-color: #f4d35e; color: #f4d35e; } /* Amarelo */
+  .soul-unstable { border-color: #fb8500; color: #fb8500; font-weight: bold; } /* Laranja */
+  .soul-critical { border-color: #d00000; color: #d00000; font-weight: bold; animation: pulse-red 2s infinite; } /* Vermelho */
+  .soul-dead { border-color: #555; color: #555; text-decoration: line-through; } /* Morto */
+
   .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
 
   /* TOKENS & UTILS */
@@ -321,7 +333,7 @@
   <div class="modal-content">
     <h2 id="origemModalTitle" style="color:var(--vigor);">Nova Habilidade de Origem</h2>
     <div class="form-group"><label>Nome</label><input id="origemNome"></div>
-    <div class="form-group"><label>Descrição</label><textarea id="origemDesc" style="height:100px;"></textarea></div>
+    <div class="form-group"><label>Descrição</label><textarea id="origemDesc" style="height:150px;"></textarea></div>
     <div style="display:flex; gap:10px; margin-top:20px;">
       <button onclick="salvarOrigem()" style="background:var(--vigor); flex-grow:1; padding:10px; border:none; color:#000; cursor:pointer; font-weight:bold;">Salvar</button>
     </div>
@@ -387,7 +399,7 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
   }
 });
 
-// LISTENER SEPARADO PARA SHIKIGAMIS
+// SHIKIGAMIS LISTENER
 onSnapshot(collection(db, "fichas", id, "shikigamis"), (snap) => {
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
@@ -411,12 +423,21 @@ function renderFicha() {
   document.getElementById('badges').innerHTML = `
     <span class="badge b-lvl">NVL <span class="editable" onclick="editarCampo(this, 'nivel', 'number')">${f.nivel||1}</span></span>
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
+    <span class="badge" id="soulBadge" style="border-color:var(--integridade);color:var(--integridade);">Estável</span>
   `;
+
+  // SOUL STATE
+  const intPct = f.integridade.max > 0 ? (f.integridade.atual / f.integridade.max) * 100 : 100;
+  const soulBadge = document.getElementById('soulBadge');
+  if(f.integridade.atual <= 0) { soulBadge.innerText = "Morto"; soulBadge.className = "badge soul-dead"; }
+  else if(intPct < 25) { soulBadge.innerText = "Crítico"; soulBadge.className = "badge soul-critical"; }
+  else if(intPct < 50) { soulBadge.innerText = "Instável"; soulBadge.className = "badge soul-unstable"; }
+  else if(intPct < 75) { soulBadge.innerText = "Danificado"; soulBadge.className = "badge soul-damaged"; }
+  else { soulBadge.innerText = "Estável"; soulBadge.className = "badge soul-stable"; }
 
   const btnApice = document.getElementById('btnApice');
   const btnCorpo = document.getElementById('btnCorpo');
   const divSequela = document.getElementById('statusSequela');
-  
   btnApice.className = "transf-btn apice locked"; btnCorpo.className = "transf-btn corpo locked"; divSequela.innerHTML = "";
   if(f.transfUnlocked.apice) { btnApice.classList.remove('locked'); btnApice.classList.add('unlocked'); if(f.transfActive === 'apice') btnApice.classList.add('active'); }
   if(f.transfUnlocked.corpo) { btnCorpo.classList.remove('locked'); btnCorpo.classList.add('unlocked'); if(f.transfActive === 'corpo') btnCorpo.classList.add('active'); }
@@ -509,7 +530,6 @@ function renderFicha() {
     if (apt.nome === "Ápice Humano" && f.transfUnlocked.apice) nivelAtual = 1;
     if (apt.nome === "Corpo Amaldiçoado" && f.transfUnlocked.corpo) nivelAtual = 1;
 
-    let isOpenClass = ''; 
     if (!isMestre && nivelAtual === 0) return;
 
     let niveisHtml = "";
@@ -529,7 +549,7 @@ function renderFicha() {
       editBtn = `<button class="btn-edit-apt" onclick="abrirEditorAptidao(${realIndex})">✎</button>`;
     }
 
-    containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body ${isOpenClass}"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
+    containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
   });
 
   const listaSkills = document.getElementById('skillsList');
