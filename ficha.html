@@ -34,22 +34,32 @@
   .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); animation: pulse 2s infinite; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
   
-  /* ANIMAÇÃO DE CRÍTICO (ALMA) */
   @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-  .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; cursor: help; }
+  .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; position: relative; }
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
   
-  /* ESTADOS DA ALMA (CSS) */
+  /* BADGE DE STATUS DA ALMA (TOOLTIP CSS) */
+  .soul-badge { cursor: help; transition: 0.3s; font-weight: bold; }
   .soul-stable { border-color: var(--integridade); color: var(--integridade); }
   .soul-damaged { border-color: #f4d35e; color: #f4d35e; } /* Amarelo */
-  .soul-unstable { border-color: #fb8500; color: #fb8500; font-weight: bold; } /* Laranja */
-  .soul-critical { border-color: #d00000; color: #d00000; font-weight: bold; animation: pulse-red 2s infinite; } /* Vermelho */
-  .soul-dead { border-color: #555; color: #555; text-decoration: line-through; } /* Morto */
+  .soul-unstable { border-color: #fb8500; color: #fb8500; border-width: 2px; } /* Laranja */
+  .soul-critical { border-color: #d00000; color: #d00000; border-width: 2px; animation: pulse-red 2s infinite; background: rgba(255,0,0,0.1); } /* Vermelho */
+  .soul-dead { border-color: #555; color: #555; text-decoration: line-through; } 
+
+  /* Tooltip Text */
+  .soul-badge:hover::after {
+    content: attr(data-tooltip);
+    position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    background: #222; color: #fff; padding: 8px; border-radius: 5px; border: 1px solid #555;
+    width: 200px; font-size: 0.75rem; font-weight: normal; text-align: center;
+    white-space: normal; z-index: 100; pointer-events: none; margin-bottom: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
 
   .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
 
@@ -81,7 +91,12 @@
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
   /* COMBATE */
-  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition:0.2s; }
+  .section-header:hover { background: #222; }
+
+  .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
+  .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
+
   .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; } .cols-3 { grid-template-columns: repeat(3, 1fr); } .cols-5 { grid-template-columns: repeat(5, 1fr); }
   @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
   .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
@@ -105,6 +120,11 @@
   .derived-calc input:focus { border-color: var(--energy); color: white; outline: none; }
 
   /* HABILIDADES DE CLASSE (ESTILOS) */
+  /* TOGGLE BODY PARA HABILIDADES */
+  .toggle-body { display: none; } 
+  .toggle-body.open { display: block; animation: slideDown 0.3s ease-out; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
   .class-ability-box { border-left: 4px solid var(--primary); padding: 10px; background: #151515; margin-bottom: 10px; border-radius: 4px; }
   .class-ability-name { font-weight: bold; color: #fff; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
   .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 5px; white-space: pre-wrap; line-height: 1.4; }
@@ -173,8 +193,6 @@
   .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
   .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
-  .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
-  .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
 
   /* LISTAS */
   .list-box ul { padding-left: 20px; margin: 0; color: #ccc; } .list-box li { margin-bottom: 5px; }
@@ -225,12 +243,17 @@
     </div>
 
     <div class="card">
-      <h3 class="section-header" style="margin-bottom:10px;">Habilidades de Classe & Origem</h3>
-      <div id="classAbilitiesList"></div>
-      <hr style="border-color:#222; margin:15px 0;">
-      <h4 style="margin:0 0 10px 0; color:var(--vigor); font-size:0.9rem;">Origem e Especializações</h4>
-      <div id="originAbilitiesList"></div>
-      <button class="btn-add-origin" onclick="abrirModalOrigem()">+ Adicionar</button>
+      <h3 class="section-header" style="margin-bottom:10px; cursor:pointer;" onclick="document.getElementById('classOriginBody').classList.toggle('open')">
+        Habilidades de Classe & Origem <span style="float:right; font-size:0.8rem;">▼</span>
+      </h3>
+      
+      <div id="classOriginBody" class="toggle-body">
+        <div id="classAbilitiesList"></div>
+        <hr style="border-color:#222; margin:15px 0;">
+        <h4 style="margin:0 0 10px 0; color:var(--vigor); font-size:0.9rem;">Origem e Especializações</h4>
+        <div id="originAbilitiesList"></div>
+        <button class="btn-add-origin" onclick="abrirModalOrigem()">+ Adicionar</button>
+      </div>
     </div>
 
     <div class="card">
@@ -423,17 +446,33 @@ function renderFicha() {
   document.getElementById('badges').innerHTML = `
     <span class="badge b-lvl">NVL <span class="editable" onclick="editarCampo(this, 'nivel', 'number')">${f.nivel||1}</span></span>
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
-    <span class="badge" id="soulBadge" style="border-color:var(--integridade);color:var(--integridade);">Estável</span>
+    <span class="badge soul-badge" id="soulBadge">Estável</span>
   `;
 
   // SOUL STATE
   const intPct = f.integridade.max > 0 ? (f.integridade.atual / f.integridade.max) * 100 : 100;
   const soulBadge = document.getElementById('soulBadge');
-  if(f.integridade.atual <= 0) { soulBadge.innerText = "Morto"; soulBadge.className = "badge soul-dead"; }
-  else if(intPct < 25) { soulBadge.innerText = "Crítico"; soulBadge.className = "badge soul-critical"; }
-  else if(intPct < 50) { soulBadge.innerText = "Instável"; soulBadge.className = "badge soul-unstable"; }
-  else if(intPct < 75) { soulBadge.innerText = "Danificado"; soulBadge.className = "badge soul-damaged"; }
-  else { soulBadge.innerText = "Estável"; soulBadge.className = "badge soul-stable"; }
+  
+  let soulClass = "badge soul-stable";
+  let soulText = "Estável";
+  let soulTip = "Alma Estável: Sem penalidades.";
+
+  if(f.integridade.atual <= 0) { 
+    soulText = "Morto"; soulClass = "badge soul-dead"; soulTip = "Personagem Morto."; 
+  } else if(intPct < 25) { 
+    soulText = "Crítico"; soulClass = "badge soul-critical"; 
+    soulTip = "CRÍTICO (<25%): -8 Testes (Desvantagem), +5 Custo PE/PV. Exposto e Fragilizado.";
+  } else if(intPct < 50) { 
+    soulText = "Instável"; soulClass = "badge soul-unstable"; 
+    soulTip = "INSTÁVEL (<50%): -6 Testes, +3 Custo PE/PV. Exposto.";
+  } else if(intPct < 75) { 
+    soulText = "Danificado"; soulClass = "badge soul-damaged"; 
+    soulTip = "DANIFICADO (<75%): -3 Testes, +2 Custo PE/PV.";
+  }
+  
+  soulBadge.innerText = soulText;
+  soulBadge.className = soulClass;
+  soulBadge.setAttribute("data-tooltip", soulTip);
 
   const btnApice = document.getElementById('btnApice');
   const btnCorpo = document.getElementById('btnCorpo');
@@ -530,6 +569,8 @@ function renderFicha() {
     if (apt.nome === "Ápice Humano" && f.transfUnlocked.apice) nivelAtual = 1;
     if (apt.nome === "Corpo Amaldiçoado" && f.transfUnlocked.corpo) nivelAtual = 1;
 
+    // Inicia sempre fechado
+    let isOpenClass = ''; 
     if (!isMestre && nivelAtual === 0) return;
 
     let niveisHtml = "";
@@ -549,7 +590,7 @@ function renderFicha() {
       editBtn = `<button class="btn-edit-apt" onclick="abrirEditorAptidao(${realIndex})">✎</button>`;
     }
 
-    containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
+    containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body ${isOpenClass}"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
   });
 
   const listaSkills = document.getElementById('skillsList');
@@ -585,9 +626,10 @@ function renderDerivados() {
   if(pSaved.t) percTotal += bonusTreino;
   if(pSaved.m) percTotal += 1;
   
+  // Correção do Cálculo de Atenção: 10 + Percepção Total + Bônus
   const atencaoBonus = Number(ficha.derivados.atencao || 0);
   const atencao = 10 + percTotal + atencaoBonus;
-  document.getElementById('valAtencao').innerText = atencao;
+  document.getElementById('valAtencao').innerText = isNaN(atencao) ? 10 : atencao;
   document.getElementById('bonusAtencao').value = ficha.derivados.atencao || "";
 
   const iniBonus = Number(ficha.derivados.iniciativa || 0);
