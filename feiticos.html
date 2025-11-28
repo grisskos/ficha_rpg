@@ -8,8 +8,7 @@
 <style>
   :root { 
     --bg: #0f0f0f; --card: #141414; --text: #f1f1f1; --border: #333;
-    --magic: #58E8DA; /* Ciano para Jujutsu */
-    --phys: #e63946;  /* Vermelho para Artes Marciais */
+    --magic: #58E8DA; --phys: #e63946; 
   }
   
   * { box-sizing: border-box; }
@@ -19,14 +18,12 @@
   .btn-back { background: transparent; border: 1px solid #555; color: #888; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-right: 15px; }
   h1 { margin: 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
 
-  /* GRID PRINCIPAL */
   .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 1400px; margin: 0 auto; }
   @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
 
-  /* ESTILOS DE SEÇÃO */
   .section-box { display: flex; flex-direction: column; gap: 15px; }
   
-  /* CAIXA PRINCIPAL (Descrição Base) */
+  /* CORE BOX (Descrição Base) */
   .core-box { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid var(--border); position: relative; }
   .core-magic { border-top: 4px solid var(--magic); }
   .core-phys { border-top: 4px solid var(--phys); }
@@ -38,29 +35,39 @@
 
   /* CARDS */
   .cards-container { display: flex; flex-direction: column; gap: 15px; }
-  .skill-card { background: var(--card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); position: relative; transition: transform 0.2s; }
+  .skill-card { 
+    background: var(--card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); 
+    position: relative; transition: transform 0.2s; 
+  }
   .skill-card:hover { transform: translateY(-2px); border-color: #555; }
   
+  /* Bloqueio de Nível */
+  .skill-card.locked { opacity: 0.5; filter: grayscale(0.8); border: 1px dashed #555; }
+  .skill-card.locked::after {
+    content: "NÍVEL INSUFICIENTE"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg);
+    font-size: 1.5rem; font-weight: bold; color: rgba(255, 0, 0, 0.5); border: 2px solid rgba(255, 0, 0, 0.5); padding: 10px;
+    pointer-events: none;
+  }
+
   .card-magic { border-left: 5px solid var(--magic); }
   .card-phys { border-left: 5px solid var(--phys); }
 
   .card-header { padding: 10px 15px; background: #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
   .card-title { font-weight: bold; font-size: 1.1rem; }
-  .card-lvl { font-size: 0.8rem; background: #333; padding: 2px 8px; border-radius: 10px; color: #fff; }
   
-  .card-stats { display: flex; gap: 10px; padding: 8px 15px; background: #111; font-size: 0.9rem; color: #aaa; border-bottom: 1px solid #222; }
+  .card-lvl-badge { font-size: 0.75rem; background: #333; padding: 2px 8px; border-radius: 10px; color: #fff; margin-left: 10px; }
+  .card-cost { font-size: 0.75rem; color: var(--magic); font-weight: bold; margin-left: auto; margin-right: 10px; }
+
+  .card-stats { display: flex; gap: 15px; padding: 8px 15px; background: #111; font-size: 0.85rem; color: #aaa; border-bottom: 1px solid #222; }
   .stat-item { display: flex; align-items: center; gap: 5px; }
-  .stat-icon { font-style: normal; }
 
   .card-body { padding: 15px; font-size: 0.95rem; color: #ddd; white-space: pre-wrap; }
   
-  .card-actions { position: absolute; top: 10px; right: 10px; display: none; gap: 5px; }
-  .skill-card:hover .card-actions { display: flex; }
+  .card-actions { display: flex; gap: 5px; }
   .btn-icon { background: #000; border: 1px solid #444; color: #fff; width: 25px; height: 25px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
   .btn-icon:hover { border-color: white; }
   .btn-del:hover { border-color: #d00000; color: #d00000; }
 
-  /* BOTÕES DE ADICIONAR */
   .btn-add { width: 100%; padding: 12px; border-radius: 8px; border: 2px dashed #444; background: transparent; color: #666; font-weight: bold; cursor: pointer; transition: 0.2s; }
   .btn-add:hover { border-color: #777; color: #fff; background: #1a1a1a; }
   .btn-add-magic:hover { border-color: var(--magic); color: var(--magic); }
@@ -73,11 +80,15 @@
   
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
   label { display: block; color: #888; font-size: 0.8rem; margin-bottom: 4px; }
-  input, textarea { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; font-family: inherit; }
+  input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; font-family: inherit; }
   textarea { height: 100px; resize: vertical; }
   input:focus, textarea:focus { border-color: #777; }
 
   .btn-confirm { width: 100%; padding: 10px; margin-top: 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: #000; }
+  
+  /* Aviso de Nível */
+  .level-info { text-align: center; color: #666; font-size: 0.8rem; margin-bottom: 20px; }
+  .level-info b { color: var(--magic); }
 </style>
 </head>
 <body>
@@ -86,6 +97,8 @@
   <button class="btn-back" onclick="voltar()">⬅ Voltar</button>
   <h1>Grimório de Técnicas</h1>
 </div>
+
+<div id="levelDisplay" class="level-info">Carregando dados de nível...</div>
 
 <div class="main-grid">
   
@@ -126,13 +139,32 @@
     <label>Nome</label>
     <input id="inNome" placeholder="Ex: Vazio Roxo / Chute Alto">
     
-    <div class="form-row" style="margin-top:10px;">
-      <div><label>Nível / Custo</label><input id="inNivel" placeholder="Ex: 10 PE / Nvl 2"></div>
-      <div><label>Dano / Cura</label><input id="inDano" placeholder="Ex: 2d8+2"></div>
+    <div id="spellConfig" class="form-row" style="margin-top:10px;">
+      <div>
+        <label>Nível do Feitiço (0-5)</label>
+        <select id="inFeiticoNivel" onchange="atualizarCusto()">
+          <option value="0">Nível 0</option>
+          <option value="1">Nível 1</option>
+          <option value="2">Nível 2</option>
+          <option value="3">Nível 3</option>
+          <option value="4">Nível 4</option>
+          <option value="5">Nível 5</option>
+        </select>
+      </div>
+      <div>
+        <label>Custo Automático (PE)</label>
+        <input id="inCusto" readonly style="color:var(--magic); font-weight:bold;">
+      </div>
     </div>
-    
-    <label>Área / Alcance</label>
-    <input id="inArea" placeholder="Ex: Cone 9m / Toque" style="margin-bottom:10px;">
+
+    <div id="genericConfig" class="form-row" style="display:none;">
+      <div><label>Nível / Custo</label><input id="inGenericNivel" placeholder="Ex: Nvl 1 / 2 PE"></div>
+    </div>
+
+    <div class="form-row">
+      <div><label>Dano / Cura</label><input id="inDano" placeholder="Ex: 2d8+2"></div>
+      <div><label>Alcance / Área</label><input id="inArea" placeholder="Ex: Cone 9m / Toque"></div>
+    </div>
     
     <label>Efeitos & Descrição</label>
     <textarea id="inEfeito" placeholder="Descreva o que acontece..."></textarea>
@@ -148,8 +180,11 @@ import { db, doc, getDoc, updateDoc } from "./firebase.js";
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let ficha = {};
-let editType = null; // 'feitico' ou 'marcial'
-let editIndex = -1;  // -1 para novo
+let editType = null;
+let editIndex = -1;
+
+// TABELA DE CUSTOS DE FEITIÇO
+const CUSTO_PE = { 0: 0, 1: 2, 2: 5, 3: 8, 4: 12, 5: 20 };
 
 window.onload = async () => {
   if(!id) return alert("ID não encontrado");
@@ -164,8 +199,35 @@ async function carregar() {
   }
 }
 
+function getNivelMaximoFeitico() {
+  const nivel = ficha.nivel || 1;
+  const isEspecialista = (ficha.classe === "Especialista em Técnica");
+
+  if (isEspecialista) {
+    if (nivel >= 15) return 5;
+    if (nivel >= 11) return 4;
+    if (nivel >= 7) return 3;
+    if (nivel >= 4) return 2;
+    return 1; // Nível 1 a 3 acessa até nível 1
+  } else {
+    // Padrão
+    if (nivel >= 17) return 5;
+    if (nivel >= 13) return 4;
+    if (nivel >= 9) return 3;
+    if (nivel >= 5) return 2;
+    return 1; // Nível 1 a 4 acessa até nível 1
+  }
+}
+
 function renderTudo() {
-  // Preencher Cores (Descrições Base)
+  const nivelMax = getNivelMaximoFeitico();
+  document.getElementById('levelDisplay').innerHTML = `
+    Personagem Nível <b>${ficha.nivel || 1}</b> • 
+    Acesso a Feitiços até <b>Nível ${nivelMax}</b>
+    ${ficha.classe === "Especialista em Técnica" ? "(Evolução Adiantada)" : ""}
+  `;
+
+  // Preencher Cores
   document.getElementById('coreInataNome').value = ficha.tecnicaInata?.nome || "";
   document.getElementById('coreInataDesc').value = ficha.tecnicaInata?.descricao || "";
   document.getElementById('coreMarcialNome').value = ficha.estiloMarcial?.nome || "";
@@ -175,32 +237,57 @@ function renderTudo() {
   const divFeiticos = document.getElementById('listaFeiticos');
   divFeiticos.innerHTML = "";
   (ficha.feiticos || []).forEach((f, i) => {
-    divFeiticos.innerHTML += cardHtml(f, i, 'feitico');
+    // Verifica se o personagem pode usar
+    const nivelNecessario = Number(f.nivelFeitico || 0); // 0 se não tiver salvo
+    const bloqueado = nivelNecessario > nivelMax;
+    
+    divFeiticos.innerHTML += cardHtml(f, i, 'feitico', bloqueado, nivelNecessario);
   });
 
   // Renderizar Marciais
   const divMarcial = document.getElementById('listaMarcial');
   divMarcial.innerHTML = "";
   (ficha.artesMarciais || []).forEach((f, i) => {
-    divMarcial.innerHTML += cardHtml(f, i, 'marcial');
+    divMarcial.innerHTML += cardHtml(f, i, 'marcial', false, 0);
   });
 }
 
-function cardHtml(dados, index, tipo) {
+function cardHtml(dados, index, tipo, bloqueado, nivelFeitico) {
   const corClass = tipo === 'feitico' ? 'card-magic' : 'card-phys';
+  const lockClass = bloqueado ? 'locked' : '';
+  
   const iconDano = dados.dano ? `<span class="stat-item" title="Dano">⚔️ ${dados.dano}</span>` : '';
   const iconArea = dados.area ? `<span class="stat-item" title="Área">🎯 ${dados.area}</span>` : '';
   
+  // Mostra Nível do Feitiço ou Texto Livre
+  let badge = "";
+  let custoHtml = "";
+
+  if(tipo === 'feitico') {
+    badge = `<span class="card-lvl-badge">Nível ${nivelFeitico}</span>`;
+    const custo = CUSTO_PE[nivelFeitico] || 0;
+    custoHtml = `<span class="card-cost">${custo} PE</span>`;
+  } else {
+    badge = dados.nivel ? `<span class="card-lvl-badge">${dados.nivel}</span>` : '';
+  }
+  
   return `
-    <div class="skill-card ${corClass}">
+    <div class="skill-card ${corClass} ${lockClass}">
       <div class="card-header">
-        <span class="card-title">${dados.nome}</span>
-        <span class="card-lvl">${dados.nivel}</span>
-        <div class="card-actions">
-          <div class="btn-icon" onclick="editar('${tipo}', ${index})">✎</div>
-          <div class="btn-icon btn-del" onclick="excluir('${tipo}', ${index})">✖</div>
+        <div style="display:flex; align-items:center;">
+          <span class="card-title">${dados.nome}</span>
+          ${badge}
+        </div>
+        
+        <div style="display:flex; align-items:center;">
+          ${custoHtml}
+          <div class="card-actions">
+            <div class="btn-icon" onclick="editar('${tipo}', ${index})">✎</div>
+            <div class="btn-icon btn-del" onclick="excluir('${tipo}', ${index})">✖</div>
+          </div>
         </div>
       </div>
+      
       <div class="card-stats">
         ${iconDano} ${iconArea}
       </div>
@@ -222,19 +309,34 @@ window.salvarCores = async () => {
       descricao: document.getElementById('coreMarcialDesc').value
     }
   });
-  alert("Descrições salvas!");
+  alert("Salvo!");
+};
+
+window.atualizarCusto = () => {
+  const nivel = document.getElementById('inFeiticoNivel').value;
+  document.getElementById('inCusto').value = CUSTO_PE[nivel] + " PE";
 };
 
 window.abrirModal = (tipo) => {
   editType = tipo;
-  editIndex = -1; // Novo
+  editIndex = -1; 
   
-  // Resetar campos
   document.getElementById('modalTitle').innerText = tipo === 'feitico' ? "Novo Feitiço" : "Nova Técnica Marcial";
   document.getElementById('btnConfirmar').style.background = tipo === 'feitico' ? "var(--magic)" : "var(--phys)";
   
+  // Mostra/Esconde campos específicos
+  if (tipo === 'feitico') {
+    document.getElementById('spellConfig').style.display = 'grid';
+    document.getElementById('genericConfig').style.display = 'none';
+    document.getElementById('inFeiticoNivel').value = "0";
+    atualizarCusto();
+  } else {
+    document.getElementById('spellConfig').style.display = 'none';
+    document.getElementById('genericConfig').style.display = 'block';
+  }
+  
   document.getElementById('inNome').value = "";
-  document.getElementById('inNivel').value = "";
+  document.getElementById('inGenericNivel').value = "";
   document.getElementById('inDano').value = "";
   document.getElementById('inArea').value = "";
   document.getElementById('inEfeito').value = "";
@@ -252,8 +354,18 @@ window.editar = (tipo, index) => {
   document.getElementById('modalTitle').innerText = "Editar Habilidade";
   document.getElementById('btnConfirmar').style.background = tipo === 'feitico' ? "var(--magic)" : "var(--phys)";
 
+  if (tipo === 'feitico') {
+    document.getElementById('spellConfig').style.display = 'grid';
+    document.getElementById('genericConfig').style.display = 'none';
+    document.getElementById('inFeiticoNivel').value = item.nivelFeitico || 0;
+    atualizarCusto();
+  } else {
+    document.getElementById('spellConfig').style.display = 'none';
+    document.getElementById('genericConfig').style.display = 'block';
+    document.getElementById('inGenericNivel').value = item.nivel;
+  }
+
   document.getElementById('inNome').value = item.nome;
-  document.getElementById('inNivel').value = item.nivel;
   document.getElementById('inDano').value = item.dano;
   document.getElementById('inArea').value = item.area;
   document.getElementById('inEfeito').value = item.efeito;
@@ -264,22 +376,26 @@ window.editar = (tipo, index) => {
 document.getElementById('btnConfirmar').onclick = async () => {
   const novoItem = {
     nome: document.getElementById('inNome').value || "Sem Nome",
-    nivel: document.getElementById('inNivel').value,
     dano: document.getElementById('inDano').value,
     area: document.getElementById('inArea').value,
     efeito: document.getElementById('inEfeito').value
   };
 
-  // Atualiza Array Local
-  if(editType === 'feitico') {
+  if (editType === 'feitico') {
+    novoItem.nivelFeitico = document.getElementById('inFeiticoNivel').value; // Salva o Nível Numérico (0-5)
+    
     if(!ficha.feiticos) ficha.feiticos = [];
     if(editIndex === -1) ficha.feiticos.push(novoItem);
     else ficha.feiticos[editIndex] = novoItem;
+    
     await updateDoc(doc(db, "fichas", id), { feiticos: ficha.feiticos });
   } else {
+    novoItem.nivel = document.getElementById('inGenericNivel').value; // Texto Livre
+    
     if(!ficha.artesMarciais) ficha.artesMarciais = [];
     if(editIndex === -1) ficha.artesMarciais.push(novoItem);
     else ficha.artesMarciais[editIndex] = novoItem;
+    
     await updateDoc(doc(db, "fichas", id), { artesMarciais: ficha.artesMarciais });
   }
 
@@ -300,14 +416,8 @@ window.excluir = async (tipo, index) => {
   renderTudo();
 };
 
-window.fecharModal = () => {
-  document.getElementById('modalCard').classList.remove('open');
-};
-
-window.voltar = () => {
-  window.location = `ficha.html?id=${id}`;
-};
+window.fecharModal = () => { document.getElementById('modalCard').classList.remove('open'); };
+window.voltar = () => { window.location = `ficha.html?id=${id}`; };
 </script>
 </body>
-  </html>
-  
+</html>
