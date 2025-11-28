@@ -29,16 +29,13 @@
   .transf-btn {
     width: 40px; height: 40px; border-radius: 50%; border: 2px solid #444; background: #222; color: #555;
     font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;
-    position: relative;
   }
   .transf-btn.locked { opacity: 0.5; cursor: not-allowed; }
   .transf-btn.unlocked { border-color: #fff; color: #fff; box-shadow: 0 0 5px rgba(255,255,255,0.2); }
   
-  /* Ápice Humano */
   .transf-btn.apice.unlocked { border-color: var(--apice); color: var(--apice); }
   .transf-btn.apice.active { background: var(--apice); color: #000; box-shadow: 0 0 15px var(--apice); animation: pulse 2s infinite; }
   
-  /* Corpo Amaldiçoado */
   .transf-btn.corpo.unlocked { border-color: var(--corpo); color: var(--corpo); }
   .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); animation: pulse 2s infinite; }
 
@@ -54,26 +51,27 @@
   /* Sequelas */
   .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
 
-  /* TOKENS SHIKIGAMI */
+  /* TOKENS */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* EDIÇÃO INLINE */
+  /* UTILS */
   .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
   .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
 
-  /* ATRIBUTOS & BARRAS */
+  /* ATRIBUTOS */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
 
+  /* BARRAS */
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
@@ -84,12 +82,8 @@
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* COMBATE (CARDS) */
-  .section-header { 
-    background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333;
-    border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; 
-    display: flex; justify-content: space-between; align-items: center;
-  }
+  /* COMBATE */
+  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
   .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
   .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -127,7 +121,7 @@
   .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
   .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
 
-  /* APTIDÕES (ESTILO NOVO) */
+  /* APTIDÕES */
   .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
   .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .aptidao-header:hover { background: #2a2a2a; }
@@ -138,7 +132,6 @@
   .nivel-row.unlocked { color: #fff; } 
   .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
   .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  
   .gm-controls { display: none; margin-left: auto; gap: 5px; } 
   .gm-visible .gm-controls { display: flex; }
   .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
@@ -162,10 +155,6 @@
   .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
   .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
-
-  /* LISTAS */
-  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; }
-  .list-box li { margin-bottom: 5px; }
 
   /* MODALS */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
@@ -226,12 +215,11 @@
     <div class="card" id="aptidoesCard">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <h3 class="section-header" style="width:100%; margin:0;">Aptidões & Evolução</h3>
-        
         <div id="gmControlsMain" style="display:none; gap:5px;">
           <button class="btn-mini" style="width:auto; padding:0 8px; font-size:0.7rem; border-color:var(--apice); color:var(--apice);" onclick="gmUnlock('apice')">Unlock Ápice</button>
           <button class="btn-mini" style="width:auto; padding:0 8px; font-size:0.7rem; border-color:var(--corpo); color:var(--corpo);" onclick="gmUnlock('corpo')">Unlock Corpo</button>
           <button class="btn-mini" style="width:auto; padding:0 8px; font-size:0.7rem; border-color:#0f0; color:#0f0;" onclick="gmClearDebuff()">Curar Sequelas</button>
-          <button class="btn-mini" style="width:auto; padding:0 8px;" onclick="addNovaAptidao()">+ Aptidão</button>
+          <button class="btn-mini" style="width:auto; padding:0 8px;" onclick="addNovaAptidao()">+</button>
         </div>
       </div>
       <div id="listaAptidoes"></div>
@@ -288,7 +276,6 @@
 <script type="module">
 import { db, auth, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
 
-// BANCO DE DADOS DE APTIDÕES COMPLETO (COM TRANSFORMATIONS)
 const APTIDOES_BASE = [
   { nome: "Liberação de Energia", descricao: "Você aprende o básico do uso de Energia. Sua aura passa a se manifestar como um vapor quente saindo do seu corpo.", maxNivel: 10, niveis: ["NV 1 - Limite de PE por turno: +1", "NV 2 - Limite de PE por turno: +1", "NV 3 - Ganha 1 Característica Única de Aura", "NV 4 - Limite de PE por turno: +1", "NV 5 - Limite de PE por turno: +1", "NV 6 - Ganha 1 Característica Única de Aura", "NV 7 - Limite de PE por turno: +1", "NV 8 - Limite de PE por turno: +1", "NV 9 - Ganha 1 Característica Única de Aura", "NV 10 - Aura estabilizada. Não gasta mais 1 PE/turno. Ganha Característica Especial. Limite PE: +1"] },
   { nome: "Proteção", descricao: "Você aprende a manter a aura no seu corpo, protegendo-se.", maxNivel: 8, niveis: ["NV 1 - +1 Redução de Dano.", "NV 2 - +1 Redução, +1 Dano.", "NV 3 - +1 Redução, +1 Dano.", "NV 4 - +2 Redução, +2 Dano. Custo: 2 PE/turno.", "NV 5 - +2 Redução, +2 Dano.", "NV 6 - Redução 1+X, Dano X (X=Metade Treino). Custo: 3 PE/turno.", "NV 7 - Redução Y+X, Dano Y+X. Custo: 4 PE/turno.", "NV 8 - Resistência Física, Dano X+Y. Custo: 5 PE/turno."] },
@@ -304,9 +291,9 @@ const APTIDOES_BASE = [
   { nome: "Redirecionar", descricao: "Manipula a direção de ataques.", maxNivel: 5, niveis: ["NV 1 - Curvar ataque de projeção. Custo 1 PE.", "NV 2 - Redirecionar projéteis curtos. Desvantagem no atacante. Custo 1 PE.", "NV 3 - Redirecionar efeitos de área. Custo 2 PE.", "NV 4 - Criar nós de redirecionamento.", "NV 5 - Refletir habilidade para o remetente. Custo 5 PE."] },
   { nome: "Esconder", descricao: "Oculta a aura de detecção.", maxNivel: 5, niveis: ["NV 1 - Indetectável por métodos simples.", "NV 2 - Projetar isca falsa. Treinamento em Furtividade.", "NV 3 - Ocultação completa. Duplicar assinatura.", "NV 4 - Mascarar grupo (Raio = Metade Nível).", "NV 5 - Indetectável total. Assumir assinatura de outro."] },
   { nome: "Perturbação", descricao: "Interfere no fluxo de energia alheio.", maxNivel: 5, niveis: ["NV 1 - Alvo -1 em testes de energia.", "NV 2 - Teste de Vontade para conjurar.", "NV 3 - Zona de perturbação 3x3. Reduz eficácia.", "NV 4 - Interromper recarga de poderes.", "NV 5 - Anular habilidade ou inverter efeito."] },
-  // Transformações Especiais (Aparecem em Aptidões se desbloqueadas)
+  // Transformações
   { nome: "Ápice Humano", descricao: "Seu corpo atinge o pico absoluto. Passivo: +Treino em Redução de Dano e Testes Físicos. Ativo: Corpo no Limite (1/longo) +1 Ação, Resistência Física. Causa Exaustão (-2 testes físicos).", maxNivel: 1, niveis: ["Desbloqueado"] },
-  { nome: "Corpo Amaldiçoado", descricao: "Corpo de energia pura. Passivo: Ataques Físicos são Mágicos, +Treino Dano, +Treino Manipulação. Ativo: Forma Amaldiçoada (1/longo) +Nvl d12 Dano, Imunidade física. Causa Corrupção (-Nvlx2 HP).", maxNivel: 1, niveis: ["Desbloqueado"] }
+  { nome: "Corpo Amaldiçoado", descricao: "Corpo de energia pura. Passivo: Ataques Físicos são Mágicos, +Treino Dano, +Treino Manipulação. Ativo: Forma Amaldiçoada (1/longo) +Nvl d12 Dano, Imunidade física. Causa Corrupção (-Nvlx2 Max HP).", maxNivel: 1, niveis: ["Desbloqueado"] }
 ];
 
 const params = new URLSearchParams(location.search);
@@ -345,11 +332,14 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.shikigamis) ficha.shikigamis = [];
     if (!ficha.vida) ficha.vida = { atual: 10, max: 10 };
+    if (!ficha.energia) ficha.energia = { atual: 10, max: 10 };
+    if (!ficha.vigor) ficha.vigor = { atual: 5, max: 5 };
+    if (!ficha.integridade) ficha.integridade = { atual: 100, max: 100 };
     if (!ficha.combate) ficha.combate = {}; 
     if (!ficha.inventario) ficha.inventario = []; 
     if (!ficha.progressoAptidoes) ficha.progressoAptidoes = {};
     if (!ficha.transfUnlocked) ficha.transfUnlocked = { apice: false, corpo: false };
-    if (!ficha.transfActive) ficha.transfActive = null; // 'apice', 'corpo' or null
+    if (!ficha.transfActive) ficha.transfActive = null; 
     if (!ficha.sequelas) ficha.sequelas = { exaustao: false, corrupcao: false };
     
     if(!editandoId) renderFicha(); 
@@ -370,34 +360,27 @@ function renderFicha() {
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
   `;
 
-  // === RENDERIZAÇÃO DE TRANSFORMAÇÕES ===
+  // TRANSFORMAÇÕES
   const btnApice = document.getElementById('btnApice');
   const btnCorpo = document.getElementById('btnCorpo');
   const divSequela = document.getElementById('statusSequela');
   
-  // Reset classes
   btnApice.className = "transf-btn apice locked";
   btnCorpo.className = "transf-btn corpo locked";
   divSequela.innerHTML = "";
 
-  // Apice
   if(f.transfUnlocked.apice) {
-    btnApice.classList.remove('locked');
-    btnApice.classList.add('unlocked');
+    btnApice.classList.remove('locked'); btnApice.classList.add('unlocked');
     if(f.transfActive === 'apice') btnApice.classList.add('active');
   }
-  // Corpo
   if(f.transfUnlocked.corpo) {
-    btnCorpo.classList.remove('locked');
-    btnCorpo.classList.add('unlocked');
+    btnCorpo.classList.remove('locked'); btnCorpo.classList.add('unlocked');
     if(f.transfActive === 'corpo') btnCorpo.classList.add('active');
   }
-
-  // Sequelas
   if(f.sequelas.exaustao) divSequela.innerHTML += `<span class="sequela-tag">⚠ EXAUSTÃO (-2 Físico)</span>`;
-  if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO (HP Reduzido)</span>`;
+  if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO (HP Max Reduzido)</span>`;
 
-  // Tokens Shikigami
+  // Tokens
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
   if(f.shikigamis && f.shikigamis.length > 0) {
@@ -424,7 +407,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // Stats
+  // Stats (Barras)
   const areaStats = document.getElementById('statsArea');
   areaStats.innerHTML = "";
   const statsMap = [
@@ -436,6 +419,7 @@ function renderFicha() {
   statsMap.forEach(s => {
     const st = f[s.k] || {atual:0, max:0};
     const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
+    
     areaStats.innerHTML += `
       <div class="stat-row">
         <div class="stat-head">
@@ -456,7 +440,7 @@ function renderFicha() {
       </div>`;
   });
 
-  // === COMBATE & CÁLCULOS ===
+  // === CÁLCULOS ===
   const nivel = f.nivel || 1;
   const metadeNivel = Math.floor(nivel / 2);
   const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
@@ -472,26 +456,24 @@ function renderFicha() {
   let bonusMagicSkill_Corpo = 0;
 
   if (f.transfUnlocked.apice) {
-    bonusRD_Apice = bonusTreino; // Passiva
-    bonusPhysSkill_Apice = bonusTreino; // Passiva
+    bonusRD_Apice = bonusTreino; 
+    bonusPhysSkill_Apice = bonusTreino;
   }
   if (f.transfUnlocked.corpo) {
-    bonusDmg_Corpo = bonusTreino; // Passiva
-    bonusMagicSkill_Corpo = bonusTreino; // Passiva
+    bonusDmg_Corpo = bonusTreino;
+    bonusMagicSkill_Corpo = bonusTreino;
   }
   if (f.sequelas.exaustao) {
-    bonusPhysSkill_Apice -= 2; // Penalidade
+    bonusPhysSkill_Apice -= 2;
   }
 
-  // Render Combate
+  // Combate
   const attacksArea = document.getElementById('combatAttacksArea');
   attacksArea.innerHTML = "";
 
-  // Corpo a Corpo
   const cCorpo = cData.corpo || {};
   const attrCorpo = cCorpo.usaDes ? modDes : modFor;
   let totCorpo = attrCorpo + metadeNivel + (cCorpo.treino ? bonusTreino : 0) + (cCorpo.outros || 0);
-  if (f.transfActive === 'corpo') { /* Corpo Amaldiçoado pode usar stats magicos? Nao especificado, mantendo fisico */ }
   
   attacksArea.innerHTML += `
     <div class="combat-card">
@@ -500,7 +482,6 @@ function renderFicha() {
       <div class="cc-footer"><div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div><input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)"></div>
     </div>`;
 
-  // Distância
   const cDist = cData.distancia || {};
   let totDist = modDes + metadeNivel + (cDist.treino ? bonusTreino : 0) + (cDist.outros || 0);
   attacksArea.innerHTML += `
@@ -510,13 +491,12 @@ function renderFicha() {
       <div class="cc-footer"><div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div><input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)"></div>
     </div>`;
 
-  // Mágico
   const cMagic = cData.magico || {};
   const attrKey = cMagic.atributo || 'inteligencia';
   const valMagic = (f.atributos && f.atributos[attrKey]) ? f.atributos[attrKey] : 10;
   const modMagic = Math.floor((valMagic - 10) / 2);
   let totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0);
-  if (f.transfActive === 'corpo' || f.transfUnlocked.corpo) totMagic += bonusMagicSkill_Corpo; // Buff Corpo
+  if (f.transfActive === 'corpo' || f.transfUnlocked.corpo) totMagic += bonusMagicSkill_Corpo;
 
   attacksArea.innerHTML += `
     <div class="combat-card">
@@ -536,8 +516,7 @@ function renderFicha() {
     const rMod = Math.floor((rVal - 10) / 2);
     let rTotal = rMod + metadeNivel + (rData.treino ? bonusTreino : 0) + (rData.outros || 0);
     
-    // Aplica Bônus/Malus de Ápice
-    if (res.k === 'fortitude' || res.k === 'reflexos') {
+    if (res.k === 'fortitude' || res.k === 'reflexos' || res.k === 'integridade') {
       rTotal += bonusPhysSkill_Apice;
     }
 
@@ -582,15 +561,19 @@ function renderFicha() {
       </div>`;
   });
 
-  // APTIDÕES (Com Ápice/Corpo)
+  // APTIDÕES (AGORA VISÍVEL PARA PLAYERS SE DESBLOQUEADO)
   const containerApt = document.getElementById('listaAptidoes');
   containerApt.innerHTML = "";
   const todasAptidoes = [...APTIDOES_BASE, ...(ficha.aptidoesCustom || [])];
 
   todasAptidoes.forEach((apt, index) => {
-    const nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
-    
-    // Mostra se desbloqueado
+    let nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
+
+    // TRUQUE DE VISIBILIDADE PARA AS TRANSFORMAÇÕES
+    if (apt.nome === "Ápice Humano" && f.transfUnlocked.apice) nivelAtual = 1;
+    if (apt.nome === "Corpo Amaldiçoado" && f.transfUnlocked.corpo) nivelAtual = 1;
+
+    // Se não for mestre e não tiver nível (nem desbloqueio), esconde
     if (!isMestre && nivelAtual === 0) return;
 
     let niveisHtml = "";
@@ -615,10 +598,12 @@ function renderFicha() {
       </div>`;
   });
 
-  // Perícias
+  // Perícias (Com bônus de Ápice nos Físicos)
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
   const userPericias = f.pericias || {}; 
+  const PHYS_ATTRS = ['forca', 'destreza', 'constituicao'];
+
   PERICIAS_DEF.forEach(p => {
     const attrVal = (f.atributos && f.atributos[p.a]) ? f.atributos[p.a] : 10;
     const modAttr = Math.floor((attrVal - 10) / 2);
@@ -628,8 +613,8 @@ function renderFicha() {
     if (saved.m) total += 1;
     total += Number(saved.bonus || 0);
 
-    // Aplica Bônus de Ápice (Físicos)
-    if (p.n === "Atletismo" || p.n === "Acrobacia" || p.n === "Furtividade" /*Reflexos n é pericia*/) {
+    // APLICA BÔNUS DE ÁPICE SE FOR ATRIBUTO FÍSICO
+    if (f.transfUnlocked.apice && PHYS_ATTRS.includes(p.a)) {
       total += bonusPhysSkill_Apice;
     }
 
@@ -647,12 +632,11 @@ function renderFicha() {
   });
 }
 
-// === FUNÇÕES GLOBAIS ===
+// === FUNÇÕES ===
 window.toggleTransformacao = async (tipo) => {
-  if (!ficha.transfUnlocked[tipo]) return; // Bloqueado
+  if (!ficha.transfUnlocked[tipo]) return; 
   
   let novoEstado = null;
-  // Se clicou no que já tá ativo, desativa (e aplica sequela)
   if (ficha.transfActive === tipo) {
     novoEstado = null;
     if (tipo === 'apice') await aplicarSequela('exaustao');
@@ -668,15 +652,18 @@ async function aplicarSequela(tipo) {
   const seq = ficha.sequelas || {};
   seq[tipo] = true;
   
-  // Dano do Corpo Amaldiçoado (Nivel * 2)
   if (tipo === 'corrupcao') {
     const dano = (ficha.nivel || 1) * 2;
-    const novaVida = Math.max(1, (ficha.vida.atual - dano));
+    // Reduz Vida Máxima (e Atual se necessário)
+    const novoMax = Math.max(1, (ficha.vida.max - dano));
+    const novoAtual = Math.min(ficha.vida.atual, novoMax);
+    
     await updateDoc(doc(db, "fichas", id), { 
       sequelas: seq,
-      "vida.atual": novaVida
+      "vida.max": novoMax,
+      "vida.atual": novoAtual
     });
-    alert(`A transformação cessou. Você sofreu ${dano} de dano pela Corrupção.`);
+    alert(`A transformação cessou. Você sofreu ${dano} de redução na Vida Máxima pela Corrupção.`);
   } else {
     await updateDoc(doc(db, "fichas", id), { sequelas: seq });
     alert("A transformação cessou. Você está exausto.");
