@@ -8,13 +8,13 @@
   :root { 
     --bg: #0f0f0f; --card: #141414; 
     --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; 
-    --apice: #f4d35e; --corpo: #9d4edd;
     --text: #f1f1f1; --dim: #888;
+    --apice: #f4d35e; --corpo: #9d4edd;
   }
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  /* === LAYOUT === */
+  /* LAYOUT */
   .main-layout { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; max-width: 1600px; margin: 0 auto; padding-bottom: 80px; }
   @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } }
   @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
@@ -22,25 +22,8 @@
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; position: relative; }
 
-  /* HEADER & TRANSFORMATIONS */
+  /* HEADER */
   .char-header { text-align: center; }
-  
-  .transf-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
-  .transf-btn {
-    width: 40px; height: 40px; border-radius: 50%; border: 2px solid #444; background: #222; color: #555;
-    font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;
-  }
-  .transf-btn.locked { opacity: 0.5; cursor: not-allowed; }
-  .transf-btn.unlocked { border-color: #fff; color: #fff; box-shadow: 0 0 5px rgba(255,255,255,0.2); }
-  
-  .transf-btn.apice.unlocked { border-color: var(--apice); color: var(--apice); }
-  .transf-btn.apice.active { background: var(--apice); color: #000; box-shadow: 0 0 15px var(--apice); animation: pulse 2s infinite; }
-  
-  .transf-btn.corpo.unlocked { border-color: var(--corpo); color: var(--corpo); }
-  .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); animation: pulse 2s infinite; }
-
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
-
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
@@ -48,7 +31,16 @@
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* Sequelas */
+  /* TRANSFORMAÇÕES */
+  .transf-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+  .transf-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #444; background: #222; color: #555; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+  .transf-btn.locked { opacity: 0.5; cursor: not-allowed; }
+  .transf-btn.unlocked { border-color: #fff; color: #fff; box-shadow: 0 0 5px rgba(255,255,255,0.2); }
+  .transf-btn.apice.unlocked { border-color: var(--apice); color: var(--apice); }
+  .transf-btn.apice.active { background: var(--apice); color: #000; box-shadow: 0 0 15px var(--apice); animation: pulse 2s infinite; }
+  .transf-btn.corpo.unlocked { border-color: var(--corpo); color: var(--corpo); }
+  .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
   .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
 
   /* TOKENS */
@@ -86,12 +78,8 @@
   .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
   .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
   .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
-
-  .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; }
-  .cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; } .cols-3 { grid-template-columns: repeat(3, 1fr); } .cols-5 { grid-template-columns: repeat(5, 1fr); }
   @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
-  
   .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
   .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
   .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
@@ -114,7 +102,6 @@
   .inv-type { font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
   .inv-stats { font-size: 0.75rem; color: var(--energy); font-weight: bold; margin-top: auto; }
   .inv-slots { font-size: 0.7rem; color: #666; text-align: right; margin-top: 5px; }
-
   .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 20px; position: relative; margin-bottom: 15px; overflow: hidden; }
   .load-fill { height: 100%; width: 0%; background: #2a9d8f; transition: 0.3s; }
   .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
@@ -127,7 +114,7 @@
   .aptidao-header:hover { background: #2a2a2a; }
   .aptidao-body { display: none; padding: 10px; background: #151515; }
   .aptidao-body.open { display: block; }
-  .aptidao-desc { font-style: italic; color: #aaa; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; }
+  .aptidao-desc { font-style: italic; color: #aaa; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; white-space: pre-wrap; }
   .nivel-row { display: flex; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #555; }
   .nivel-row.unlocked { color: #fff; } 
   .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
@@ -136,6 +123,8 @@
   .gm-visible .gm-controls { display: flex; }
   .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
   .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
+  .btn-edit-apt:hover { color: var(--primary); }
 
   /* PERÍCIAS & NAV */
   .skills-card { padding: 0; overflow: hidden; height: 100%; }
@@ -155,6 +144,10 @@
   .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
   .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
+
+  /* LISTAS */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; }
+  .list-box li { margin-bottom: 5px; }
 
   /* MODALS */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
@@ -181,7 +174,6 @@
         <div id="btnCorpo" class="transf-btn corpo locked" title="Corpo Amaldiçoado" onclick="toggleTransformacao('corpo')">👹</div>
       </div>
       <div id="statusSequela"></div>
-
       <img id="charImg" class="char-img" src="">
       <h2 class="char-name"><span class="editable" id="nomeDisplay" onclick="editarCampo(this, 'nome', 'text')">...</span></h2>
       <div id="badges" class="badges"></div>
@@ -219,7 +211,7 @@
           <button class="btn-mini" style="width:auto; padding:0 8px; font-size:0.7rem; border-color:var(--apice); color:var(--apice);" onclick="gmUnlock('apice')">Unlock Ápice</button>
           <button class="btn-mini" style="width:auto; padding:0 8px; font-size:0.7rem; border-color:var(--corpo); color:var(--corpo);" onclick="gmUnlock('corpo')">Unlock Corpo</button>
           <button class="btn-mini" style="width:auto; padding:0 8px; font-size:0.7rem; border-color:#0f0; color:#0f0;" onclick="gmClearDebuff()">Curar Sequelas</button>
-          <button class="btn-mini" style="width:auto; padding:0 8px;" onclick="addNovaAptidao()">+</button>
+          <button class="btn-mini" style="width:auto; padding:0 8px;" onclick="abrirEditorAptidao(-1)">+ Aptidão</button>
         </div>
       </div>
       <div id="listaAptidoes"></div>
@@ -273,9 +265,36 @@
   </div>
 </div>
 
+<div id="aptidaoEditorModal" class="modal">
+  <div class="modal-content">
+    <h2 style="color:var(--energy);">Editor de Aptidão</h2>
+    <div class="form-group">
+      <label>Nome da Aptidão</label>
+      <input id="editAptNome">
+    </div>
+    <div class="form-group">
+      <label>Descrição Geral</label>
+      <textarea id="editAptDesc" style="height:80px;"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Nível Máximo (0 = Passiva/Apenas Descrição)</label>
+      <input type="number" id="editAptMax" min="0" max="20" onchange="renderLevelInputs()">
+    </div>
+    
+    <div id="editAptLevelsContainer" style="margin-top:10px; display:flex; flex-direction:column; gap:5px;"></div>
+
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button onclick="salvarAptidaoCustom()" style="background:var(--energy); flex-grow:1; padding:10px; border:none; color:#000; cursor:pointer; font-weight:bold;">Salvar</button>
+      <button onclick="excluirAptidaoCustom()" id="btnExcluirApt" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer;">Excluir</button>
+    </div>
+    <button onclick="document.getElementById('aptidaoEditorModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button>
+  </div>
+</div>
+
 <script type="module">
 import { db, auth, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
 
+// BANCO DE DADOS DE APTIDÕES PADRÃO
 const APTIDOES_BASE = [
   { nome: "Liberação de Energia", descricao: "Você aprende o básico do uso de Energia. Sua aura passa a se manifestar como um vapor quente saindo do seu corpo.", maxNivel: 10, niveis: ["NV 1 - Limite de PE por turno: +1", "NV 2 - Limite de PE por turno: +1", "NV 3 - Ganha 1 Característica Única de Aura", "NV 4 - Limite de PE por turno: +1", "NV 5 - Limite de PE por turno: +1", "NV 6 - Ganha 1 Característica Única de Aura", "NV 7 - Limite de PE por turno: +1", "NV 8 - Limite de PE por turno: +1", "NV 9 - Ganha 1 Característica Única de Aura", "NV 10 - Aura estabilizada. Não gasta mais 1 PE/turno. Ganha Característica Especial. Limite PE: +1"] },
   { nome: "Proteção", descricao: "Você aprende a manter a aura no seu corpo, protegendo-se.", maxNivel: 8, niveis: ["NV 1 - +1 Redução de Dano.", "NV 2 - +1 Redução, +1 Dano.", "NV 3 - +1 Redução, +1 Dano.", "NV 4 - +2 Redução, +2 Dano. Custo: 2 PE/turno.", "NV 5 - +2 Redução, +2 Dano.", "NV 6 - Redução 1+X, Dano X (X=Metade Treino). Custo: 3 PE/turno.", "NV 7 - Redução Y+X, Dano Y+X. Custo: 4 PE/turno.", "NV 8 - Resistência Física, Dano X+Y. Custo: 5 PE/turno."] },
@@ -291,7 +310,6 @@ const APTIDOES_BASE = [
   { nome: "Redirecionar", descricao: "Manipula a direção de ataques.", maxNivel: 5, niveis: ["NV 1 - Curvar ataque de projeção. Custo 1 PE.", "NV 2 - Redirecionar projéteis curtos. Desvantagem no atacante. Custo 1 PE.", "NV 3 - Redirecionar efeitos de área. Custo 2 PE.", "NV 4 - Criar nós de redirecionamento.", "NV 5 - Refletir habilidade para o remetente. Custo 5 PE."] },
   { nome: "Esconder", descricao: "Oculta a aura de detecção.", maxNivel: 5, niveis: ["NV 1 - Indetectável por métodos simples.", "NV 2 - Projetar isca falsa. Treinamento em Furtividade.", "NV 3 - Ocultação completa. Duplicar assinatura.", "NV 4 - Mascarar grupo (Raio = Metade Nível).", "NV 5 - Indetectável total. Assumir assinatura de outro."] },
   { nome: "Perturbação", descricao: "Interfere no fluxo de energia alheio.", maxNivel: 5, niveis: ["NV 1 - Alvo -1 em testes de energia.", "NV 2 - Teste de Vontade para conjurar.", "NV 3 - Zona de perturbação 3x3. Reduz eficácia.", "NV 4 - Interromper recarga de poderes.", "NV 5 - Anular habilidade ou inverter efeito."] },
-  // Transformações
   { nome: "Ápice Humano", descricao: "Seu corpo atinge o pico absoluto. Passivo: +Treino em Redução de Dano e Testes Físicos. Ativo: Corpo no Limite (1/longo) +1 Ação, Resistência Física. Causa Exaustão (-2 testes físicos).", maxNivel: 1, niveis: ["Desbloqueado"] },
   { nome: "Corpo Amaldiçoado", descricao: "Corpo de energia pura. Passivo: Ataques Físicos são Mágicos, +Treino Dano, +Treino Manipulação. Ativo: Forma Amaldiçoada (1/longo) +Nvl d12 Dano, Imunidade física. Causa Corrupção (-Nvlx2 Max HP).", maxNivel: 1, niveis: ["Desbloqueado"] }
 ];
@@ -302,6 +320,7 @@ window.id = id;
 let ficha = {}; 
 let editandoId = null;
 let editingItemIndex = -1;
+let editingAptIndex = -1;
 const MESTRE_EMAIL = "grisskos@fake.com";
 let isMestre = false;
 
@@ -316,7 +335,6 @@ const PERICIAS_DEF = [
 ];
 const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligencia:"INT", sabedoria:"SAB", presenca:"PRE" };
 
-// Check Mestre
 auth.onAuthStateChanged(user => {
   if(user && user.email === MESTRE_EMAIL) {
     isMestre = true;
@@ -327,7 +345,6 @@ auth.onAuthStateChanged(user => {
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
-    // Safety
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.shikigamis) ficha.shikigamis = [];
@@ -341,6 +358,7 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
     if (!ficha.transfUnlocked) ficha.transfUnlocked = { apice: false, corpo: false };
     if (!ficha.transfActive) ficha.transfActive = null; 
     if (!ficha.sequelas) ficha.sequelas = { exaustao: false, corrupcao: false };
+    if (!ficha.aptidoesCustom) ficha.aptidoesCustom = [];
     
     if(!editandoId) renderFicha(); 
   }
@@ -349,7 +367,6 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
 function renderFicha() {
   const f = ficha;
   
-  // Header Info
   const nomeEl = document.getElementById('nomeDisplay');
   if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
   const imgEl = document.getElementById('charImg');
@@ -360,7 +377,6 @@ function renderFicha() {
     <span class="badge b-cls">${f.classe || 'Aventureiro'}</span>
   `;
 
-  // TRANSFORMAÇÕES
   const btnApice = document.getElementById('btnApice');
   const btnCorpo = document.getElementById('btnCorpo');
   const divSequela = document.getElementById('statusSequela');
@@ -380,7 +396,6 @@ function renderFicha() {
   if(f.sequelas.exaustao) divSequela.innerHTML += `<span class="sequela-tag">⚠ EXAUSTÃO (-2 Físico)</span>`;
   if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO (HP Max Reduzido)</span>`;
 
-  // Tokens
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
   if(f.shikigamis && f.shikigamis.length > 0) {
@@ -393,54 +408,23 @@ function renderFicha() {
     shikiArea.innerHTML = `<div class="shiki-add" onclick="irParaShikigamis()" title="Criar Invocação">+</div>`;
   }
 
-  // Atributos
   const areaAttr = document.getElementById('atributosArea');
   areaAttr.innerHTML = "";
   Object.keys(ATR_SHORT).forEach(key => {
     const val = (f.atributos && f.atributos[key]) ? f.atributos[key] : 10;
     const mod = Math.floor((val - 10) / 2);
-    areaAttr.innerHTML += `
-      <div class="attr-box">
-        <span class="attr-lbl">${ATR_SHORT[key]}</span>
-        <span class="attr-val">${mod>=0?'+':''}${mod}</span>
-        <span class="attr-raw editable" onclick="editarCampo(this, 'atributos.${key}', 'number')">${val}</span>
-      </div>`;
+    areaAttr.innerHTML += `<div class="attr-box"><span class="attr-lbl">${ATR_SHORT[key]}</span><span class="attr-val">${mod>=0?'+':''}${mod}</span><span class="attr-raw editable" onclick="editarCampo(this, 'atributos.${key}', 'number')">${val}</span></div>`;
   });
 
-  // Stats (Barras)
   const areaStats = document.getElementById('statsArea');
   areaStats.innerHTML = "";
-  const statsMap = [
-    {k:'vida', l:'Vida', color:'var(--primary)'},
-    {k:'energia', l:'Energia', color:'var(--energy)'},
-    {k:'vigor', l:'Vigor', color:'var(--vigor)'},
-    {k:'integridade', l:'Integ.', color:'var(--integridade)'}
-  ];
+  const statsMap = [{k:'vida', l:'Vida', color:'var(--primary)'}, {k:'energia', l:'Energia', color:'var(--energy)'}, {k:'vigor', l:'Vigor', color:'var(--vigor)'}, {k:'integridade', l:'Integ.', color:'var(--integridade)'}];
   statsMap.forEach(s => {
     const st = f[s.k] || {atual:0, max:0};
     const pct = st.max > 0 ? Math.min(100, (st.atual/st.max)*100) : 0;
-    
-    areaStats.innerHTML += `
-      <div class="stat-row">
-        <div class="stat-head">
-          <span>${s.l}</span> 
-          <div>
-            <span class="editable" onclick="editarCampo(this, '${s.k}.atual', 'number')">${st.atual}</span> / 
-            <span class="editable" onclick="editarCampo(this, '${s.k}.max', 'number')">${st.max}</span>
-          </div>
-        </div>
-        <div class="bar-bg">
-            <div class="bar-fill" style="width:${pct}%; background:${s.color}; box-shadow: 0 0 8px ${s.color};"></div>
-        </div>
-        <div class="stat-ctrl">
-          <div class="btn-calc" onclick="mathStat(this, '${s.k}')" title="Calcular">🔢</div>
-          <div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div>
-          <div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div>
-        </div>
-      </div>`;
+    areaStats.innerHTML += `<div class="stat-row"><div class="stat-head"><span>${s.l}</span><div><span class="editable" onclick="editarCampo(this, '${s.k}.atual', 'number')">${st.atual}</span> / <span class="editable" onclick="editarCampo(this, '${s.k}.max', 'number')">${st.max}</span></div></div><div class="bar-bg"><div class="bar-fill" style="width:${pct}%; background:${s.color}; box-shadow: 0 0 8px ${s.color};"></div></div><div class="stat-ctrl"><div class="btn-calc" onclick="mathStat(this, '${s.k}')" title="Calcular">🔢</div><div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div><div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div></div></div>`;
   });
 
-  // === CÁLCULOS ===
   const nivel = f.nivel || 1;
   const metadeNivel = Math.floor(nivel / 2);
   const bonusTreino = 2 + Math.floor((nivel - 1) / 4);
@@ -449,25 +433,15 @@ function renderFicha() {
   const modDes = Math.floor(((f.atributos?.destreza || 10) - 10) / 2);
   const cData = f.combate || {};
 
-  // --- BÔNUS DE TRANSFORMAÇÃO ---
   let bonusRD_Apice = 0;
   let bonusPhysSkill_Apice = 0;
   let bonusDmg_Corpo = 0;
   let bonusMagicSkill_Corpo = 0;
 
-  if (f.transfUnlocked.apice) {
-    bonusRD_Apice = bonusTreino; 
-    bonusPhysSkill_Apice = bonusTreino;
-  }
-  if (f.transfUnlocked.corpo) {
-    bonusDmg_Corpo = bonusTreino;
-    bonusMagicSkill_Corpo = bonusTreino;
-  }
-  if (f.sequelas.exaustao) {
-    bonusPhysSkill_Apice -= 2;
-  }
+  if (f.transfUnlocked.apice) { bonusRD_Apice = bonusTreino; bonusPhysSkill_Apice = bonusTreino; }
+  if (f.transfUnlocked.corpo) { bonusDmg_Corpo = bonusTreino; bonusMagicSkill_Corpo = bonusTreino; }
+  if (f.sequelas.exaustao) { bonusPhysSkill_Apice -= 2; }
 
-  // Combate
   const attacksArea = document.getElementById('combatAttacksArea');
   attacksArea.innerHTML = "";
 
@@ -475,21 +449,11 @@ function renderFicha() {
   const attrCorpo = cCorpo.usaDes ? modDes : modFor;
   let totCorpo = attrCorpo + metadeNivel + (cCorpo.treino ? bonusTreino : 0) + (cCorpo.outros || 0);
   
-  attacksArea.innerHTML += `
-    <div class="combat-card">
-      <div class="cc-header">Corpo a Corpo <div class="btn-toggle-attr" onclick="toggleMeleeAttr()">${cCorpo.usaDes?'DES':'FOR'}</div></div>
-      <div class="cc-body">${totCorpo>=0?'+':''}${totCorpo}</div>
-      <div class="cc-footer"><div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div><input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)"></div>
-    </div>`;
+  attacksArea.innerHTML += `<div class="combat-card"><div class="cc-header">Corpo a Corpo <div class="btn-toggle-attr" onclick="toggleMeleeAttr()">${cCorpo.usaDes?'DES':'FOR'}</div></div><div class="cc-body">${totCorpo>=0?'+':''}${totCorpo}</div><div class="cc-footer"><div class="btn-train ${cCorpo.treino?'active':''}" onclick="toggleCombatTrain('corpo')">T</div><input class="bonus-input" placeholder="+" value="${cCorpo.outros||''}" onchange="setCombatOther('corpo', this.value)"></div></div>`;
 
   const cDist = cData.distancia || {};
   let totDist = modDes + metadeNivel + (cDist.treino ? bonusTreino : 0) + (cDist.outros || 0);
-  attacksArea.innerHTML += `
-    <div class="combat-card">
-      <div class="cc-header">Distância</div>
-      <div class="cc-body">${totDist>=0?'+':''}${totDist}</div>
-      <div class="cc-footer"><div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div><input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)"></div>
-    </div>`;
+  attacksArea.innerHTML += `<div class="combat-card"><div class="cc-header">Distância</div><div class="cc-body">${totDist>=0?'+':''}${totDist}</div><div class="cc-footer"><div class="btn-train ${cDist.treino?'active':''}" onclick="toggleCombatTrain('distancia')">T</div><input class="bonus-input" placeholder="+" value="${cDist.outros||''}" onchange="setCombatOther('distancia', this.value)"></div></div>`;
 
   const cMagic = cData.magico || {};
   const attrKey = cMagic.atributo || 'inteligencia';
@@ -497,38 +461,20 @@ function renderFicha() {
   const modMagic = Math.floor((valMagic - 10) / 2);
   let totMagic = modMagic + metadeNivel + bonusTreino + (cMagic.outros || 0);
   if (f.transfActive === 'corpo' || f.transfUnlocked.corpo) totMagic += bonusMagicSkill_Corpo;
+  attacksArea.innerHTML += `<div class="combat-card"><div class="cc-header">Amaldiçoado <select class="mini-select" onchange="setMagicAttr(this.value)">${Object.keys(ATR_SHORT).map(k => `<option value="${k}" ${k===attrKey?'selected':''}>${ATR_SHORT[k]}</option>`).join('')}</select></div><div class="cc-body">${totMagic>=0?'+':''}${totMagic}</div><div class="cc-footer"><span style="font-size:0.7rem; color:var(--energy);">[T]</span><input class="bonus-input" placeholder="+" value="${cMagic.outros||''}" onchange="setCombatOther('magico', this.value)"></div></div>`;
 
-  attacksArea.innerHTML += `
-    <div class="combat-card">
-      <div class="cc-header">Amaldiçoado <select class="mini-select" onchange="setMagicAttr(this.value)">${Object.keys(ATR_SHORT).map(k => `<option value="${k}" ${k===attrKey?'selected':''}>${ATR_SHORT[k]}</option>`).join('')}</select></div>
-      <div class="cc-body">${totMagic>=0?'+':''}${totMagic}</div>
-      <div class="cc-footer"><span style="font-size:0.7rem; color:var(--energy);">[T]</span><input class="bonus-input" placeholder="+" value="${cMagic.outros||''}" onchange="setCombatOther('magico', this.value)"></div>
-    </div>`;
-
-  // Resistências
   const resistArea = document.getElementById('combatResistArea');
   resistArea.innerHTML = "";
   const resistencias = [{ k: 'astucia', l: 'Astúcia', a: 'inteligencia' }, { k: 'fortitude', l: 'Fortitude', a: 'constituicao' }, { k: 'integridade', l: 'Integ.', a: 'constituicao' }, { k: 'reflexos', l: 'Reflexos', a: 'destreza' }, { k: 'vontade', l: 'Vontade', a: 'sabedoria' }];
-  
   resistencias.forEach(res => {
     const rData = cData[res.k] || {};
     const rVal = (f.atributos && f.atributos[res.a]) ? f.atributos[res.a] : 10;
     const rMod = Math.floor((rVal - 10) / 2);
     let rTotal = rMod + metadeNivel + (rData.treino ? bonusTreino : 0) + (rData.outros || 0);
-    
-    if (res.k === 'fortitude' || res.k === 'reflexos' || res.k === 'integridade') {
-      rTotal += bonusPhysSkill_Apice;
-    }
-
-    resistArea.innerHTML += `
-      <div class="combat-card">
-        <div class="cc-header">${res.l}</div>
-        <div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div>
-        <div class="cc-footer"><div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div><input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)"></div>
-      </div>`;
+    if (res.k === 'fortitude' || res.k === 'reflexos' || res.k === 'integridade') rTotal += bonusPhysSkill_Apice;
+    resistArea.innerHTML += `<div class="combat-card"><div class="cc-header">${res.l}</div><div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div><div class="cc-footer"><div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div><input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)"></div></div>`;
   });
 
-  // Inventário
   const str = f.atributos?.forca || 10;
   const strMod = Math.floor((str - 10) / 2);
   const limit = 8 + (strMod * 2); 
@@ -549,93 +495,130 @@ function renderFicha() {
   (f.inventario || []).forEach((item, idx) => {
     const gradeClass = `grade-${item.grau || 4}`;
     const imgUrl = item.imagem || 'https://via.placeholder.com/150?text=Item';
-    invGrid.innerHTML += `
-      <div class="inv-card ${gradeClass}" onclick="abrirItemModal(${idx})">
-        <img src="${imgUrl}" class="inv-img">
-        <div class="inv-body">
-          <div class="inv-title">${item.nome}</div>
-          <div class="inv-type">${item.tipo} • Grau ${['Esp','1','2','3','4'][item.grau]}</div>
-          <div class="inv-stats">${item.bonus || ''}</div>
-          <div class="inv-slots">${item.espacos} 📦</div>
-        </div>
-      </div>`;
+    invGrid.innerHTML += `<div class="inv-card ${gradeClass}" onclick="abrirItemModal(${idx})"><img src="${imgUrl}" class="inv-img"><div class="inv-body"><div class="inv-title">${item.nome}</div><div class="inv-type">${item.tipo} • Grau ${['Esp','1','2','3','4'][item.grau]}</div><div class="inv-stats">${item.bonus || ''}</div><div class="inv-slots">${item.espacos} 📦</div></div></div>`;
   });
 
-  // APTIDÕES (AGORA VISÍVEL PARA PLAYERS SE DESBLOQUEADO)
+  // APTIDÕES
   const containerApt = document.getElementById('listaAptidoes');
   containerApt.innerHTML = "";
-  const todasAptidoes = [...APTIDOES_BASE, ...(ficha.aptidoesCustom || [])];
+  
+  // Renderiza Fixas
+  APTIDOES_BASE.forEach(apt => renderAptidaoItem(apt, containerApt, false, -1));
+  // Renderiza Custom
+  (ficha.aptidoesCustom || []).forEach((apt, index) => renderAptidaoItem(apt, containerApt, true, index));
 
-  todasAptidoes.forEach((apt, index) => {
-    let nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
-
-    // TRUQUE DE VISIBILIDADE PARA AS TRANSFORMAÇÕES
-    if (apt.nome === "Ápice Humano" && f.transfUnlocked.apice) nivelAtual = 1;
-    if (apt.nome === "Corpo Amaldiçoado" && f.transfUnlocked.corpo) nivelAtual = 1;
-
-    // Se não for mestre e não tiver nível (nem desbloqueio), esconde
-    if (!isMestre && nivelAtual === 0) return;
-
-    let niveisHtml = "";
-    apt.niveis.forEach((desc, idx) => {
-      const lvl = idx + 1;
-      const isUnlocked = lvl <= nivelAtual;
-      if (!isMestre && !isUnlocked) return;
-
-      const controls = isMestre ? `
-        <div class="gm-controls">
-          <div class="btn-gm" onclick="setAptidao('${apt.nome}', ${lvl})">🔓</div>
-          <div class="btn-gm" style="border-color:#d00000;color:#d00000;" onclick="setAptidao('${apt.nome}', ${lvl-1})">🔒</div>
-        </div>` : "";
-
-      niveisHtml += `<div class="nivel-row ${isUnlocked ? 'unlocked' : ''}"><div class="nivel-check"></div><div style="flex-grow:1;">${desc}</div>${controls}</div>`;
-    });
-
-    containerApt.innerHTML += `
-      <div class="aptidao-box">
-        <div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span></span><span>▼</span></div>
-        <div class="aptidao-body ${nivelAtual > 0 ? 'open' : ''}"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div>
-      </div>`;
-  });
-
-  // Perícias (Com bônus de Ápice nos Físicos)
+  // Perícias
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
-  const userPericias = f.pericias || {}; 
   const PHYS_ATTRS = ['forca', 'destreza', 'constituicao'];
-
   PERICIAS_DEF.forEach(p => {
     const attrVal = (f.atributos && f.atributos[p.a]) ? f.atributos[p.a] : 10;
     const modAttr = Math.floor((attrVal - 10) / 2);
-    const saved = userPericias[p.n] || { t: false, m: false, bonus: 0 };
+    const saved = (f.pericias||{})[p.n] || { t: false, m: false, bonus: 0 };
     let total = modAttr + metadeNivel;
     if (saved.t) total += bonusTreino;
     if (saved.m) total += 1;
     total += Number(saved.bonus || 0);
-
-    // APLICA BÔNUS DE ÁPICE SE FOR ATRIBUTO FÍSICO
-    if (f.transfUnlocked.apice && PHYS_ATTRS.includes(p.a)) {
-      total += bonusPhysSkill_Apice;
-    }
-
-    listaSkills.innerHTML += `
-      <div class="skill-row">
-        <span class="sk-name">${p.n}</span>
-        <span class="sk-attr">${ATR_SHORT[p.a]}</span>
-        <span class="sk-total">${total>=0?'+':''}${total}</span>
-        <div class="sk-btn-group">
-           <input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)">
-           <div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div>
-           <div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div>
-        </div>
-      </div>`;
+    if (f.transfUnlocked.apice && PHYS_ATTRS.includes(p.a)) total += bonusPhysSkill_Apice;
+    listaSkills.innerHTML += `<div class="skill-row"><span class="sk-name">${p.n}</span><span class="sk-attr">${ATR_SHORT[p.a]}</span><span class="sk-total">${total>=0?'+':''}${total}</span><div class="sk-btn-group"><input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)"><div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div><div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div></div></div>`;
   });
 }
 
-// === FUNÇÕES ===
+function renderAptidaoItem(apt, container, isCustom, index) {
+  let nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
+  
+  // Visibilidade das Transformações
+  if (apt.nome === "Ápice Humano" && ficha.transfUnlocked.apice) nivelAtual = 1;
+  if (apt.nome === "Corpo Amaldiçoado" && ficha.transfUnlocked.corpo) nivelAtual = 1;
+
+  // Se for Mestre, vê tudo. Se for Player, vê se Nivel > 0 ou se é Passiva (maxNivel 0)
+  if (!isMestre && nivelAtual === 0 && apt.maxNivel > 0) return;
+
+  let niveisHtml = "";
+  if (apt.maxNivel > 0 && apt.niveis) {
+    apt.niveis.forEach((desc, idx) => {
+      const lvl = idx + 1;
+      const isUnlocked = lvl <= nivelAtual;
+      if (!isMestre && !isUnlocked) return;
+      const controls = isMestre ? `<div class="gm-controls"><div class="btn-gm" onclick="setAptidao('${apt.nome}', ${lvl})">🔓</div><div class="btn-gm" style="border-color:#d00000;color:#d00000;" onclick="setAptidao('${apt.nome}', ${lvl-1})">🔒</div></div>` : "";
+      niveisHtml += `<div class="nivel-row ${isUnlocked ? 'unlocked' : ''}"><div class="nivel-check"></div><div style="flex-grow:1;">${desc}</div>${controls}</div>`;
+    });
+  }
+
+  const editBtn = (isMestre && isCustom) ? `<button class="btn-edit-apt" onclick="abrirEditorAptidao(${index})">✎</button>` : "";
+  const displayLevel = apt.maxNivel > 0 ? `(${nivelAtual}/${apt.maxNivel})` : "(Passiva)";
+
+  container.innerHTML += `
+    <div class="aptidao-box">
+      <div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">${displayLevel}</span>${editBtn}</span><span>▼</span></div>
+      <div class="aptidao-body ${nivelAtual > 0 || apt.maxNivel === 0 ? 'open' : ''}"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div>
+    </div>`;
+}
+
+// === EDITOR DE APTIDÕES ===
+window.abrirEditorAptidao = (index) => {
+  editingAptIndex = index;
+  const modal = document.getElementById('aptidaoEditorModal');
+  
+  if(index > -1) {
+    const apt = ficha.aptidoesCustom[index];
+    document.getElementById('editAptNome').value = apt.nome;
+    document.getElementById('editAptDesc').value = apt.descricao;
+    document.getElementById('editAptMax').value = apt.maxNivel;
+    renderLevelInputs(apt.niveis);
+    document.getElementById('btnExcluirApt').style.display = 'block';
+  } else {
+    document.getElementById('editAptNome').value = "";
+    document.getElementById('editAptDesc').value = "";
+    document.getElementById('editAptMax').value = 5;
+    renderLevelInputs();
+    document.getElementById('btnExcluirApt').style.display = 'none';
+  }
+  modal.style.display = 'flex';
+};
+
+window.renderLevelInputs = (existingLevels = []) => {
+  const max = Number(document.getElementById('editAptMax').value);
+  const container = document.getElementById('editAptLevelsContainer');
+  container.innerHTML = "";
+  for(let i=0; i<max; i++) {
+    const val = existingLevels[i] || "";
+    container.innerHTML += `<input class="apt-lvl-input" placeholder="Descrição do Nível ${i+1}" value="${val}">`;
+  }
+};
+
+window.salvarAptidaoCustom = async () => {
+  const max = Number(document.getElementById('editAptMax').value);
+  const niveis = [];
+  document.querySelectorAll('.apt-lvl-input').forEach(input => niveis.push(input.value));
+  
+  const novaApt = {
+    nome: document.getElementById('editAptNome').value,
+    descricao: document.getElementById('editAptDesc').value,
+    maxNivel: max,
+    niveis: niveis
+  };
+  
+  if(!ficha.aptidoesCustom) ficha.aptidoesCustom = [];
+  if(editingAptIndex === -1) ficha.aptidoesCustom.push(novaApt);
+  else ficha.aptidoesCustom[editingAptIndex] = novaApt;
+  
+  await updateDoc(doc(db, "fichas", id), { aptidoesCustom: ficha.aptidoesCustom });
+  document.getElementById('aptidaoEditorModal').style.display = 'none';
+};
+
+window.excluirAptidaoCustom = async () => {
+  if(editingAptIndex === -1 || !confirm("Excluir esta aptidão?")) return;
+  ficha.aptidoesCustom.splice(editingAptIndex, 1);
+  await updateDoc(doc(db, "fichas", id), { aptidoesCustom: ficha.aptidoesCustom });
+  document.getElementById('aptidaoEditorModal').style.display = 'none';
+};
+
+window.addNovaAptidao = () => abrirEditorAptidao(-1);
+
+// === FUNÇÕES GLOBAIS ===
 window.toggleTransformacao = async (tipo) => {
   if (!ficha.transfUnlocked[tipo]) return; 
-  
   let novoEstado = null;
   if (ficha.transfActive === tipo) {
     novoEstado = null;
@@ -644,25 +627,17 @@ window.toggleTransformacao = async (tipo) => {
   } else {
     novoEstado = tipo;
   }
-  
   await updateDoc(doc(db, "fichas", id), { transfActive: novoEstado });
 };
 
 async function aplicarSequela(tipo) {
   const seq = ficha.sequelas || {};
   seq[tipo] = true;
-  
   if (tipo === 'corrupcao') {
     const dano = (ficha.nivel || 1) * 2;
-    // Reduz Vida Máxima (e Atual se necessário)
     const novoMax = Math.max(1, (ficha.vida.max - dano));
     const novoAtual = Math.min(ficha.vida.atual, novoMax);
-    
-    await updateDoc(doc(db, "fichas", id), { 
-      sequelas: seq,
-      "vida.max": novoMax,
-      "vida.atual": novoAtual
-    });
+    await updateDoc(doc(db, "fichas", id), { sequelas: seq, "vida.max": novoMax, "vida.atual": novoAtual });
     alert(`A transformação cessou. Você sofreu ${dano} de redução na Vida Máxima pela Corrupção.`);
   } else {
     await updateDoc(doc(db, "fichas", id), { sequelas: seq });
@@ -683,7 +658,6 @@ window.gmClearDebuff = async () => {
 
 window.setSkillBonus = async (skillName, val) => { const pericias = ficha.pericias || {}; if (!pericias[skillName]) pericias[skillName] = { t: false, m: false, bonus: 0 }; pericias[skillName].bonus = Number(val); await updateDoc(doc(db, "fichas", id), { pericias: pericias }); };
 window.setAptidao = async (nomeApt, novoNivel) => { if (!isMestre) return; const progresso = ficha.progressoAptidoes || {}; progresso[nomeApt] = novoNivel; await updateDoc(doc(db, "fichas", id), { progressoAptidoes: progresso }); };
-window.addNovaAptidao = async () => { if (!isMestre) return; const nome = prompt("Nome da Nova Aptidão:"); if (!nome) return; const nova = { nome: nome, maxNivel: 5, descricao: "Descrição...", niveis: ["NV 1...", "NV 2...", "NV 3...", "NV 4...", "NV 5..."] }; const custom = ficha.aptidoesCustom || []; custom.push(nova); await updateDoc(doc(db, "fichas", id), { aptidoesCustom: custom }); alert("Criada!"); };
 window.abrirItemModal = (index = -1) => { editingItemIndex = index; document.getElementById('itemModal').style.display = 'block'; document.getElementById('propList').innerHTML = ""; document.getElementById('encantList').innerHTML = ""; document.getElementById('btnExcluirItem').style.display = index === -1 ? 'none' : 'block'; document.getElementById('itemModalTitle').innerText = index === -1 ? 'Novo Item' : 'Editar Item'; if (index > -1) { const item = ficha.inventario[index]; document.getElementById('itNome').value = item.nome; document.getElementById('itTipo').value = item.tipo; document.getElementById('itGrau').value = item.grau; document.getElementById('itEspacos').value = item.espacos; document.getElementById('itBonus').value = item.bonus; document.getElementById('itImg').value = item.imagem; document.getElementById('itDesc').value = item.descricao; (item.propriedades || []).forEach(p => addPropField(p.nome, p.desc)); (item.encantamentos || []).forEach(e => addEncantField(e.nome, e.desc)); } else { document.getElementById('itNome').value = ""; document.getElementById('itEspacos').value = 1; document.getElementById('itBonus').value = ""; document.getElementById('itImg').value = ""; document.getElementById('itDesc').value = ""; } };
 window.addPropField = (nome = "", desc = "") => { const div = document.createElement('div'); div.className = 'dynamic-list-item'; div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="prop-name"><textarea placeholder="Descrição" class="prop-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`; document.getElementById('propList').appendChild(div); };
 window.addEncantField = (nome = "", desc = "") => { const div = document.createElement('div'); div.className = 'dynamic-list-item'; div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="encant-name" style="border-color:var(--energy);"><textarea placeholder="Descrição" class="encant-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`; document.getElementById('encantList').appendChild(div); };
