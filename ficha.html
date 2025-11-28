@@ -21,7 +21,7 @@
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; position: relative; }
 
-  /* HEADER */
+  /* HEADER & SIDEBAR */
   .char-header { text-align: center; }
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
@@ -30,40 +30,42 @@
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* TOKENS */
+  /* TOKENS SHIKIGAMI */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* UTILS */
+  /* EDIÇÃO INLINE */
   .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
   .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
 
-  /* ATRIBUTOS */
+  /* ATRIBUTOS & BARRAS */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
 
-  /* BARRAS (FIXED CSS) */
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
-  .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; position: relative; }
-  .bar-fill { height: 100%; transition: width 0.3s ease-in-out; } /* Removed classes c-vida, etc. relying on JS inline style */
-  
+  .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; transition: width 0.3s; }
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
   .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
   .btn-mini:hover { border-color: white; color: white; background: #333; }
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* COMBATE */
-  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+  /* COMBATE (CARDS) */
+  .section-header { 
+    background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333;
+    border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; 
+    display: flex; justify-content: space-between; align-items: center;
+  }
   .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
   .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
 
@@ -101,12 +103,13 @@
   .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
   .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
 
-  /* APTIDÕES */
+  /* APTIDÕES (ESTILO NOVO) */
   .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
   .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .aptidao-header:hover { background: #2a2a2a; }
   .aptidao-body { display: none; padding: 10px; background: #151515; }
   .aptidao-body.open { display: block; }
+  .aptidao-desc { font-style: italic; color: #aaa; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; }
   .nivel-row { display: flex; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #555; }
   .nivel-row.unlocked { color: #fff; } 
   .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
@@ -247,7 +250,24 @@
 
 <script type="module">
 import { db, auth, doc, updateDoc, deleteDoc, onSnapshot } from "./firebase.js";
-import { APTIDOES_BASE } from "./aptidoes_db.js";
+
+// BANCO DE DADOS DE APTIDÕES COMPLETO (COM DESCRIÇÃO)
+const APTIDOES_BASE = [
+  { nome: "Liberação de Energia", descricao: "Você aprende o básico do uso de Energia. Sua aura passa a se manifestar como um vapor quente saindo do seu corpo. Você pode gastar até seu Limite de PE por turno, que cresce conforme o nível.", maxNivel: 10, niveis: ["NV 1 - Limite de PE por turno: +1", "NV 2 - Limite de PE por turno: +1", "NV 3 - Ganha 1 Característica Única de Aura", "NV 4 - Limite de PE por turno: +1", "NV 5 - Limite de PE por turno: +1", "NV 6 - Ganha 1 Característica Única de Aura", "NV 7 - Limite de PE por turno: +1", "NV 8 - Limite de PE por turno: +1", "NV 9 - Ganha 1 Característica Única de Aura", "NV 10 - Aura estabilizada. Não gasta mais 1 PE/turno. Ganha Característica Especial. Limite PE: +1"] },
+  { nome: "Proteção", descricao: "Você aprende a manter a aura no seu corpo, contendo a mesma e evitando que ela saia para todos os lugares. Você passa a proteger melhor seu corpo. Com uma ação bônus você libera sua aura e ativa automaticamente sua proteção. Você gasta 1 ponto de energia por turno com aura ativa.", maxNivel: 8, niveis: ["NV 1 - +1 Redução de Dano.", "NV 2 - +1 Redução, +1 Dano.", "NV 3 - +1 Redução, +1 Dano.", "NV 4 - +2 Redução, +2 Dano. Custo: 2 PE/turno.", "NV 5 - +2 Redução, +2 Dano.", "NV 6 - Redução 1+X, Dano X (X=Metade Treino). Custo: 3 PE/turno.", "NV 7 - Redução Y+X, Dano Y+X. Custo: 4 PE/turno.", "NV 8 - Resistência Física, Dano X+Y. Custo: 5 PE/turno."] },
+  { nome: "Projeção", descricao: "Você aprende a projetar sua aura, imbuindo ela em pequenas coisas e podendo utilizar para ataques menores. Você gasta 1 ponto de energia e uma ação comum para projetar sua energia. Custo de 1 PE. Seus ataques de projeção causam um dano crítico no 20 natural.", maxNivel: 5, niveis: ["NV 1 - Ataque 1d8. Crítico 20.", "NV 2 - Soma Atributo Mental. Imbuir objeto (+1d6).", "NV 3 - Soma Treinamento. Dano 1d10. Imbuir (+1d8+Mental). Custo 2 PE.", "NV 4 - Dano 2d8. Ignora RD (Treino). Imbuir (+2d6+Mental). Custo 3 PE.", "NV 5 - Dano 3d10. Ignora RD (Treino+Mental). Imbuir (+3d8+Mental). Custo 4 PE."] },
+  { nome: "Criação", descricao: "Você entende o conceito de criação, aprendendo como a natureza funciona e as coisas ao seu redor podem ser utilizadas. Com uma ação comum você é capaz de criar coisas feitas de energia.", maxNivel: 5, niveis: ["NV 1 - Paredes 1x1. Vida = Metade Nível x Treino. Custo 1 PE.", "NV 2 - Soma Atributo Mental na Vida.", "NV 3 - Paredes 3x3, formatos variáveis. Custo 2 PE.", "NV 4 - Vida = Nível x Treino + Mental. Maleáveis.", "NV 5 - Vida = Nível x Treino + 2x Mental. Imune ao 1º ataque. Custo 4 PE."] },
+  { nome: "Concentração", descricao: "Gastando uma ação bônus, você concentra sua aura em pontos específicos, focando causar um dano ou uma explosão maior de energia.", maxNivel: 5, niveis: ["NV 1 - Aumenta dado de dano em 1 nível. Custo 2 PE.", "NV 2 - Soma modificador do maior atributo.", "NV 3 - +1 dado adicional no dano. Custo 3 PE.", "NV 4 - Aumenta dado em 2 níveis. Custo 4 PE.", "NV 5 - Maximiza dados (qtd igual Treinamento). Custo 5 PE."] },
+  { nome: "Transformação", descricao: "Você aprende a ressignificar a sua aura e a energia ao seu redor, transformando seu efeito. Útil para trocar tipo de dano, alterar forma de construções energéticas ou transmutar temporariamente características físicas. Você ativa os estados com ação bônus.", maxNivel: 5, niveis: ["NV 1 - Líquida (+1 CA/Ref), Sólida (+1 RD/Fort), Gasosa (+1 Dano/Integ).", "NV 2 - Bônus aumenta para +2.", "NV 3 - Bônus aumenta para +3. Custo 3 PE/turno.", "NV 4 - Bônus aumenta para +4.", "NV 5 - Estado Máximo. Custo 4 PE/turno."] },
+  { nome: "Aura Elemental", descricao: "Você imbui sua aura com propriedades da natureza (Fogo, Gelo, Raio, etc).", maxNivel: 5, niveis: ["NV 1 - Mudar tipo de dano por Treinamento turnos.", "NV 2 - Transformar objeto/efeito. +1d6 dano elemental. Duração Cena.", "NV 3 - Transformar aura do alvo (Teste Res). Soma Mental no dano.", "NV 4 - Elemento passivo. Segundo elemento disponível.", "NV 5 - Causa 2d10 + Mental de dano elemental."] },
+  { nome: "Molde", descricao: "Você aprende a esculpir a energia com precisão, tornando criações e solidificações maleáveis e funcionais essenciais para criar formas complexas.", maxNivel: 5, niveis: ["NV 1 - Moldar 1x1 (pilar, lâmina). Dur: Treino turnos. Custo 2 PE.", "NV 2 - +1 Vida, formas mais complexas.", "NV 3 - Moldar 3x3 com partes móveis.", "NV 4 - Criar mecanismos (portas, alavancas).", "NV 5 - Ganha característica extra (afiada, etc). Imune 1º ataque."] },
+  { nome: "Intensificação", descricao: "Como uma reação, você aprende a comprimir e sobrecarregar a energia para torná-la mais potente: mais dano, mais defesa, efeitos mais longos ou maior alcance.", maxNivel: 5, niveis: ["NV 1 - +1 Dano/Defesa. Custo 1 PE.", "NV 2 - +2 Dano/Defesa, +1 Alcance. Custo 1 PE.", "NV 3 - +1 + Metade Treino. Ignora RD (Metade Treino). Custo 2 PE.", "NV 4 - +1 Nível Dano ou Modificador na Defesa. Custo 3 PE.", "NV 5 - Dano Bônus X+Y. Sacrificar energia para +2 Níveis Dano. Custo 5 PE."] },
+  { nome: "Solidificação", descricao: "Utilizando uma ação bônus, você compacta e endurece sua aura em torno do corpo, transformando-a numa armadura energética. Melhora a Proteção.", maxNivel: 5, niveis: ["NV 1 - +1 Redução. PV Temp = Treinamento.", "NV 2 - +2 Redução. +1 Dano energético.", "NV 3 - Redução 1+X. Res. Física X. PV Temp = Treino + Mental. Custo 2 PE.", "NV 4 - Redução Y+X. Redução extra contra críticos.", "NV 5 - Res. Física e Dano X+Y. Imunidade a 1 efeito negativo. Custo 4 PE."] },
+  { nome: "Encasular", descricao: "Com uma ação comum, você cria invólucros/bolhas de energia que prendem, isolam ou protegem.", maxNivel: 5, niveis: ["NV 1 - Bolha 1x1. Reduz mobilidade, concede RD. Dur: Treino turnos.", "NV 2 - Bolha ganha HP. Inimigos: Desvantagem física. Custo 2 PE.", "NV 3 - Dano periódico. À prova de som.", "NV 4 - Múltiplos alvos ou 3x3. Absorve 1 ataque. Custo 3 PE.", "NV 5 - Quase impenetrável. Bloqueia feitiços. Custo 4 PE."] },
+  { nome: "Redirecionar", descricao: "Com uma reação, você manipula a direção dos fluxos de energia: pode curvar ataques, reencaminhar projeções ou alterar trajetórias.", maxNivel: 5, niveis: ["NV 1 - Curvar ataque de projeção. Custo 1 PE.", "NV 2 - Redirecionar projéteis curtos. Desvantagem no atacante. Custo 1 PE.", "NV 3 - Redirecionar efeitos de área/origem externa. Custo 2 PE.", "NV 4 - Criar nós de redirecionamento automático.", "NV 5 - Refletir habilidade para o remetente. Custo 5 PE."] },
+  { nome: "Esconder", descricao: "Você aprende a ocultar a sua aura e a energia de detecção alheia, criando camadas de camuflagem e dissimulação.", maxNivel: 5, niveis: ["NV 1 - Indetectável por métodos simples.", "NV 2 - Projetar isca falsa. Treinamento em Furtividade.", "NV 3 - Ocultação completa. Duplicar assinatura (eco).", "NV 4 - Mascarar grupo (Raio = Metade Nível).", "NV 5 - Indetectável total. Assumir assinatura de outro."] },
+  { nome: "Perturbação", descricao: "Com uma ação comum ou reação, você aprende a interferir no fluxo de energia dos outros: quebrar conjurações, causar dispersão de efeitos e desestabilizar ataques.", maxNivel: 5, niveis: ["NV 1 - Alvo -1 em testes de energia.", "NV 2 - Teste de Vontade para conjurar. Falha = Interrompido.", "NV 3 - Zona de perturbação 3x3. Reduz eficácia, dano periódico.", "NV 4 - Interromper recarga de poderes.", "NV 5 - Anular habilidade (cooldown) ou inverter efeito (buff->debuff)."] }
+];
 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
@@ -507,6 +527,7 @@ function renderFicha() {
           <span>▼</span>
         </div>
         <div class="aptidao-body ${nivelAtual > 0 ? 'open' : ''}">
+          <div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>
           ${niveisHtml}
         </div>
       </div>`;
@@ -550,6 +571,7 @@ window.addNovaAptidao = async () => {
   if (!nome) return;
   const nova = {
     nome: nome, maxNivel: 5,
+    descricao: "Descrição padrão...",
     niveis: ["NV 1 - Descrição...", "NV 2 - ...", "NV 3 - ...", "NV 4 - ...", "NV 5 - ..."]
   };
   const custom = ficha.aptidoesCustom || [];
