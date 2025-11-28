@@ -13,7 +13,7 @@
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  /* Layout Responsivo */
+  /* === LAYOUT === */
   .main-layout { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; max-width: 1600px; margin: 0 auto; padding-bottom: 80px; }
   @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } }
   @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
@@ -21,7 +21,7 @@
   .col-side, .col-center, .col-right { display: flex; flex-direction: column; gap: 20px; }
   .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #2a2a2a; position: relative; }
 
-  /* Cabeçalho */
+  /* HEADER */
   .char-header { text-align: center; }
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
@@ -30,27 +30,27 @@
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); }
 
-  /* Tokens */
+  /* TOKENS */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* Edição Inline */
+  /* EDIÇÃO INLINE */
   .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
   .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
 
-  /* Atributos */
+  /* ATRIBUTOS */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
 
-  /* Barras */
+  /* BARRAS */
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
@@ -65,12 +65,24 @@
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* Combate */
-  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #333; }
+  /* COMBATE (CARDS) */
+  .section-header { 
+    background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333;
+    border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; 
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  /* Botão minimalista no header */
+  .btn-icon-sm {
+    background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; 
+    border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s;
+  }
+  .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
+
   .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; }
   .cols-3 { grid-template-columns: repeat(3, 1fr); }
   .cols-5 { grid-template-columns: repeat(5, 1fr); }
   @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
+  
   .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
   .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
   .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
@@ -82,21 +94,15 @@
   select.mini-select { background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; max-width: 80px; margin-top: 2px; }
   select.mini-select option { background: #222; color: #fff; }
 
-  /* --- INVENTÁRIO CARDS --- */
-  .inv-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  /* INVENTÁRIO */
   .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-  
-  .inv-card { 
-    background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; 
-    transition: 0.2s; display: flex; flex-direction: column; 
-  }
+  .inv-card { background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
   .inv-card:hover { border-color: white; transform: translateY(-3px); }
   .inv-card.grade-4 { border-left: 3px solid #888; }
   .inv-card.grade-3 { border-left: 3px solid #4cc9f0; }
   .inv-card.grade-2 { border-left: 3px solid #4361ee; }
   .inv-card.grade-1 { border-left: 3px solid #f72585; }
   .inv-card.grade-0 { border-left: 3px solid #ff9e00; box-shadow: 0 0 5px #ff9e00; }
-
   .inv-img { width: 100%; height: 80px; object-fit: cover; background: #000; }
   .inv-body { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }
   .inv-title { font-weight: bold; font-size: 0.9rem; color: #fff; line-height: 1.1; }
@@ -104,7 +110,6 @@
   .inv-stats { font-size: 0.75rem; color: var(--energy); font-weight: bold; margin-top: auto; }
   .inv-slots { font-size: 0.7rem; color: #666; text-align: right; margin-top: 5px; }
 
-  /* Barra de Carga */
   .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 20px; position: relative; margin-bottom: 15px; overflow: hidden; }
   .load-fill { height: 100%; width: 0%; background: #2a9d8f; transition: 0.3s; }
   .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
@@ -112,22 +117,33 @@
   .load-fill.full { background: #e63946; }
   .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
 
-  /* Navegação */
+  /* LISTAS, FAB E NAV */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; }
+  .list-box li { margin-bottom: 5px; }
   .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; }
   .btn-summon { border: 1px solid var(--integridade); color: var(--integridade); }
   .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border: 1px solid var(--energy); color: var(--energy); }
   .btn-tech:hover { background: var(--energy); color: #000; }
-
-  /* Listas */
-  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; }
-  .list-box li { margin-bottom: 5px; }
-
-  /* FAB */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
 
-  /* MODAL */
+  /* PERÍCIAS */
+  .skills-card { padding: 0; overflow: hidden; height: 100%; }
+  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+  .skill-row { display: flex; align-items: center; padding: 8px 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
+  .skill-row:hover { background: #1b1b1b; }
+  .sk-name { flex-grow: 1; color: #eee; }
+  .sk-attr { font-size: 0.7rem; color: #555; width: 40px; text-transform: uppercase; font-weight: bold; }
+  .sk-total { font-weight: bold; color: white; width: 35px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
+  .sk-btn-group { display: flex; gap: 5px; }
+  .sk-btn { width: 25px; height: 25px; border-radius: 4px; border: 1px solid #444; background: #111; color: #555; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+  .sk-btn:hover { border-color: #777; color: #aaa; }
+  .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
+  .sk-btn.active-m { background: rgba(230, 57, 70, 0.2); border-color: var(--primary); color: var(--primary); }
+
+  /* MODALS */
   .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; padding: 20px; overflow-y: auto; }
   .modal-content { background: var(--card); padding: 20px; border-radius: 10px; max-width: 600px; margin: 20px auto; border: 1px solid #444; }
   .form-group { margin-bottom: 15px; }
@@ -139,7 +155,6 @@
   .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
   .btn-del-item { background: transparent; border: none; color: #d00000; cursor: pointer; font-size: 1.2rem; line-height: 1; }
   .btn-add-item { background: #222; border: 1px solid #444; color: #ccc; width: 100%; padding: 5px; cursor: pointer; margin-top: 5px; }
-  
 </style>
 </head>
 <body>
@@ -178,9 +193,9 @@
     </div>
 
     <div class="card">
-      <div class="inv-header">
-        <h3 class="section-header" style="margin:0; flex-grow:1; margin-right:10px;">Inventário</h3>
-        <button class="btn-mini" onclick="abrirItemModal()">+ Item</button>
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; background:#111;">
+        <span style="flex-grow:1; text-align:center;">Inventário</span>
+        <button class="btn-icon-sm" onclick="abrirItemModal()" title="Adicionar Item">+</button>
       </div>
       
       <div class="load-bar-container">
@@ -253,7 +268,7 @@
         </select>
       </div>
       <div class="form-group"><label>Espaços</label><input type="number" id="itEspacos" value="1"></div>
-      <div class="form-group"><label>Bônus (Resumo)</label><input id="itBonus" placeholder="+2 CA"></div>
+      <div class="form-group"><label>Bônus</label><input id="itBonus" placeholder="+2 CA"></div>
     </div>
 
     <div class="form-group"><label>Imagem (URL)</label><input id="itImg" placeholder="http://..."></div>
@@ -302,7 +317,6 @@ const ATR_SHORT = { forca:"FOR", destreza:"DES", constituicao:"CON", inteligenci
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
-    // Safety Checks
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.shikigamis) ficha.shikigamis = [];
@@ -318,11 +332,8 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
 
 function renderFicha() {
   const f = ficha;
-  
-  // Header
   const nomeEl = document.getElementById('nomeDisplay');
   if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
-  
   const imgEl = document.getElementById('charImg');
   if(f.imagem) imgEl.src = f.imagem;
 
@@ -446,38 +457,24 @@ function renderFicha() {
       </div>`;
   });
 
-  // === INVENTÁRIO (CARGA) ===
+  // === INVENTÁRIO ===
   const str = f.atributos?.forca || 10;
   const strMod = Math.floor((str - 10) / 2);
-  // Regra: 8 + dobro do mod (ou -2 se negativo)
   const limit = 8 + (strMod * 2); 
   const hardLimit = limit * 2;
-  
-  // Calcula Peso Atual
   const currentLoad = (f.inventario || []).reduce((acc, item) => acc + (Number(item.espacos)||0), 0);
   
-  // Atualiza Barra
   const bar = document.getElementById('loadFill');
   const txt = document.getElementById('loadText');
   const warning = document.getElementById('overburdenMsg');
-  
   const pct = Math.min(100, (currentLoad / hardLimit) * 100);
   bar.style.width = pct + '%';
   txt.innerText = `${currentLoad} / ${limit} Espaços`;
-  
   bar.classList.remove('over', 'full');
   warning.style.display = 'none';
-  
-  if (currentLoad > limit) {
-    bar.classList.add('over');
-    warning.style.display = 'block';
-  }
-  if (currentLoad > hardLimit) {
-    bar.classList.add('full');
-    txt.innerText = "IMPOSSÍVEL CARREGAR";
-  }
+  if (currentLoad > limit) { bar.classList.add('over'); warning.style.display = 'block'; }
+  if (currentLoad > hardLimit) { bar.classList.add('full'); txt.innerText = "IMPOSSÍVEL CARREGAR"; }
 
-  // Renderiza Grid de Itens
   const invGrid = document.getElementById('inventoryGrid');
   invGrid.innerHTML = "";
   (f.inventario || []).forEach((item, idx) => {
@@ -521,7 +518,7 @@ function renderFicha() {
   document.getElementById('habsList').innerHTML = (f.habilidades||[]).map(i=>`<li>${i}</li>`).join('');
 }
 
-// === LÓGICA DO INVENTÁRIO (MODAL) ===
+// === FUNÇÕES ===
 window.abrirItemModal = (index = -1) => {
   editingItemIndex = index;
   document.getElementById('itemModal').style.display = 'block';
@@ -539,11 +536,9 @@ window.abrirItemModal = (index = -1) => {
     document.getElementById('itBonus').value = item.bonus;
     document.getElementById('itImg').value = item.imagem;
     document.getElementById('itDesc').value = item.descricao;
-    
     (item.propriedades || []).forEach(p => addPropField(p.nome, p.desc));
     (item.encantamentos || []).forEach(e => addEncantField(e.nome, e.desc));
   } else {
-    // Reset para novo item
     document.getElementById('itNome').value = "";
     document.getElementById('itEspacos').value = 1;
     document.getElementById('itBonus').value = "";
@@ -555,26 +550,14 @@ window.abrirItemModal = (index = -1) => {
 window.addPropField = (nome = "", desc = "") => {
   const div = document.createElement('div');
   div.className = 'dynamic-list-item';
-  div.innerHTML = `
-    <div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;">
-      <input placeholder="Nome da Propriedade (ex: Versátil)" value="${nome}" class="prop-name">
-      <textarea placeholder="Descrição da propriedade..." class="prop-desc" style="height:50px;">${desc}</textarea>
-    </div>
-    <button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>
-  `;
+  div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="prop-name"><textarea placeholder="Descrição" class="prop-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`;
   document.getElementById('propList').appendChild(div);
 };
 
 window.addEncantField = (nome = "", desc = "") => {
   const div = document.createElement('div');
   div.className = 'dynamic-list-item';
-  div.innerHTML = `
-    <div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;">
-      <input placeholder="Nome do Encantamento" value="${nome}" class="encant-name" style="border-color:var(--energy);">
-      <textarea placeholder="Descrição do efeito..." class="encant-desc" style="height:50px;">${desc}</textarea>
-    </div>
-    <button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>
-  `;
+  div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="encant-name" style="border-color:var(--energy);"><textarea placeholder="Descrição" class="encant-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`;
   document.getElementById('encantList').appendChild(div);
 };
 
@@ -590,23 +573,14 @@ window.salvarItem = async () => {
     propriedades: [],
     encantamentos: []
   };
-
-  // Coleta Props e Encants
   document.querySelectorAll('#propList .dynamic-list-item').forEach(el => {
-    novoItem.propriedades.push({
-      nome: el.querySelector('.prop-name').value,
-      desc: el.querySelector('.prop-desc').value
-    });
+    novoItem.propriedades.push({ nome: el.querySelector('.prop-name').value, desc: el.querySelector('.prop-desc').value });
   });
   document.querySelectorAll('#encantList .dynamic-list-item').forEach(el => {
-    novoItem.encantamentos.push({
-      nome: el.querySelector('.encant-name').value,
-      desc: el.querySelector('.encant-desc').value
-    });
+    novoItem.encantamentos.push({ nome: el.querySelector('.encant-name').value, desc: el.querySelector('.encant-desc').value });
   });
 
   if (!ficha.inventario) ficha.inventario = [];
-  
   if (editingItemIndex === -1) ficha.inventario.push(novoItem);
   else ficha.inventario[editingItemIndex] = novoItem;
 
@@ -616,13 +590,13 @@ window.salvarItem = async () => {
 
 window.excluirItem = async () => {
   if (editingItemIndex === -1) return;
-  if (!confirm("Excluir este item?")) return;
+  if (!confirm("Excluir?")) return;
   ficha.inventario.splice(editingItemIndex, 1);
   await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario });
   document.getElementById('itemModal').style.display = 'none';
 };
 
-// === DEMAIS FUNÇÕES (Combate, Status, etc) ===
+// Utils
 window.toggleCombatTrain = async (key) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].treino = !combate[key].treino; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
 window.setCombatOther = async (key, val) => { const combate = ficha.combate || {}; if (!combate[key]) combate[key] = { treino: false, outros: 0 }; combate[key].outros = Number(val); await updateDoc(doc(db, "fichas", id), { combate: combate }); };
 window.toggleMeleeAttr = async () => { const combate = ficha.combate || {}; if (!combate.corpo) combate.corpo = { treino: false, outros: 0, usaDes: false }; combate.corpo.usaDes = !combate.corpo.usaDes; await updateDoc(doc(db, "fichas", id), { combate: combate }); };
