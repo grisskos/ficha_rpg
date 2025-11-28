@@ -14,13 +14,17 @@
   * { box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: 'Funnel Sans', sans-serif; padding: 20px; margin: 0; display:flex; height: 100vh; overflow: hidden; }
 
-  /* LAYOUT */
+  /* LAYOUT DESKTOP */
   .layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; height: 100%; }
   
-  /* SIDEBAR (Lista de Shikigamis) */
-  .sidebar { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--border); padding-right: 20px; overflow-y: auto; }
+  /* SIDEBAR (Lista) */
+  .sidebar { 
+    display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--border); 
+    padding-right: 20px; overflow-y: auto; background: var(--bg); z-index: 99;
+    transition: transform 0.3s ease;
+  }
   
-  /* Item da lista com imagem */
+  /* Item da lista */
   .shikigami-item { 
     background: var(--card); border: 1px solid var(--border); padding: 10px; border-radius: 8px; 
     cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px;
@@ -34,32 +38,30 @@
   .btn-new { background: var(--energy); color: #000; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
   .btn-back { background: transparent; border: 1px solid #555; color: #888; padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: auto; }
 
-  /* AREA PRINCIPAL (Calculadora) */
-  .main-area { overflow-y: auto; padding-right: 10px; display: none; }
+  /* AREA PRINCIPAL */
+  .main-area { overflow-y: auto; padding-right: 10px; display: none; width: 100%; }
   .main-area.visible { display: block; }
 
-  /* Header do Editor (Imagem e Nome) */
+  /* HEADER E INPUTS */
   .editor-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
   .shiki-preview-img { 
       width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
       border: 3px solid var(--energy); margin-bottom: 10px; background: #222;
-      display: none; /* Esconde se não tiver src */
+      display: none; 
   }
-  /* Mostra a imagem se o src for válido */
   .shiki-preview-img[src*="http"] { display: inline-block; }
 
-  input.name-input { background: transparent; border: none; border-bottom: 2px solid var(--energy); color: white; font-size: 1.5rem; font-weight: bold; width: 300px; outline: none; text-align: center; }
-  input.url-input { background: transparent; border: none; border-bottom: 1px solid #555; color: #aaa; font-size: 0.9rem; width: 300px; outline: none; text-align: center; display: block; margin: 5px auto 15px auto; }
+  input.name-input { background: transparent; border: none; border-bottom: 2px solid var(--energy); color: white; font-size: 1.5rem; font-weight: bold; width: 100%; max-width: 300px; outline: none; text-align: center; }
+  input.url-input { background: transparent; border: none; border-bottom: 1px solid #555; color: #aaa; font-size: 0.9rem; width: 100%; max-width: 300px; outline: none; text-align: center; display: block; margin: 5px auto 15px auto; }
   
-  .header-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+  .header-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
 
-  /* Grids e Tabelas */
   .grid-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
-
+  
+  /* TABELAS */
   table { width: 100%; border-collapse: collapse; margin-bottom: 15px; background: var(--card); border-radius: 8px; overflow: hidden; }
-  th { background: #222; color: var(--energy); padding: 10px; text-align: center; }
-  td { border: 1px solid var(--border); padding: 8px; text-align: center; }
+  th { background: #222; color: var(--energy); padding: 10px; text-align: center; font-size: 0.9rem; }
+  td { border: 1px solid var(--border); padding: 8px; text-align: center; font-size: 0.9rem; }
   
   input[type="number"], select { 
     background: var(--input-bg); border: 1px solid var(--border); color: white; 
@@ -68,19 +70,45 @@
 
   .check-wrapper { display: flex; justify-content: center; height: 100%; align-items: center; }
   input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--energy); }
-
   .stat-highlight { color: var(--energy); font-weight: bold; font-size: 1.2rem; }
   
   .btn-save { background: var(--energy); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
   .btn-delete { background: transparent; color: #d00000; border: 1px solid #d00000; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
 
+  /* --- MOBILE CSS --- */
+  .mobile-menu-btn { display: none; position: fixed; top: 15px; left: 15px; z-index: 200; background: #111; color: var(--energy); border: 1px solid var(--energy); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 1.2rem; }
+
+  @media (max-width: 900px) { 
+    body { padding: 10px; display: block; overflow-y: auto; height: auto; }
+    .layout { display: block; height: auto; }
+    
+    .mobile-menu-btn { display: block; }
+
+    /* Sidebar vira um Drawer lateral */
+    .sidebar { 
+        position: fixed; top: 0; left: 0; bottom: 0; width: 85%; max-width: 300px;
+        transform: translateX(-100%); box-shadow: 5px 0 20px rgba(0,0,0,0.8);
+        padding: 20px; padding-top: 60px; /* Espaço pro botão fechar */
+    }
+    .sidebar.open { transform: translateX(0); }
+    
+    .main-area { padding-top: 50px; } /* Espaço pro botão menu */
+    .grid-cols { grid-template-columns: 1fr; } /* Empilha colunas */
+    
+    /* Overlay Escuro */
+    .overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index: 98; }
+    .overlay.open { display: block; }
+  }
 </style>
 </head>
 <body>
 
+<button class="mobile-menu-btn" onclick="toggleSidebar()">☰ Grimório</button>
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
 <div class="layout">
   <div id="sidebar" class="sidebar">
-    <h2 style="margin-top:0; color:var(--energy);">Grimório</h2>
+    <h2 style="margin-top:0; color:var(--energy);">Lista de Invocações</h2>
     <button class="btn-new" onclick="novoShikigami()">+ Nova Invocação</button>
     <div id="listaShikigamis" style="display:flex; flex-direction:column; gap:10px;">Carregando...</div>
     <button class="btn-back" onclick="voltarFicha()">Voltar para Personagem</button>
@@ -94,7 +122,7 @@
         <input type="text" id="shikigamiImgUrl" class="url-input" placeholder="URL da Imagem (opcional)" oninput="document.getElementById('shikiPreview').src=this.value">
         
         <div class="header-buttons">
-            <button class="btn-save" onclick="salvarShikigami()">Salvar Invocação</button>
+            <button class="btn-save" onclick="salvarShikigami()">Salvar</button>
             <button class="btn-delete" onclick="excluirShikigami()">Excluir</button>
         </div>
     </div>
@@ -102,10 +130,10 @@
     <div class="grid-cols">
       <div>
         <table class="tabelaParametros">
-          <thead><tr><th colspan="2">Configuração Básica</th></tr></thead>
+          <thead><tr><th colspan="2">Configuração</th></tr></thead>
           <tbody>
-            <tr><td>Nível do Invocador</td><td><select id="invocadorNivel"></select></td></tr>
-            <tr><td>Grau da Invocação</td>
+            <tr><td>Nível Invocador</td><td><select id="invocadorNivel"></select></td></tr>
+            <tr><td>Grau Invocação</td>
               <td>
                 <select id="seletorGrau">
                   <option value="4">Grau 4</option>
@@ -135,17 +163,17 @@
 
       <div>
         <table class="tabelaParametros">
-          <thead><tr><th colspan="2">Estatísticas Finais</th></tr></thead>
+          <thead><tr><th colspan="2">Estatísticas</th></tr></thead>
           <tbody>
-            <tr><td>Pontos de Vida</td><td><span id="pvValue" class="stat-highlight">8</span></td></tr>
-            <tr><td>Classe de Armadura</td><td><span id="caValue" class="stat-highlight">15</span></td></tr>
+            <tr><td>Vida</td><td><span id="pvValue" class="stat-highlight">8</span></td></tr>
+            <tr><td>CA</td><td><span id="caValue" class="stat-highlight">15</span></td></tr>
             <tr><td>Deslocamento</td><td><span id="dValue" class="stat-highlight">4.5m</span></td></tr>
-            <tr><td>CD Resistência</td><td><span id="cdValue">11</span></td></tr>
+            <tr><td>CD</td><td><span id="cdValue">11</span></td></tr>
           </tbody>
         </table>
 
         <table class="tabelaPericias">
-          <thead><tr><th colspan="2">Perícias & Combate</th></tr></thead>
+          <thead><tr><th colspan="2">Perícias</th></tr></thead>
           <tbody>
             <tr>
               <td>Atributo Base</td>
@@ -157,19 +185,19 @@
                 </select>
               </td>
             </tr>
-            <tr><td>Perícia (Com Maestria)</td><td id="pmValue">0</td></tr>
-            <tr><td>Perícia (Sem Maestria)</td><td id="pdValue">2</td></tr>
+            <tr><td>Com Maestria</td><td id="pmValue">0</td></tr>
+            <tr><td>Sem Maestria</td><td id="pdValue">2</td></tr>
           </tbody>
         </table>
 
         <table class="tabelaInvocador">
-          <thead><tr><th>Habilidade / Poder</th><th>Ativar</th></tr></thead>
+          <thead><tr><th>Poderes</th><th>On</th></tr></thead>
           <tbody>
-            <tr><td>Invocações Móveis?</td><td class="check-wrapper"><input type="checkbox" name="moveis" class="habInvocador calc-trigger"></td></tr>
-            <tr><td>Invocações Resistentes?</td><td class="check-wrapper"><input type="checkbox" name="resistentes" class="habInvocador calc-trigger"></td></tr>
-            <tr><td>Controlador - Mobilidade</td><td class="check-wrapper"><input type="checkbox" name="mobilidade" class="habInvocador calc-trigger"></td></tr>
-            <tr><td>Controlador - Resistência</td><td class="check-wrapper"><input type="checkbox" name="resistencia" class="habInvocador calc-trigger"></td></tr>
-            <tr><td>Controlador - Precisão</td><td class="check-wrapper"><input type="checkbox" name="precisao" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Invocações Móveis</td><td class="check-wrapper"><input type="checkbox" name="moveis" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Invocações Resistentes</td><td class="check-wrapper"><input type="checkbox" name="resistentes" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Contr. Mobilidade</td><td class="check-wrapper"><input type="checkbox" name="mobilidade" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Contr. Resistência</td><td class="check-wrapper"><input type="checkbox" name="resistencia" class="habInvocador calc-trigger"></td></tr>
+            <tr><td>Contr. Precisão</td><td class="check-wrapper"><input type="checkbox" name="precisao" class="habInvocador calc-trigger"></td></tr>
             <tr><td>Fantoche Supremo</td><td class="check-wrapper"><input type="checkbox" name="supremo" class="habInvocador calc-trigger"></td></tr>
             <tr><td>Concentrar Poder</td><td class="check-wrapper"><input type="checkbox" name="concentrar" class="habInvocador calc-trigger"></td></tr>
           </tbody>
@@ -180,7 +208,6 @@
 </div>
 
 <script type="module">
-// Usando a importação simples que funciona com o seu firebase.js atual
 import { db, doc, getDoc, updateDoc } from "./firebase.js";
 
 const params = new URLSearchParams(location.search);
@@ -219,8 +246,7 @@ function renderLista() {
   lista.innerHTML = "";
   
   currentData.shikigamis.forEach((shiki, index) => {
-    // Verifica se tem imagem para mostrar a miniatura
-    const imgHtml = shiki.imagem ? `<img src="${shiki.imagem}" class="sidebar-thumb" onerror="this.src='https://via.placeholder.com/50/222/58E8DA?text=Wolf'">` : `<div class="sidebar-thumb"></div>`;
+    const imgHtml = shiki.imagem ? `<img src="${shiki.imagem}" class="sidebar-thumb" onerror="this.src='https://via.placeholder.com/50/222/58E8DA?text=?'">` : `<div class="sidebar-thumb"></div>`;
     
     lista.innerHTML += `
       <div class="shikigami-item ${index === currentShikiIndex ? 'active' : ''}" onclick="abrirShikigami(${index})">
@@ -233,11 +259,19 @@ function renderLista() {
   });
 }
 
+// TOGGLE MENU MOBILE
+window.toggleSidebar = () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+}
+
 window.novoShikigami = () => {
   if (currentData.shikigamis.length >= 20) return alert("Limite de 20 invocações atingido!");
   currentShikiIndex = -1;
   limparFormulario();
   document.getElementById('editorArea').classList.add('visible');
+  // Fecha o menu no mobile
+  if(window.innerWidth <= 900) toggleSidebar();
   calcAtributos();
 };
 
@@ -247,7 +281,9 @@ window.abrirShikigami = (index) => {
   const s = currentData.shikigamis[index];
   document.getElementById('editorArea').classList.add('visible');
   
-  // Preenche Campos Básicos e Imagem
+  // Fecha o menu no mobile
+  if(window.innerWidth <= 900) toggleSidebar();
+  
   document.getElementById('shikigamiNome').value = s.nome;
   document.getElementById('shikigamiImgUrl').value = s.imagem || "";
   document.getElementById('shikiPreview').src = s.imagem || "";
@@ -277,7 +313,7 @@ window.salvarShikigami = async () => {
 
   const novoShiki = {
     nome: nome,
-    imagem: imagem, // Salva a URL da imagem
+    imagem: imagem, 
     nivelInv: Number(document.getElementById('invocadorNivel').value),
     grau: document.getElementById('seletorGrau').value,
     atrPericia: document.getElementById('seletorAtributoPericia').value,
@@ -293,7 +329,7 @@ window.salvarShikigami = async () => {
   }
 
   await updateDoc(doc(db, "fichas", charId), { shikigamis: currentData.shikigamis });
-  alert("Salvo com sucesso!");
+  alert("Salvo!");
   renderLista();
 };
 
@@ -322,7 +358,7 @@ function limparFormulario() {
   calcAtributos();
 }
 
-// LÓGICA DE CÁLCULO (Mantida a sua original)
+// LÓGICA DE CÁLCULO
 window.calcAtributos = () => {
     const grauInvocacao = document.getElementById('seletorGrau').value;
     const multiplicadorInvocacao = [6, 4, 2, 1, 0][grauInvocacao];
