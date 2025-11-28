@@ -8,17 +8,17 @@
   :root { 
     --bg: #0a0a0a; 
     --card: #141414; 
-    --primary: #e63946;
+    --primary: #e63946; 
     --energy: #58E8DA;
     --vigor: #69E858;
-    --integridade: #D073FA; /* Roxo */
+    --integridade: #D073FA;
     --text: #f1f1f1; 
   }
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; }
   
   header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
-  h1 { margin: 0; color: var(--primary); text-transform: uppercase; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+  h1 { margin: 0; color: var(--integridade); text-transform: uppercase; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
   
   .gm-grid { 
     display: grid; 
@@ -63,76 +63,99 @@
 
   .btn-back { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
   .btn-back:hover { background: #444; }
+  
+  #loading { text-align: center; color: #666; margin-top: 20px; }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>🛡️ Escudo do Mestre</h1>
-  <button class="btn-back" onclick="window.location='index.html'">Sair do Escudo</button>
-</header>
+<div id="loading">Verificando Credenciais do Mestre...</div>
 
-<div id="grid" class="gm-grid">
-  <p style="color:#666">Sintonizando com as almas dos jogadores...</p>
+<div id="app" style="display:none;">
+  <header>
+    <h1>🛡️ Escudo do Mestre</h1>
+    <button class="btn-back" onclick="window.location='index.html'">Sair</button>
+  </header>
+
+  <div id="grid" class="gm-grid">
+    <p style="color:#666">Sintonizando com as almas dos jogadores...</p>
+  </div>
 </div>
 
 <script type="module">
-import { db, collection, query, onSnapshot, orderBy } from "./firebase.js";
+import { db, auth, collection, query, onSnapshot, orderBy, onAuthStateChanged } from "./firebase.js";
 
-const q = query(collection(db, "fichas"), orderBy("nome"));
+const MESTRE_EMAIL = "grisskos@fake.com";
 
-onSnapshot(q, (snapshot) => {
-  const grid = document.getElementById("grid");
-  
-  if (snapshot.empty) {
-    grid.innerHTML = "<p>Nenhum aventureiro encontrado neste plano.</p>";
-    return;
+// VERIFICAÇÃO DE SEGURANÇA
+onAuthStateChanged(auth, user => {
+  if (user && user.email === MESTRE_EMAIL) {
+    // É o mestre, libera o app
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    iniciarMonitoramento();
+  } else {
+    // Não é o mestre (ou não logado)
+    alert("ACESSO NEGADO: Apenas o Mestre pode entrar aqui.");
+    window.location = "index.html";
   }
+});
 
-  grid.innerHTML = ""; 
+function iniciarMonitoramento() {
+  const q = query(collection(db, "fichas"), orderBy("nome"));
 
-  snapshot.forEach((doc) => {
-    const f = doc.data();
-    const id = doc.id;
+  onSnapshot(q, (snapshot) => {
+    const grid = document.getElementById("grid");
     
-    const pVida = calcPct(f.vida);
-    const pEnergia = calcPct(f.energia);
-    // Garantindo que use integridade
-    const pIntegridade = calcPct(f.integridade || {atual:0, max:100}); 
-    
-    const nivel = f.nivel || 1;
-    const origemTxt = f.origem ? `• ${f.origem}` : "";
+    if (snapshot.empty) {
+      grid.innerHTML = "<p>Nenhum aventureiro encontrado neste plano.</p>";
+      return;
+    }
 
-    grid.innerHTML += `
-      <div class="char-card">
-        <button class="btn-spy" onclick="window.open('ficha.html?id=${id}', '_blank')" title="Abrir Ficha Completa">👁️</button>
-        
-        <div class="card-header">
-          <img src="${f.imagem || 'https://via.placeholder.com/50/333/666?text=?'}" onerror="this.src='https://via.placeholder.com/50'">
-          <div>
-            <h3>${f.nome} <span class="lvl-badge">Nvl ${nivel}</span></h3>
-            <small>${f.classe || 'Aventureiro'} ${origemTxt}</small>
+    grid.innerHTML = ""; 
+
+    snapshot.forEach((doc) => {
+      const f = doc.data();
+      const id = doc.id;
+      
+      const pVida = calcPct(f.vida);
+      const pEnergia = calcPct(f.energia);
+      const pIntegridade = calcPct(f.integridade); 
+      
+      const nivel = f.nivel || 1;
+      const origemTxt = f.origem ? `• ${f.origem}` : "";
+
+      grid.innerHTML += `
+        <div class="char-card">
+          <button class="btn-spy" onclick="window.open('ficha.html?id=${id}', '_blank')" title="Abrir Ficha Completa">👁️</button>
+          
+          <div class="card-header">
+            <img src="${f.imagem || 'https://via.placeholder.com/50/333/666?text=?'}" onerror="this.src='https://via.placeholder.com/50'">
+            <div>
+              <h3>${f.nome} <span class="lvl-badge">Nvl ${nivel}</span></h3>
+              <small>${f.classe || 'N/A'} ${origemTxt}</small>
+            </div>
+          </div>
+
+          <div class="stat-row hp">
+            <div class="stat-label"><span>VIDA</span> <span>${f.vida?.atual||0}/${f.vida?.max||0}</span></div>
+            <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pVida}%"></div></div>
+          </div>
+
+          <div class="stat-row en">
+            <div class="stat-label"><span>ENERGIA</span> <span>${f.energia?.atual||0}/${f.energia?.max||0}</span></div>
+            <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pEnergia}%"></div></div>
+          </div>
+
+          <div class="stat-row integ">
+            <div class="stat-label"><span>INTEGRIDADE</span> <span>${f.integridade?.atual || 0}/${f.integridade?.max || 0}</span></div>
+            <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pIntegridade}%"></div></div>
           </div>
         </div>
-
-        <div class="stat-row hp">
-          <div class="stat-label"><span>VIDA</span> <span>${f.vida?.atual}/${f.vida?.max}</span></div>
-          <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pVida}%"></div></div>
-        </div>
-
-        <div class="stat-row en">
-          <div class="stat-label"><span>ENERGIA</span> <span>${f.energia?.atual}/${f.energia?.max}</span></div>
-          <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pEnergia}%"></div></div>
-        </div>
-
-        <div class="stat-row integ">
-          <div class="stat-label"><span>INTEGRIDADE</span> <span>${f.integridade?.atual || 0}/${f.integridade?.max || 0}</span></div>
-          <div class="bar-mini-bg"><div class="bar-mini-fill" style="width:${pIntegridade}%"></div></div>
-        </div>
-      </div>
-    `;
+      `;
+    });
   });
-});
+}
 
 function calcPct(stat) {
   if (!stat || !stat.max) return 0;
