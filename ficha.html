@@ -128,7 +128,7 @@
   .sk-name { flex-grow: 1; color: #eee; }
   .sk-attr { font-size: 0.7rem; color: #555; width: 40px; text-transform: uppercase; font-weight: bold; }
   .sk-total { font-weight: bold; color: white; width: 35px; text-align: right; margin-right: 15px; font-size: 1.1rem; }
-  .sk-btn-group { display: flex; gap: 5px; }
+  .sk-btn-group { display: flex; gap: 5px; align-items: center; }
   .sk-btn { width: 25px; height: 25px; border-radius: 4px; border: 1px solid #444; background: #111; color: #555; font-size: 0.7rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
   .sk-btn:hover { border-color: #777; color: #aaa; }
   .sk-btn.active-t { background: rgba(88, 232, 218, 0.2); border-color: var(--energy); color: var(--energy); }
@@ -540,16 +540,19 @@ function renderFicha() {
   PERICIAS_DEF.forEach(p => {
     const attrVal = (f.atributos && f.atributos[p.a]) ? f.atributos[p.a] : 10;
     const modAttr = Math.floor((attrVal - 10) / 2);
-    const saved = userPericias[p.n] || { t: false, m: false };
+    const saved = userPericias[p.n] || { t: false, m: false, bonus: 0 };
     let total = modAttr + metadeNivel;
     if (saved.t) total += bonusTreino;
     if (saved.m) total += 1;
+    total += Number(saved.bonus || 0);
+
     listaSkills.innerHTML += `
       <div class="skill-row">
         <span class="sk-name">${p.n}</span>
         <span class="sk-attr">${ATR_SHORT[p.a]}</span>
         <span class="sk-total">${total>=0?'+':''}${total}</span>
         <div class="sk-btn-group">
+           <input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)">
            <div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div>
            <div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div>
         </div>
@@ -558,6 +561,13 @@ function renderFicha() {
 }
 
 // === FUNÇÕES ===
+window.setSkillBonus = async (skillName, val) => {
+  const pericias = ficha.pericias || {};
+  if (!pericias[skillName]) pericias[skillName] = { t: false, m: false, bonus: 0 };
+  pericias[skillName].bonus = Number(val);
+  await updateDoc(doc(db, "fichas", id), { pericias: pericias });
+};
+
 window.setAptidao = async (nomeApt, novoNivel) => {
   if (!isMestre) return;
   const progresso = ficha.progressoAptidoes || {};
