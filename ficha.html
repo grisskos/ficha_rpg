@@ -42,7 +42,7 @@
   .b-lvl { color: white; border-color: white; font-weight: bold; }
   .b-cls { color: var(--primary); border-color: var(--primary); cursor: pointer; }
   .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
-
+  
   /* SOUL STATUS */
   .soul-badge { cursor: help; transition: 0.3s; font-weight: bold; border: 1px solid; }
   .soul-stable { border-color: var(--integridade); color: var(--integridade); }
@@ -50,37 +50,41 @@
   .soul-unstable { border-color: #fb8500; color: #fb8500; border-width: 2px; }
   .soul-critical { border-color: #d00000; color: #d00000; border-width: 2px; animation: pulse-red 2s infinite; background: rgba(255,0,0,0.1); }
   .soul-dead { border-color: #555; color: #555; text-decoration: line-through; } 
+  .soul-badge:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 8px; border-radius: 5px; border: 1px solid #555; width: 200px; font-size: 0.75rem; font-weight: normal; text-align: center; white-space: normal; z-index: 100; pointer-events: none; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
   @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
-  /* TOKENS */
+  /* TOKENS & UTILS */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
-
-  /* UTILS */
-  .editable { cursor: pointer; border-bottom: 1px dashed #555; display: inline-block; min-width: 20px; text-align: center; }
+  .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
+  .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
   .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
-  .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; }
 
   /* ATRIBUTOS & BARRAS */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .attr-box { background: #222; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #333; }
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
+  .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
   .bar-fill { height: 100%; transition: width 0.3s; }
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
+  .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .btn-mini:hover { border-color: white; color: white; background: #333; }
+  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
+  .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
   /* COMBATE */
   .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition:0.2s; }
   .section-header:hover { background: #222; }
   .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; } .cols-3 { grid-template-columns: repeat(3, 1fr); } .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
   .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
   .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
   .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
@@ -100,58 +104,46 @@
   .derived-calc { display: flex; justify-content: center; margin-top: 5px; }
   .derived-calc input { background: #111; border: 1px solid #444; color: #aaa; width: 40px; text-align: center; border-radius: 3px; font-size: 0.8rem; }
 
-  /* INVENTÁRIO NOVO (ESTILO ACORDEÃO) */
-  .inv-header-controls { display: flex; gap: 10px; margin-bottom: 10px; }
-  .inv-search { flex-grow: 1; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; }
-  .btn-add-inv { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-  .inv-load-display { text-align: right; font-size: 0.8rem; color: #aaa; margin-bottom: 5px; }
-  .load-num { background: #111; border: 1px solid #333; padding: 2px 6px; color: white; font-weight: bold; border-radius: 3px; margin: 0 2px; }
-  .inv-categories { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; }
-  .inv-cat-btn { background: #111; border: 1px solid #333; color: #888; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
-  .inv-cat-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(230, 57, 70, 0.1); }
-  .inv-list { display: flex; flex-direction: column; gap: 5px; }
-  .inv-row { background: var(--inv-bg); border-radius: 4px; overflow: hidden; border: 1px solid #333; }
-  .inv-summary { padding: 10px; display: flex; align-items: center; cursor: pointer; justify-content: space-between; }
-  .inv-summary:hover { background: var(--inv-hover); }
-  .inv-check { width: 20px; height: 20px; border: 2px solid #444; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-right: 10px; cursor: pointer; }
-  .inv-check.equipped { border-color: var(--primary); background: rgba(230, 57, 70, 0.2); color: var(--primary); }
-  .inv-main-info { flex-grow: 1; }
-  .inv-name { font-weight: bold; color: white; font-size: 0.95rem; }
-  .inv-mini-stats { font-size: 0.75rem; color: #999; display: flex; gap: 10px; }
-  .inv-mini-stats span b { color: var(--primary); }
-  .inv-expand-icon { color: #666; font-size: 0.8rem; transform: rotate(0deg); transition: 0.2s; }
-  .inv-row.expanded .inv-expand-icon { transform: rotate(180deg); }
-  .inv-details { display: none; padding: 15px; background: #151515; border-top: 1px solid #333; grid-template-columns: 1fr 100px; gap: 15px; }
-  .inv-row.expanded .inv-details { display: grid; }
-  .inv-stat-block { display: flex; flex-direction: column; gap: 5px; font-size: 0.85rem; color: #ccc; }
-  .inv-stat-line { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 2px; }
-  .inv-stat-label { color: var(--primary); font-weight: bold; }
-  .inv-img-preview { width: 100px; height: 100px; object-fit: cover; border: 1px solid #444; background: #000; border-radius: 4px; }
-  .inv-actions { grid-column: span 2; display: flex; justify-content: space-between; margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
-  .btn-txt-del { color: #d00000; background: transparent; border: none; cursor: pointer; font-size: 0.8rem; }
-  .btn-txt-edit { color: var(--primary); background: transparent; border: none; cursor: pointer; font-size: 0.8rem; }
-  .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 20px; position: relative; margin-bottom: 15px; overflow: hidden; }
-  .load-fill { height: 100%; width: 0%; background: #2a9d8f; transition: 0.3s; }
-  .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
-  .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
-  .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
-
-  /* APTIDÕES & HABILIDADES */
+  /* HABILIDADES DE CLASSE (NOVO VISUAL) */
   .toggle-body { display: none; } .toggle-body.open { display: block; animation: slideDown 0.3s ease-out; }
   @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-  .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
-  .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-  .aptidao-body { display: none; padding: 10px; background: #151515; }
-  .aptidao-body.open { display: block; }
-  .aptidao-desc { font-style: italic; color: #aaa; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; white-space: pre-wrap; }
-  .nivel-row { display: flex; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #555; }
-  .nivel-row.unlocked { color: #fff; } 
-  .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
-  .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
+  
+  /* Botão para selecionar habilidade */
+  .ability-select-btn {
+    background: #1a1a1a; color: #aaa; border: 2px dashed #444; 
+    width: 100%; padding: 12px; font-weight: bold; cursor: pointer; 
+    border-radius: 6px; display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; transition: 0.2s;
+  }
+  .ability-select-btn:hover { background: #222; border-color: var(--primary); color: var(--primary); }
+  
+  /* Card da Habilidade Selecionada */
+  .ability-card-display {
+    background: #151515; border-left: 4px solid var(--primary); border-radius: 4px; 
+    padding: 15px; margin-bottom: 10px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  }
+  .ability-card-title { font-weight: bold; color: #fff; font-size: 1rem; margin-bottom: 5px; text-transform: uppercase; }
+  .ability-card-desc { font-size: 0.9rem; color: #aaa; white-space: pre-wrap; line-height: 1.5; }
+  
+  .btn-remove-ability { 
+    position: absolute; top: 5px; right: 5px; 
+    background: transparent; border: none; color: #666; 
+    cursor: pointer; font-size: 1rem; transition: 0.2s;
+  }
+  .btn-remove-ability:hover { color: #d00000; }
+  
+  /* Aptidão Geral (Listas) */
+  .class-ability-box { border-left: 4px solid var(--vigor); padding: 10px; background: #151515; margin-bottom: 10px; border-radius: 4px; }
+  .class-ability-name { font-weight: bold; color: #fff; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
+  .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 5px; white-space: pre-wrap; line-height: 1.4; }
+
+  /* Botões Mestre */
   .gm-controls { display: none; margin-left: auto; gap: 5px; } 
   .gm-visible .gm-controls { display: flex; }
   .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+  .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
   .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
+  .btn-edit-apt:hover { color: var(--primary); }
 
   /* PERÍCIAS & NAV */
   .skills-card { padding: 0; overflow: hidden; height: 100%; }
@@ -172,6 +164,9 @@
   .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
 
+  /* LISTAS */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; } .list-box li { margin-bottom: 5px; }
+
   /* MODALS */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
   .fab-config:hover { background: var(--primary); border-color: var(--primary); }
@@ -185,10 +180,17 @@
   .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
   .btn-del-item { background: transparent; border: none; color: #d00000; cursor: pointer; font-size: 1.2rem; line-height: 1; }
   .btn-add-item { background: #222; border: 1px solid #444; color: #ccc; width: 100%; padding: 5px; cursor: pointer; margin-top: 5px; }
+  
+  /* POPUP ROLAGEM DADOS */
+  .dice-result { font-size: 2rem; font-weight: bold; color: var(--primary); text-align: center; margin: 15px 0; }
+  .dice-log { font-size: 0.9rem; color: #888; text-align: center; }
+  .btn-roll { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; font-size: 1.2rem; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 15px; }
+  
+  /* SELEÇÃO DE HABILIDADES MODAL */
   .sel-option { background: #111; padding: 10px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.2s; }
   .sel-option:hover { background: #1a1a1a; border-left: 3px solid var(--primary); }
   .sel-title { font-weight: bold; color: white; font-size: 1rem; }
-  .sel-desc { color: #aaa; font-size: 0.85rem; margin-top: 2px; }
+  .sel-desc { color: #aaa; font-size: 0.85rem; margin-top: 2px; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -225,6 +227,7 @@
       <h3 class="section-header" style="margin-bottom:10px; cursor:pointer;" onclick="document.getElementById('classOriginBody').classList.toggle('open')">
         Habilidades de Classe & Origem <span style="float:right; font-size:0.8rem;">▼</span>
       </h3>
+      
       <div id="classOriginBody" class="toggle-body">
         <div id="classAbilitiesList"></div>
         <hr style="border-color:#222; margin:15px 0;">
@@ -277,10 +280,10 @@
     <div class="card">
       <h3 class="section-header" style="margin-bottom:10px;">Valores Adicionais</h3>
       <div class="derived-grid">
-        <div class="derived-box"><div class="derived-label">DEFESA</div><div class="derived-value" id="valDefesa">10</div><div class="derived-calc"><input id="bonusDef" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('defesa', this.value)"></div></div>
-        <div class="derived-box"><div class="derived-label">ATENÇÃO</div><div class="derived-value" id="valAtencao">10</div><div class="derived-calc"><input id="bonusAtencao" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('atencao', this.value)"></div></div>
-        <div class="derived-box"><div class="derived-label">INICIATIVA</div><div class="derived-value" id="valIniciativa">+0</div><div class="derived-calc"><input id="bonusIniciativa" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('iniciativa', this.value)"></div></div>
-        <div class="derived-box"><div class="derived-label">DESLOC.</div><div class="derived-value" id="valDesloc">9m</div><div class="derived-calc"><input id="bonusDesloc" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('deslocamento', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">DEFESA</div><div class="derived-value" id="valDefesa">10</div><div class="derived-calc"><input id="bonusDef" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('defesa', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">ATENÇÃO</div><div class="derived-value" id="valAtencao">10</div><div class="derived-calc"><input id="bonusAtencao" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('atencao', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">INICIATIVA</div><div class="derived-value" id="valIniciativa">+0</div><div class="derived-calc"><input id="bonusIniciativa" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('iniciativa', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">DESLOC.</div><div class="derived-value" id="valDesloc">9m</div><div class="derived-calc"><input id="bonusDesloc" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('deslocamento', this.value)"></div></div>
       </div>
     </div>
 
@@ -298,7 +301,14 @@
 
 <div id="diceModal" class="modal"><div class="modal-content" style="max-width:300px; text-align:center;"><h2 id="diceTitle" style="color:var(--primary);">Rolar Dado</h2><div id="diceResult" class="dice-result">--</div><div id="diceLog" class="dice-log">1d20 + Mod</div><button id="btnRollConfirm" class="btn-roll">ROLAR</button><button onclick="document.getElementById('diceModal').style.display='none'" style="background:transparent; border:none; color:#666; margin-top:10px; cursor:pointer; width:100%;">Cancelar</button></div></div>
 
-<div id="selectionModal" class="modal"><div class="modal-content"><h2 id="selectTitle" style="color:var(--primary);">Escolha</h2><div id="selectorFilters" style="margin-bottom:10px; display:flex; gap:5px; flex-wrap:wrap;"></div><div id="selectOptionsList" style="display:flex; flex-direction:column; gap:5px; max-height:60vh; overflow-y:auto;"></div><button onclick="document.getElementById('selectionModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer; margin-top:15px;">Cancelar</button></div></div>
+<div id="selectionModal" class="modal">
+  <div class="modal-content">
+    <h2 id="selectTitle" style="color:var(--primary);">Escolha uma Habilidade</h2>
+    <div id="selectorFilters" style="margin-bottom:10px; display:flex; gap:5px; flex-wrap:wrap;"></div>
+    <div id="selectOptionsList" style="display:flex; flex-direction:column; gap:5px; max-height:60vh; overflow-y:auto;"></div>
+    <button onclick="document.getElementById('selectionModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer; margin-top:15px;">Cancelar</button>
+  </div>
+</div>
 
 <div id="configModal" class="modal"><div class="modal-content"><h2 style="color:var(--primary);">Configurações</h2><label>Imagem (URL)</label><input id="editImgUrl" style="margin-bottom:15px;"><button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button><br><br><button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer;">Fechar</button><button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button></div></div>
 
@@ -390,7 +400,7 @@ import { HABILIDADES_CLASSE } from "./classes_db.js";
 import { ITENS_ESPECIAIS } from "./itens_db.js";
 import { PROPRIEDADES_GERAIS, PROPRIEDADES_ESPECIAIS, ENCANTAMENTOS_ARMAS, ENCANTAMENTOS_ESCUDOS, ENCANTAMENTOS_UNIFORMES } from "./propriedades_db.js";
 
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1444085918196826192/BqSOdpPZa0F6m4pE4Wg3_QUUvgiXhCuwCk2xp43su6Jjhf4yx0zly68cO2bmSCRvLL38"; 
+const WEBHOOK_URL = "SEU_LINK_DO_DISCORD_AQUI"; 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 window.id = id;
@@ -554,6 +564,7 @@ function renderFicha() {
     let nivelAtual = (ficha.progressoAptidoes || {})[apt.nome] || 0;
     if (apt.nome === "Ápice Humano" && f.transfUnlocked.apice) nivelAtual = 1;
     if (apt.nome === "Corpo Amaldiçoado" && f.transfUnlocked.corpo) nivelAtual = 1;
+    let isOpenClass = ''; 
     if (!isMestre && nivelAtual === 0) return;
     let niveisHtml = "";
     if(apt.niveis) {
@@ -570,7 +581,7 @@ function renderFicha() {
       const realIndex = index - APTIDOES_BASE.length;
       editBtn = `<button class="btn-edit-apt" onclick="abrirEditorAptidao(${realIndex})">✎</button>`;
     }
-    containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
+    containerApt.innerHTML += `<div class="aptidao-box"><div class="aptidao-header" onclick="this.nextElementSibling.classList.toggle('open')"><span>${apt.nome} <span style="font-size:0.8rem;color:#666;">(${nivelAtual}/${apt.maxNivel})</span>${editBtn}</span><span>▼</span></div><div class="aptidao-body ${isOpenClass}"><div class="aptidao-desc">${apt.descricao || 'Sem descrição.'}</div>${niveisHtml}</div></div>`;
   });
 
   const listaSkills = document.getElementById('skillsList');
@@ -588,7 +599,7 @@ function renderFicha() {
   });
 }
 
-// === RENDER INVENTÁRIO (ACORDEÃO) ===
+// === RENDER INVENTÁRIO ===
 window.renderInventario = () => {
   const strMod = Math.floor(((ficha.atributos?.forca || 10) - 10) / 2);
   const limit = 8 + (strMod * 2); 
@@ -656,6 +667,15 @@ window.renderInventario = () => {
   });
 };
 
+window.filtrarInv = (cat, btn) => {
+  currentInvFilter = cat;
+  document.querySelectorAll('.inv-cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderInventario();
+};
+window.toggleInvRow = (idx) => { document.getElementById(`inv-row-${idx}`).classList.toggle('expanded'); };
+window.toggleEquipItem = async (idx) => { ficha.inventario[idx].equipado = !ficha.inventario[idx].equipado; await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario }); renderInventario(); };
+
 // === SELEÇÃO DE PROPRIEDADES/ENCANTAMENTOS/ITENS ===
 window.abrirSeletor = (tipo) => {
   const modal = document.getElementById('selectionModal');
@@ -668,7 +688,6 @@ window.abrirSeletor = (tipo) => {
   if(tipo === 'item') {
      document.getElementById('selectTitle').innerText = "Itens Especiais";
      opcoes = ITENS_ESPECIAIS;
-     // Ordenar por custo?
      opcoes.sort((a,b) => a.custo - b.custo);
   } else if (tipo === 'propriedade') {
     document.getElementById('selectTitle').innerText = "Propriedades";
@@ -736,15 +755,6 @@ window.addSelecionado = (item, tipo) => {
   }
   document.getElementById('selectionModal').style.display = 'none';
 };
-
-window.filtrarInv = (cat, btn) => {
-  currentInvFilter = cat;
-  document.querySelectorAll('.inv-cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderInventario();
-};
-window.toggleInvRow = (idx) => { document.getElementById(`inv-row-${idx}`).classList.toggle('expanded'); };
-window.toggleEquipItem = async (idx) => { ficha.inventario[idx].equipado = !ficha.inventario[idx].equipado; await updateDoc(doc(db, "fichas", id), { inventario: ficha.inventario }); renderInventario(); };
 
 function renderDerivados(totalLevel) {
   const desMod = Math.floor((ficha.atributos.destreza - 10) / 2);
@@ -863,13 +873,6 @@ window.adicionarClasse = async () => { const nome = document.getElementById('new
 window.atualizarNivelClasse = async (index, novoNivel) => { ficha.classes[index].nivel = Number(novoNivel); await updateDoc(doc(db, "fichas", id), { classes: ficha.classes }); renderFicha(); };
 window.removerClasse = async (index) => { if(!confirm("Remover esta classe?")) return; ficha.classes.splice(index, 1); await updateDoc(doc(db, "fichas", id), { classes: ficha.classes }); abrirClassManager(); renderFicha(); };
 
-// ADICIONE ESTAS FUNÇÕES PARA O SELETOR DE PROPRIEDADES/ITEM
-window.addPropField = (nome = "", desc = "") => { const div = document.createElement('div'); div.className = 'dynamic-list-item'; div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="prop-name"><textarea placeholder="Descrição" class="prop-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`; document.getElementById('propList').appendChild(div); };
-window.addEncantField = (nome = "", desc = "") => { const div = document.createElement('div'); div.className = 'dynamic-list-item'; div.innerHTML = `<div style="flex-grow:1; display:flex; flex-direction:column; gap:5px;"><input placeholder="Nome" value="${nome}" class="encant-name" style="border-color:var(--energy);"><textarea placeholder="Descrição" class="encant-desc" style="height:50px;">${desc}</textarea></div><button class="btn-del-item" onclick="this.parentElement.remove()">✖</button>`; document.getElementById('encantList').appendChild(div); };
-window.abrirSeletor = (tipo) => { const modal = document.getElementById('selectionModal'); const listDiv = document.getElementById('selectOptionsList'); const filtersDiv = document.getElementById('selectorFilters'); listDiv.innerHTML = ""; filtersDiv.innerHTML = ""; let opcoes = []; if(tipo === 'item') { document.getElementById('selectTitle').innerText = "Itens Especiais"; opcoes = ITENS_ESPECIAIS; opcoes.sort((a,b) => a.custo - b.custo); } else if (tipo === 'propriedade') { document.getElementById('selectTitle').innerText = "Propriedades"; opcoes = [...PROPRIEDADES_GERAIS, ...PROPRIEDADES_ESPECIAIS]; filtersDiv.innerHTML = `<button class="btn-mini" onclick="filtrarOpcoes('Gerais')">Gerais</button><button class="btn-mini" onclick="filtrarOpcoes('Especiais')">Especiais</button>`; } else { document.getElementById('selectTitle').innerText = "Encantamentos"; opcoes = [...ENCANTAMENTOS_ARMAS, ...ENCANTAMENTOS_ESCUDOS, ...ENCANTAMENTOS_UNIFORMES]; filtersDiv.innerHTML = `<button class="btn-mini" onclick="filtrarOpcoes('Armas')">Armas</button><button class="btn-mini" onclick="filtrarOpcoes('Escudos')">Escudos</button><button class="btn-mini" onclick="filtrarOpcoes('Uniformes')">Uniformes</button>`; } renderOpcoes(opcoes, tipo); modal.style.display = 'flex'; };
-window.filtrarOpcoes = (categoria) => { let lista = []; if(categoria === 'Gerais') lista = PROPRIEDADES_GERAIS; if(categoria === 'Especiais') lista = PROPRIEDADES_ESPECIAIS; if(categoria === 'Armas') lista = ENCANTAMENTOS_ARMAS; if(categoria === 'Escudos') lista = ENCANTAMENTOS_ESCUDOS; if(categoria === 'Uniformes') lista = ENCANTAMENTOS_UNIFORMES; const tipo = (categoria === 'Gerais' || categoria === 'Especiais') ? 'propriedade' : 'encantamento'; renderOpcoes(lista, tipo); };
-function renderOpcoes(lista, tipo) { const container = document.getElementById('selectOptionsList'); container.innerHTML = ""; lista.forEach(item => { const itemStr = JSON.stringify(item).replace(/'/g, "\\'"); let display = ""; if(tipo === 'item') { display = `<div class="sel-option" onclick='addSelecionado(${itemStr}, "item")'><div style="display:flex; justify-content:space-between;"><div class="sel-title">${item.nome}</div><div style="font-size:0.7rem; color:var(--energy);">Custo ${item.custo}</div></div><div class="sel-desc">${item.desc}</div></div>`; } else { display = `<div class="sel-option" onclick='addSelecionado(${itemStr}, "${tipo}")'><div class="sel-title">${item.nome}</div><div class="sel-desc">${item.desc}</div></div>`; } container.innerHTML += display; }); }
-window.addSelecionado = (item, tipo) => { if(tipo === 'item') { document.getElementById('itNome').value = item.nome; document.getElementById('itTipo').value = item.tipo; const grauMap = {1:"4", 2:"3", 3:"2", 4:"1"}; if(grauMap[item.custo]) document.getElementById('itGrau').value = grauMap[item.custo]; document.getElementById('itDesc').value = item.desc; } else if (tipo === 'propriedade') { addPropField(item.nome, item.desc); } else { addEncantField(item.nome, item.desc); } document.getElementById('selectionModal').style.display = 'none'; };
 // ROLAGEM
 let rollData = {};
 window.prepararRolagem = (nome, mod) => { rollData = { nome, mod }; document.getElementById('diceTitle').innerText = `Rolar ${nome}`; document.getElementById('diceLog').innerText = `1d20 + ${mod}`; document.getElementById('diceResult').innerText = "--"; document.getElementById('diceModal').style.display = "flex"; };
@@ -878,4 +881,3 @@ document.getElementById('btnRollConfirm').onclick = () => { const dado = Math.fl
 </script>
 </body>
 </html>
-
