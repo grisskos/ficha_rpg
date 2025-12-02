@@ -14,7 +14,7 @@
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
   
-  /* LAYOUT */
+  /* === LAYOUT === */
   .main-layout { display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; max-width: 1600px; margin: 0 auto; padding-bottom: 80px; }
   @media (max-width: 1200px) { .main-layout { grid-template-columns: 280px 1fr; } }
   @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
@@ -39,31 +39,25 @@
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
   .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
   .b-lvl { color: white; border-color: white; font-weight: bold; }
+  .b-cls { color: var(--primary); border-color: var(--primary); }
+  .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
   
-  /* Multiclasse Badge */
-  .b-cls { 
-    color: var(--primary); border-color: var(--primary); 
-    display: flex; align-items: center; gap: 5px; cursor: pointer;
-  }
-  .b-cls:hover { background: rgba(230, 57, 70, 0.1); }
-
   /* SOUL STATUS */
   .soul-badge { cursor: help; transition: 0.3s; font-weight: bold; border: 1px solid; }
   .soul-stable { border-color: var(--integridade); color: var(--integridade); }
   .soul-damaged { border-color: #f4d35e; color: #f4d35e; }
   .soul-unstable { border-color: #fb8500; color: #fb8500; border-width: 2px; }
-  .soul-critical { border-color: #d00000; color: #d00000; border-width: 2px; animation: pulse 2s infinite; background: rgba(255,0,0,0.1); }
+  .soul-critical { border-color: #d00000; color: #d00000; border-width: 2px; animation: pulse-red 2s infinite; background: rgba(255,0,0,0.1); }
   .soul-dead { border-color: #555; color: #555; text-decoration: line-through; } 
-  .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
+  .soul-badge:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 8px; border-radius: 5px; border: 1px solid #555; width: 200px; font-size: 0.75rem; font-weight: normal; text-align: center; white-space: normal; z-index: 100; pointer-events: none; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+  @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
-  /* TOKENS */
+  /* TOKENS & UTILS */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
   .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
   .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
   .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
-
-  /* UTILS */
   .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
   .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
@@ -75,7 +69,6 @@
   .attr-lbl { font-size: 0.7rem; color: var(--dim); display: block; font-weight: bold; }
   .attr-val { font-size: 1.4rem; font-weight: bold; display: block; margin: 2px 0; color: var(--text); }
   .attr-raw { font-size: 0.8rem; color: #777; background: #111; padding: 2px 6px; border-radius: 3px; }
-  
   .stat-row { margin-bottom: 12px; }
   .stat-head { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; color: #ddd; font-weight: bold; }
   .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
@@ -86,7 +79,7 @@
   .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
   .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
-  /* COMBATE & VALORES */
+  /* COMBATE & DERIVADOS */
   .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition:0.2s; }
   .section-header:hover { background: #222; }
   .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; } .cols-3 { grid-template-columns: repeat(3, 1fr); } .cols-5 { grid-template-columns: repeat(5, 1fr); }
@@ -101,7 +94,6 @@
   .btn-train.active { background: var(--energy); border-color: var(--energy); color: #000; }
   select.mini-select { background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; max-width: 80px; margin-top: 2px; }
   select.mini-select option { background: #222; color: #fff; }
-
   .derived-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .derived-box { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 10px; text-align: center; }
   .derived-label { font-size: 0.7rem; color: var(--energy); font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
@@ -109,47 +101,45 @@
   .derived-calc { display: flex; justify-content: center; margin-top: 5px; }
   .derived-calc input { background: #111; border: 1px solid #444; color: #aaa; width: 40px; text-align: center; border-radius: 3px; font-size: 0.8rem; }
 
-  /* HABILIDADES DE CLASSE */
+  /* HABILIDADES (NOVO ESTILO CARD SELEÇÃO) */
   .toggle-body { display: none; } .toggle-body.open { display: block; animation: slideDown 0.3s ease-out; }
   @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-  .class-ability-box { border-left: 4px solid var(--primary); padding: 10px; background: #151515; margin-bottom: 10px; border-radius: 4px; }
+  
+  .ability-select-btn {
+    background: #eee; color: #222; border: 2px solid #ccc; 
+    width: 100%; padding: 10px; font-weight: bold; cursor: pointer; 
+    border-radius: 4px; display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; transition: 0.2s;
+  }
+  .ability-select-btn:hover { background: #fff; border-color: var(--primary); color: var(--primary); }
+  
+  .ability-card-display {
+    background: #151515; border-left: 4px solid var(--primary); border-radius: 4px; 
+    padding: 15px; margin-bottom: 10px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  }
+  .ability-card-title { font-weight: bold; color: #fff; font-size: 1rem; margin-bottom: 5px; }
+  .ability-card-desc { font-size: 0.9rem; color: #aaa; white-space: pre-wrap; line-height: 1.5; }
+  .btn-remove-ability { 
+    position: absolute; top: 5px; right: 5px; 
+    background: transparent; border: none; color: #666; 
+    cursor: pointer; font-size: 1rem;
+  }
+  .btn-remove-ability:hover { color: #d00000; }
+  
+  /* Aptidão Geral (Listas) */
+  .class-ability-box { border-left: 4px solid var(--vigor); padding: 10px; background: #151515; margin-bottom: 10px; border-radius: 4px; }
   .class-ability-name { font-weight: bold; color: #fff; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
   .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 5px; white-space: pre-wrap; line-height: 1.4; }
-  .class-select { background: #000; border: 1px solid #444; color: #ccc; padding: 5px; border-radius: 4px; width: 100%; margin-top: 5px; font-family: inherit; }
-  .multi-choice-container { background: #111; padding: 10px; border: 1px solid #333; border-radius: 4px; margin-top: 5px; }
-  .multi-choice-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; color: #ccc; font-size: 0.85rem; border-bottom: 1px solid #222; padding-bottom: 5px; }
-  .multi-choice-item input { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; accent-color: var(--primary); }
-  .btn-add-origin { width: 100%; border: 1px dashed #555; background: transparent; color: #666; padding: 8px; cursor: pointer; margin-top: 5px; border-radius: 5px; }
-  .btn-add-origin:hover { border-color: var(--primary); color: var(--primary); }
-  
-  /* INVENTÁRIO, PERÍCIAS, NAV, LISTAS */
-  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-  .inv-card { background: #1a1a1a; border: 1px solid #444; border-radius: 6px; overflow: hidden; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; }
-  .inv-card:hover { border-color: white; transform: translateY(-3px); }
-  .inv-card.grade-4 { border-left: 3px solid #888; } .inv-card.grade-3 { border-left: 3px solid #4cc9f0; } .inv-card.grade-2 { border-left: 3px solid #4361ee; } .inv-card.grade-1 { border-left: 3px solid #f72585; } .inv-card.grade-0 { border-left: 3px solid #ff9e00; box-shadow: 0 0 5px #ff9e00; }
-  .inv-img { width: 100%; height: 80px; object-fit: cover; background: #000; }
-  .inv-body { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }
-  .inv-title { font-weight: bold; font-size: 0.9rem; color: #fff; line-height: 1.1; }
-  .inv-type { font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
-  .inv-stats { font-size: 0.75rem; color: var(--energy); font-weight: bold; margin-top: auto; }
-  .inv-slots { font-size: 0.7rem; color: #666; text-align: right; margin-top: 5px; }
-  .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 20px; position: relative; margin-bottom: 15px; overflow: hidden; }
-  .load-fill { height: 100%; width: 0%; background: #2a9d8f; transition: 0.3s; }
-  .load-text { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 0.8rem; line-height: 20px; color: #fff; text-shadow: 0 0 3px #000; }
-  .load-fill.over { background: #e9c46a; } .load-fill.full { background: #e63946; }
-  .overburden-warning { color: #e63946; font-size: 0.8rem; text-align: center; display: none; margin-top: -10px; margin-bottom: 10px; font-weight: bold; }
 
-  .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
-  .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-  .aptidao-header:hover { background: #2a2a2a; }
-  .aptidao-body { display: none; padding: 10px; background: #151515; }
-  .aptidao-body.open { display: block; }
-  .aptidao-desc { font-style: italic; color: #aaa; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; white-space: pre-wrap; }
-  .nivel-row { display: flex; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #555; }
-  .nivel-row.unlocked { color: #fff; } 
-  .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
-  .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
-  
+  /* Botões Mestre */
+  .gm-controls { display: none; margin-left: auto; gap: 5px; } 
+  .gm-visible .gm-controls { display: flex; }
+  .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+  .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
+  .btn-edit-apt:hover { color: var(--primary); }
+
+  /* PERÍCIAS & NAV */
   .skills-card { padding: 0; overflow: hidden; height: 100%; }
   .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
   .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
@@ -167,11 +157,15 @@
   .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
   .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
   .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
-  
-  .btn-icon-tiny { background: transparent; border: none; color: #666; cursor: pointer; font-size: 1rem; margin-left: 10px; }
-  .btn-icon-tiny:hover { color: white; }
   .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
   .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
+
+  /* LISTAS */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; } .list-box li { margin-bottom: 5px; }
+  .btn-add-origin { width: 100%; border: 1px dashed #555; background: transparent; color: #666; padding: 8px; cursor: pointer; margin-top: 5px; border-radius: 5px; }
+  .btn-add-origin:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-icon-tiny { background: transparent; border: none; color: #666; cursor: pointer; font-size: 1rem; margin-left: 10px; }
+  .btn-icon-tiny:hover { color: white; }
 
   /* MODALS */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
@@ -182,21 +176,33 @@
   .form-group label { display: block; color: #aaa; margin-bottom: 5px; font-size: 0.8rem; font-weight: bold; }
   input, textarea, select { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; box-sizing: border-box; font-family: inherit; }
   textarea { height: 80px; resize: vertical; }
+  .list-adder { margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
+  .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
   .btn-del-item { background: transparent; border: none; color: #d00000; cursor: pointer; font-size: 1.2rem; line-height: 1; }
   .btn-add-item { background: #222; border: 1px solid #444; color: #ccc; width: 100%; padding: 5px; cursor: pointer; margin-top: 5px; }
   
-  /* GM CONTROLS */
-  .gm-controls { display: none; margin-left: auto; gap: 5px; } 
-  .gm-visible .gm-controls { display: flex; }
-  .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
-  .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
-  .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
-  .btn-edit-apt:hover { color: var(--primary); }
+  /* POPUP ROLAGEM DADOS */
+  .dice-result { font-size: 2rem; font-weight: bold; color: var(--primary); text-align: center; margin: 15px 0; }
+  .dice-log { font-size: 0.9rem; color: #888; text-align: center; }
+  .btn-roll { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; font-size: 1.2rem; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 15px; }
   
-  /* LISTAS */
-  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; } .list-box li { margin-bottom: 5px; }
-  .list-adder { margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
-  .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
+  /* SELEÇÃO DE HABILIDADES MODAL (ITEM) */
+  .sel-option { background: #111; padding: 10px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.2s; }
+  .sel-option:hover { background: #1a1a1a; border-left: 3px solid var(--primary); }
+  .sel-title { font-weight: bold; color: white; font-size: 1rem; }
+  .sel-desc { color: #aaa; font-size: 0.85rem; margin-top: 2px; }
+  
+  /* APTIDÕES */
+  .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
+  .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .aptidao-header:hover { background: #2a2a2a; }
+  .aptidao-body { display: none; padding: 10px; background: #151515; }
+  .aptidao-body.open { display: block; }
+  .aptidao-desc { font-style: italic; color: #aaa; margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #333; padding-bottom: 10px; white-space: pre-wrap; }
+  .nivel-row { display: flex; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid #222; font-size: 0.9rem; color: #555; }
+  .nivel-row.unlocked { color: #fff; } 
+  .nivel-check { width: 15px; height: 15px; border: 1px solid #444; border-radius: 50%; margin-right: 10px; margin-top: 2px; flex-shrink: 0; }
+  .unlocked .nivel-check { background: var(--energy); border-color: var(--energy); box-shadow: 0 0 5px var(--energy); }
 </style>
 </head>
 <body>
@@ -295,35 +301,36 @@
 
 <button class="fab-config" onclick="abrirConfig()">⚙️</button>
 
-<div id="configModal" class="modal"><div class="modal-content"><h2 style="color:var(--primary);">Configurações</h2><label>Imagem (URL)</label><input id="editImgUrl" style="margin-bottom:15px;"><button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button><br><br><button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer;">Fechar</button><button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button></div></div>
-
-<div id="itemModal" class="modal"><div class="modal-content"><h2 id="itemModalTitle" style="color:var(--primary);">Novo Item</h2><div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;"><div class="form-group"><label>Nome</label><input id="itNome"></div><div class="form-group"><label>Tipo</label><select id="itTipo"><option value="Arma">Arma</option><option value="Uniforme">Uniforme</option><option value="Item">Item</option></select></div></div><div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;"><div class="form-group"><label>Grau</label><select id="itGrau"><option value="4">Grau 4</option><option value="3">Grau 3</option><option value="2">Grau 2</option><option value="1">Grau 1</option><option value="0">Especial</option></select></div><div class="form-group"><label>Espaços</label><input type="number" id="itEspacos" value="1"></div><div class="form-group"><label>Bônus</label><input id="itBonus" placeholder="+2 CA"></div></div><div class="form-group"><label>Imagem (URL)</label><input id="itImg" placeholder="http://..."></div><div class="form-group"><label>Descrição Geral</label><textarea id="itDesc" style="height:60px;"></textarea></div><div class="list-adder"><label>Propriedades</label><div id="propList"></div><button class="btn-add-item" onclick="addPropField()">+ Propriedade</button></div><div class="list-adder"><label>Encantamentos</label><div id="encantList"></div><button class="btn-add-item" onclick="addEncantField()">+ Encantamento</button></div><div style="display:flex; gap:10px; margin-top:20px;"><button onclick="salvarItem()" style="background:var(--primary); flex-grow:1; padding:10px; border:none; color:white; cursor:pointer;">Salvar Item</button><button onclick="excluirItem()" id="btnExcluirItem" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer; display:none;">Excluir</button></div><button onclick="document.getElementById('itemModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button></div></div>
-
-<div id="aptidaoEditorModal" class="modal"><div class="modal-content"><h2 style="color:var(--energy);">Editor de Aptidão</h2><div class="form-group"><label>Nome da Aptidão</label><input id="editAptNome"></div><div class="form-group"><label>Descrição Geral</label><textarea id="editAptDesc" style="height:80px;"></textarea></div><div class="form-group"><label>Nível Máximo (0 = Passiva)</label><input type="number" id="editAptMax" min="0" max="20" onchange="renderLevelInputs()"></div><div id="editAptLevelsContainer" style="margin-top:10px; display:flex; flex-direction:column; gap:5px;"></div><div style="display:flex; gap:10px; margin-top:20px;"><button onclick="salvarAptidaoCustom()" style="background:var(--energy); flex-grow:1; padding:10px; border:none; color:#000; cursor:pointer; font-weight:bold;">Salvar</button><button onclick="excluirAptidaoCustom()" id="btnExcluirApt" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer;">Excluir</button></div><button onclick="document.getElementById('aptidaoEditorModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button></div></div>
-
-<div id="origemModal" class="modal"><div class="modal-content"><h2 id="origemModalTitle" style="color:var(--vigor);">Nova Habilidade de Origem</h2><div class="form-group"><label>Nome</label><input id="origemNome"></div><div class="form-group"><label>Descrição</label><textarea id="origemDesc" style="height:150px;"></textarea></div><div style="display:flex; gap:10px; margin-top:20px;"><button onclick="salvarOrigem()" style="background:var(--vigor); flex-grow:1; padding:10px; border:none; color:#000; cursor:pointer; font-weight:bold;">Salvar</button></div><button onclick="document.getElementById('origemModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button></div></div>
-
-<div id="classManagerModal" class="modal">
-  <div class="modal-content">
-    <h2 style="color:var(--primary);">Gerenciar Classes</h2>
-    <div id="currentClassesList" style="margin-bottom:20px;"></div>
-    
-    <div style="border-top:1px solid #333; padding-top:10px;">
-      <label>Adicionar Nova Classe</label>
-      <div style="display:flex; gap:10px;">
-        <select id="newClassSelect" style="flex-grow:1;"></select>
-        <button onclick="adicionarClasse()" style="background:var(--primary); border:none; color:white; padding:5px 10px; cursor:pointer;">Adicionar</button>
-      </div>
-    </div>
-    <button onclick="document.getElementById('classManagerModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:15px; border:none; color:white; cursor:pointer;">Fechar</button>
+<div id="diceModal" class="modal">
+  <div class="modal-content" style="max-width:300px; text-align:center;">
+    <h2 id="diceTitle" style="color:var(--primary);">Rolar Dado</h2>
+    <div id="diceResult" class="dice-result">--</div>
+    <div id="diceLog" class="dice-log">1d20 + Mod</div>
+    <button id="btnRollConfirm" class="btn-roll">ROLAR</button>
+    <button onclick="document.getElementById('diceModal').style.display='none'" style="background:transparent; border:none; color:#666; margin-top:10px; cursor:pointer; width:100%;">Cancelar</button>
   </div>
 </div>
+
+<div id="selectionModal" class="modal">
+  <div class="modal-content">
+    <h2 id="selectTitle" style="color:var(--primary);">Escolha uma Habilidade</h2>
+    <div id="selectOptionsList" style="display:flex; flex-direction:column; gap:5px;"></div>
+    <button onclick="document.getElementById('selectionModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer; margin-top:15px;">Cancelar</button>
+  </div>
+</div>
+
+<div id="configModal" class="modal"><div class="modal-content"><h2 style="color:var(--primary);">Configurações</h2><label>Imagem (URL)</label><input id="editImgUrl" style="margin-bottom:15px;"><button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button><br><br><button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer;">Fechar</button><button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button></div></div>
+<div id="itemModal" class="modal"><div class="modal-content"><h2 id="itemModalTitle" style="color:var(--primary);">Novo Item</h2><div style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;"><div class="form-group"><label>Nome</label><input id="itNome"></div><div class="form-group"><label>Tipo</label><select id="itTipo"><option value="Arma">Arma</option><option value="Uniforme">Uniforme</option><option value="Item">Item</option></select></div></div><div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;"><div class="form-group"><label>Grau</label><select id="itGrau"><option value="4">Grau 4</option><option value="3">Grau 3</option><option value="2">Grau 2</option><option value="1">Grau 1</option><option value="0">Especial</option></select></div><div class="form-group"><label>Espaços</label><input type="number" id="itEspacos" value="1"></div><div class="form-group"><label>Bônus</label><input id="itBonus" placeholder="+2 CA"></div></div><div class="form-group"><label>Imagem (URL)</label><input id="itImg" placeholder="http://..."></div><div class="form-group"><label>Descrição Geral</label><textarea id="itDesc" style="height:60px;"></textarea></div><div class="list-adder"><label>Propriedades</label><div id="propList"></div><button class="btn-add-item" onclick="addPropField()">+ Propriedade</button></div><div class="list-adder"><label>Encantamentos</label><div id="encantList"></div><button class="btn-add-item" onclick="addEncantField()">+ Encantamento</button></div><div style="display:flex; gap:10px; margin-top:20px;"><button onclick="salvarItem()" style="background:var(--primary); flex-grow:1; padding:10px; border:none; color:white; cursor:pointer;">Salvar Item</button><button onclick="excluirItem()" id="btnExcluirItem" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer; display:none;">Excluir</button></div><button onclick="document.getElementById('itemModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button></div></div>
+<div id="aptidaoEditorModal" class="modal"><div class="modal-content"><h2 style="color:var(--energy);">Editor de Aptidão</h2><div class="form-group"><label>Nome da Aptidão</label><input id="editAptNome"></div><div class="form-group"><label>Descrição Geral</label><textarea id="editAptDesc" style="height:80px;"></textarea></div><div class="form-group"><label>Nível Máximo (0 = Passiva)</label><input type="number" id="editAptMax" min="0" max="20" onchange="renderLevelInputs()"></div><div id="editAptLevelsContainer" style="margin-top:10px; display:flex; flex-direction:column; gap:5px;"></div><div style="display:flex; gap:10px; margin-top:20px;"><button onclick="salvarAptidaoCustom()" style="background:var(--energy); flex-grow:1; padding:10px; border:none; color:#000; cursor:pointer; font-weight:bold;">Salvar</button><button onclick="excluirAptidaoCustom()" id="btnExcluirApt" style="background:transparent; border:1px solid #d00000; color:#d00000; padding:10px; cursor:pointer;">Excluir</button></div><button onclick="document.getElementById('aptidaoEditorModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button></div></div>
+<div id="origemModal" class="modal"><div class="modal-content"><h2 id="origemModalTitle" style="color:var(--vigor);">Nova Habilidade de Origem</h2><div class="form-group"><label>Nome</label><input id="origemNome"></div><div class="form-group"><label>Descrição</label><textarea id="origemDesc" style="height:150px;"></textarea></div><div style="display:flex; gap:10px; margin-top:20px;"><button onclick="salvarOrigem()" style="background:var(--vigor); flex-grow:1; padding:10px; border:none; color:#000; cursor:pointer; font-weight:bold;">Salvar</button></div><button onclick="document.getElementById('origemModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:5px; border:none; color:white; cursor:pointer;">Cancelar</button></div></div>
+<div id="classManagerModal" class="modal"><div class="modal-content"><h2 style="color:var(--primary);">Gerenciar Classes</h2><div id="currentClassesList" style="margin-bottom:20px;"></div><div style="border-top:1px solid #333; padding-top:10px;"><label>Adicionar Nova Classe</label><div style="display:flex; gap:10px;"><select id="newClassSelect" style="flex-grow:1;"></select><button onclick="adicionarClasse()" style="background:var(--primary); border:none; color:white; padding:5px 10px; cursor:pointer;">Adicionar</button></div></div><button onclick="document.getElementById('classManagerModal').style.display='none'" style="background:#333; width:100%; padding:10px; margin-top:15px; border:none; color:white; cursor:pointer;">Fechar</button></div></div>
 
 <script type="module">
 import { db, auth, doc, updateDoc, deleteDoc, onSnapshot, collection } from "./firebase.js";
 import { APTIDOES_BASE } from "./aptidoes_db.js";
 import { HABILIDADES_CLASSE } from "./classes_db.js";
 
+const WEBHOOK_URL = "SEU_LINK_DO_DISCORD_AQUI"; 
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 window.id = id;
@@ -356,15 +363,7 @@ auth.onAuthStateChanged(user => {
 onSnapshot(doc(db, "fichas", id), (docSnap) => {
   if (docSnap.exists()) { 
     ficha = docSnap.data();
-    
-    // MIGRATION: Convert old string classe/nivel to array structure
-    if (!ficha.classes) {
-      ficha.classes = [];
-      if (ficha.classe) {
-        ficha.classes.push({ nome: ficha.classe, nivel: Number(ficha.nivel || 1) });
-      }
-    }
-    
+    if (!ficha.classes) ficha.classes = [{ nome: ficha.classe || "Lutador", nivel: Number(ficha.nivel || 1) }];
     if (!ficha.atributos) ficha.atributos = { forca:10, destreza:10, constituicao:10, inteligencia:10, sabedoria:10, presenca:10 };
     if (!ficha.pericias) ficha.pericias = {};
     if (!ficha.vida) ficha.vida = { atual: 10, max: 10 };
@@ -386,7 +385,6 @@ onSnapshot(doc(db, "fichas", id), (docSnap) => {
   }
 });
 
-// SHIKIGAMIS
 onSnapshot(collection(db, "fichas", id, "shikigamis"), (snap) => {
   const shikiArea = document.getElementById('shikiTokens');
   shikiArea.innerHTML = "";
@@ -404,12 +402,10 @@ function renderFicha() {
   const f = ficha;
   const totalLevel = f.classes.reduce((acc, c) => acc + Number(c.nivel), 0);
   
-  // Header
   const nomeEl = document.getElementById('nomeDisplay');
   if(nomeEl && !nomeEl.querySelector('input')) nomeEl.innerText = f.nome || "Sem Nome";
   document.getElementById('charImg').src = f.imagem || "";
 
-  // Badge de Classe (Multiclasse)
   const classBadgeText = f.classes.map(c => `${c.nome} ${c.nivel}`).join(" / ");
   document.getElementById('badges').innerHTML = `
     <span class="badge b-lvl">NVL ${totalLevel}</span>
@@ -417,7 +413,7 @@ function renderFicha() {
     <span class="badge soul-badge" id="soulBadge">Estável</span>
   `;
 
-  // Soul
+  // SOUL
   const intPct = f.integridade.max > 0 ? (f.integridade.atual / f.integridade.max) * 100 : 100;
   const soulBadge = document.getElementById('soulBadge');
   let soulClass = "badge soul-stable"; let soulText = "Estável"; let soulTip = "Alma Estável: Sem penalidades.";
@@ -436,7 +432,6 @@ function renderFicha() {
   if(f.sequelas.exaustao) divSequela.innerHTML += `<span class="sequela-tag">⚠ EXAUSTÃO (-2 Físico)</span>`;
   if(f.sequelas.corrupcao) divSequela.innerHTML += `<span class="sequela-tag">☠ CORRUPÇÃO (HP Max Reduzido)</span>`;
 
-  // Atributos
   const areaAttr = document.getElementById('atributosArea');
   areaAttr.innerHTML = "";
   Object.keys(ATR_SHORT).forEach(key => {
@@ -445,7 +440,6 @@ function renderFicha() {
     areaAttr.innerHTML += `<div class="attr-box"><span class="attr-lbl">${ATR_SHORT[key]}</span><span class="attr-val">${mod>=0?'+':''}${mod}</span><span class="attr-raw editable" onclick="editarCampo(this, 'atributos.${key}', 'number')">${val}</span></div>`;
   });
 
-  // Stats
   const areaStats = document.getElementById('statsArea');
   areaStats.innerHTML = "";
   const statsMap = [{k:'vida', l:'Vida', color:'var(--primary)'}, {k:'energia', l:'Energia', color:'var(--energy)'}, {k:'vigor', l:'Vigor', color:'var(--vigor)'}, {k:'integridade', l:'Integ.', color:'var(--integridade)'}];
@@ -455,7 +449,6 @@ function renderFicha() {
     areaStats.innerHTML += `<div class="stat-row"><div class="stat-head"><span>${s.l}</span><div><span class="editable" onclick="editarCampo(this, '${s.k}.atual', 'number')">${st.atual}</span> / <span class="editable" onclick="editarCampo(this, '${s.k}.max', 'number')">${st.max}</span></div></div><div class="bar-bg"><div class="bar-fill" style="width:${pct}%; background:${s.color}; box-shadow: 0 0 8px ${s.color};"></div></div><div class="stat-ctrl"><div class="btn-calc" onclick="mathStat(this, '${s.k}')">🔢</div><div class="btn-mini" onclick="upStat('${s.k}', -1)">-</div><div class="btn-mini" onclick="upStat('${s.k}', 1)">+</div></div></div>`;
   });
 
-  // Calc Globals
   const metadeNivel = Math.floor(totalLevel / 2);
   const bonusTreino = 2 + Math.floor((totalLevel - 1) / 4);
   const modFor = Math.floor((f.atributos.forca - 10) / 2);
@@ -467,9 +460,8 @@ function renderFicha() {
   if (f.sequelas.exaustao) bonusPhysSkill_Apice -= 2;
 
   renderDerivados(totalLevel);
-  renderHabilidadesClasse(); // Agora suporta multiclasse
+  renderHabilidadesClasse();
 
-  // Combate
   const attacksArea = document.getElementById('combatAttacksArea');
   attacksArea.innerHTML = "";
   const cCorpo = cData.corpo || {};
@@ -499,8 +491,6 @@ function renderFicha() {
     resistArea.innerHTML += `<div class="combat-card"><div class="cc-header">${res.l}</div><div class="cc-body" style="font-size:1.5rem;">${rTotal>=0?'+':''}${rTotal}</div><div class="cc-footer"><div class="btn-train ${rData.treino?'active':''}" onclick="toggleCombatTrain('${res.k}')">T</div><input class="bonus-input" placeholder="+" value="${rData.outros||''}" onchange="setCombatOther('${res.k}', this.value)"></div></div>`;
   });
 
-  // Inventário
-  const strMod = Math.floor((f.atributos.forca - 10) / 2);
   const limit = 8 + (strMod * 2); 
   const hardLimit = limit * 2;
   const currentLoad = (f.inventario || []).reduce((acc, item) => acc + (Number(item.espacos)||0), 0);
@@ -516,7 +506,6 @@ function renderFicha() {
     invGrid.innerHTML += `<div class="inv-card ${gradeClass}" onclick="abrirItemModal(${idx})"><img src="${imgUrl}" class="inv-img"><div class="inv-body"><div class="inv-title">${item.nome}</div><div class="inv-type">${item.tipo} • Grau ${['Esp','1','2','3','4'][item.grau]}</div><div class="inv-stats">${item.bonus || ''}</div><div class="inv-slots">${item.espacos} 📦</div></div></div>`;
   });
 
-  // Aptidões
   const containerApt = document.getElementById('listaAptidoes');
   containerApt.innerHTML = "";
   const todasAptidoes = [...APTIDOES_BASE, ...(ficha.aptidoesCustom || [])];
@@ -551,7 +540,6 @@ function renderFicha() {
 
   const listaSkills = document.getElementById('skillsList');
   listaSkills.innerHTML = "";
-  
   PERICIAS_DEF.forEach(p => {
     const attrVal = f.atributos[p.a] || 10;
     const modAttr = Math.floor((attrVal - 10) / 2);
@@ -562,59 +550,110 @@ function renderFicha() {
     total += Number(saved.bonus || 0);
     if (f.transfUnlocked.apice && PHYS_ATTRS.includes(p.a)) total += bonusPhysSkill_Apice;
 
-    listaSkills.innerHTML += `<div class="skill-row"><span class="sk-name">${p.n}</span><span class="sk-attr">${ATR_SHORT[p.a]}</span><span class="sk-total">${total>=0?'+':''}${total}</span><div class="sk-btn-group"><input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)"><div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div><div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div></div></div>`;
+    listaSkills.innerHTML += `
+      <div class="skill-row" onclick="prepararRolagem('${p.n}', ${total})">
+        <span class="sk-name">${p.n}</span>
+        <span class="sk-attr">${ATR_SHORT[p.a]}</span>
+        <span class="sk-total">${total>=0?'+':''}${total}</span>
+        <div class="sk-btn-group" onclick="event.stopPropagation()">
+           <input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)">
+           <div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div>
+           <div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div>
+        </div>
+      </div>`;
   });
 }
 
-// RENDERIZAÇÃO MULTICLASSE
+// RENDERIZAR HABILIDADES CLASSE (REFORMULADO - MODAL)
 function renderHabilidadesClasse() {
   const container = document.getElementById('classAbilitiesList');
   container.innerHTML = "";
   
-  // Itera sobre todas as classes do personagem
-  ficha.classes.forEach((clsObj, classIndex) => {
+  ficha.classes.forEach((clsObj) => {
     const classeNome = clsObj.nome;
     const nivelClasse = Number(clsObj.nivel || 1);
     
-    // Cabeçalho da Classe
     container.innerHTML += `<h4 style="margin:10px 0 5px 0; color:var(--primary); text-transform:uppercase;">${classeNome} (Nível ${nivelClasse})</h4>`;
 
     if (HABILIDADES_CLASSE[classeNome]) {
       HABILIDADES_CLASSE[classeNome].forEach((hab, habIdx) => {
-        if (hab.nivel > nivelClasse) return; // Só mostra se tiver nível NA CLASSE
-
-        let content = "";
+        if (hab.nivel > nivelClasse) return;
         
-        // Gera ID único para a escolha: NomeClasse-IndexHabilidade
-        // Ex: Lutador-0, Suporte-1
-        // Isso evita colisão entre classes diferentes
         const uniqueKey = `${classeNome}-${habIdx}`;
-
+        
         if (hab.tipo === "selecao_unica") {
           const savedChoice = (ficha.escolhasClasse || {})[uniqueKey] || "";
-          const options = hab.opcoes.map(op => `<option value="${op}" ${op===savedChoice?'selected':''}>${op}</option>`).join('');
-          content = `<div class="class-ability-box"><div class="class-ability-name">${hab.nome}</div><div class="class-ability-desc">${hab.desc || ''}</div><select class="class-select" onchange="salvarEscolhaClasse('${uniqueKey}', this.value)"><option value="">-- Escolha --</option>${options}</select></div>`;
-        } else if (hab.tipo === "selecao_multipla") {
+          
+          // SE JÁ ESCOLHEU, MOSTRA CARD
+          if(savedChoice) {
+            // Precisa achar a descrição da opção escolhida
+            // A string da opção é "Nome: Descrição". Vamos separar.
+            let title = savedChoice;
+            let desc = "";
+            if(savedChoice.includes(":")) {
+              const parts = savedChoice.split(":");
+              title = parts[0];
+              desc = parts.slice(1).join(":").trim();
+            }
+            
+            container.innerHTML += `
+              <div class="ability-card-display">
+                <button class="btn-remove-ability" onclick="salvarEscolhaClasse('${uniqueKey}', '')">✎</button>
+                <div class="ability-card-title">${title}</div>
+                <div class="ability-card-desc">${desc}</div>
+              </div>`;
+          } 
+          // SE NÃO ESCOLHEU, MOSTRA BOTÃO DE SELEÇÃO
+          else {
+             container.innerHTML += `
+               <div class="ability-select-btn" onclick="openSelectionModal('${uniqueKey}', 'unica', ${habIdx}, '${classeNome}')">
+                 <span>➕ Selecionar: ${hab.nome}</span>
+                 <span>➤</span>
+               </div>`;
+          }
+        } 
+        
+        else if (hab.tipo === "selecao_multipla") {
+          // MULTIPLA (MANOBRAS)
           const savedChoices = (ficha.escolhasClasse || {})[uniqueKey] || []; 
           const qtdMax = hab.qtd || 2;
-          let checksHtml = "";
-          hab.opcoes.forEach(op => {
-            const nomeOp = typeof op === 'string' ? op : op.nome;
-            const descOp = typeof op === 'string' ? '' : op.desc;
-            const isChecked = savedChoices.includes(nomeOp);
-            checksHtml += `<div class="multi-choice-item"><input type="checkbox" onchange="toggleEscolhaMultipla('${uniqueKey}', '${nomeOp}', ${qtdMax}, this)" ${isChecked ? 'checked' : ''}><div><strong style="color:white;">${nomeOp}</strong><div style="color:#888;">${descOp}</div></div></div>`;
+          
+          // Renderiza as já escolhidas
+          savedChoices.forEach(choice => {
+             const choiceObj = hab.opcoes.find(op => op.nome === choice || op === choice);
+             const title = choiceObj.nome || choiceObj;
+             const desc = choiceObj.desc || "";
+             
+             container.innerHTML += `
+              <div class="ability-card-display">
+                <button class="btn-remove-ability" onclick="toggleEscolhaMultipla('${uniqueKey}', '${title}', ${qtdMax}, {checked:false})">×</button>
+                <div class="ability-card-title">${title}</div>
+                <div class="ability-card-desc">${desc}</div>
+              </div>`;
           });
-          content = `<div class="class-ability-box"><div class="class-ability-name">${hab.nome} (Escolha ${qtdMax})</div><div class="class-ability-desc">${hab.desc || ''}</div><div class="multi-choice-container">${checksHtml}</div></div>`;
-        } else {
-          content = `<div class="class-ability-box"><div class="class-ability-name">${hab.nome}</div><div class="class-ability-desc">${hab.desc}</div></div>`;
-        }
+
+          // Se ainda pode escolher, mostra botão
+          if(savedChoices.length < qtdMax) {
+            container.innerHTML += `
+               <div class="ability-select-btn" onclick="openSelectionModal('${uniqueKey}', 'multipla', ${habIdx}, '${classeNome}', ${qtdMax})">
+                 <span>➕ Adicionar: ${hab.nome} (${savedChoices.length}/${qtdMax})</span>
+                 <span>➤</span>
+               </div>`;
+          }
+        } 
         
-        container.innerHTML += content;
+        else {
+          // PASSIVA FIXA
+          container.innerHTML += `
+            <div class="class-ability-box">
+              <div class="class-ability-name">${hab.nome}</div>
+              <div class="class-ability-desc">${hab.desc}</div>
+            </div>`;
+        }
       });
     }
   });
 
-  // Origem (Mantido)
   const originContainer = document.getElementById('originAbilitiesList');
   originContainer.innerHTML = "";
   (ficha.habilidadesOrigem || []).forEach((h, i) => {
@@ -632,95 +671,90 @@ function renderHabilidadesClasse() {
   });
 }
 
-function renderDerivados(totalLevel) {
-  const desMod = Math.floor((ficha.atributos.destreza - 10) / 2);
-  const sabMod = Math.floor((ficha.atributos.sabedoria - 10) / 2);
-  const metadeNivel = Math.floor(totalLevel / 2);
-  const bonusTreino = 2 + Math.floor((totalLevel - 1) / 4);
+// SELECTION MODAL LOGIC
+let currentSelectionKey = "";
+let currentSelectionType = "";
+let currentSelectionMax = 0;
+
+window.openSelectionModal = (key, type, habIndex, className, max = 1) => {
+  currentSelectionKey = key;
+  currentSelectionType = type;
+  currentSelectionMax = max;
   
-  const defBonus = Number(ficha.derivados.defesa || 0);
-  const defesa = 10 + desMod + metadeNivel + defBonus;
-  document.getElementById('valDefesa').innerText = defesa;
-  document.getElementById('bonusDef').value = ficha.derivados.defesa || "";
-
-  const pSaved = (ficha.pericias && ficha.pericias["Percepção"]) || {t:false, m:false, bonus:0};
-  let percTotal = sabMod + metadeNivel + Number(pSaved.bonus || 0);
-  if(pSaved.t) percTotal += bonusTreino;
-  if(pSaved.m) percTotal += 1;
+  const hab = HABILIDADES_CLASSE[className][habIndex];
+  const listDiv = document.getElementById('selectOptionsList');
+  const modal = document.getElementById('selectionModal');
   
-  const atencaoBonus = Number(ficha.derivados.atencao || 0);
-  const atencao = 10 + percTotal + atencaoBonus;
-  document.getElementById('valAtencao').innerText = atencao;
-  document.getElementById('bonusAtencao').value = ficha.derivados.atencao || "";
-
-  const iniBonus = Number(ficha.derivados.iniciativa || 0);
-  const iniciativa = desMod + iniBonus;
-  document.getElementById('valIniciativa').innerText = (iniciativa>=0?'+':'') + iniciativa;
-  document.getElementById('bonusIniciativa').value = ficha.derivados.iniciativa || "";
-
-  const desBonus = Number(ficha.derivados.deslocamento || 0);
-  const desloc = 9 + desBonus;
-  document.getElementById('valDesloc').innerText = desloc + "m";
-  document.getElementById('bonusDesloc').value = ficha.derivados.deslocamento || "";
-}
-
-// GERENCIADOR DE CLASSES (MODAL)
-window.abrirClassManager = () => {
-  const modal = document.getElementById('classManagerModal');
-  const listDiv = document.getElementById('currentClassesList');
-  const select = document.getElementById('newClassSelect');
-  
-  // Popula lista atual
+  document.getElementById('selectTitle').innerText = hab.nome;
   listDiv.innerHTML = "";
-  ficha.classes.forEach((cls, idx) => {
+  
+  // Filtra opções já escolhidas (para multipla)
+  const savedChoices = (ficha.escolhasClasse || {})[key] || [];
+
+  hab.opcoes.forEach(op => {
+    let title = "";
+    let desc = "";
+    let rawValue = "";
+
+    if(typeof op === 'string') {
+       if(op.includes(":")) {
+         const parts = op.split(":");
+         title = parts[0];
+         desc = parts.slice(1).join(":").trim();
+       } else {
+         title = op;
+       }
+       rawValue = op;
+    } else {
+       title = op.nome;
+       desc = op.desc;
+       rawValue = op.nome;
+    }
+
+    // Se já escolheu, não mostra na lista
+    if(type === 'multipla' && savedChoices.includes(title)) return;
+
     listDiv.innerHTML += `
-      <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:8px; margin-bottom:5px; border-radius:4px;">
-        <span style="font-weight:bold; color:white;">${cls.nome}</span>
-        <div style="display:flex; align-items:center; gap:5px;">
-          <span style="color:#aaa; font-size:0.8rem;">Nvl:</span>
-          <input type="number" value="${cls.nivel}" style="width:40px; padding:2px; text-align:center;" onchange="atualizarNivelClasse(${idx}, this.value)">
-          <button onclick="removerClasse(${idx})" style="background:transparent; border:none; color:#d00000; cursor:pointer; font-weight:bold;">×</button>
-        </div>
+      <div class="sel-option" onclick="confirmSelection('${rawValue.replace(/'/g, "\\'")}')">
+        <div class="sel-title">${title}</div>
+        <div class="sel-desc">${desc}</div>
       </div>`;
   });
-
-  // Popula seletor de novas classes (Baseado no DB)
-  select.innerHTML = `<option value="">-- Selecionar --</option>`;
-  Object.keys(HABILIDADES_CLASSE).forEach(nome => {
-    // Só mostra se ainda não tem
-    if(!ficha.classes.some(c => c.nome === nome)) {
-      select.innerHTML += `<option value="${nome}">${nome}</option>`;
-    }
-  });
-
-  modal.style.display = 'flex';
-};
-
-window.adicionarClasse = async () => {
-  const nome = document.getElementById('newClassSelect').value;
-  if(!nome) return;
   
-  ficha.classes.push({ nome: nome, nivel: 1 });
-  await updateDoc(doc(db, "fichas", id), { classes: ficha.classes });
-  abrirClassManager(); // Refresh modal
-  renderFicha(); // Refresh screen
-};
+  modal.style.display = 'flex';
+}
 
-window.atualizarNivelClasse = async (index, novoNivel) => {
-  ficha.classes[index].nivel = Number(novoNivel);
-  await updateDoc(doc(db, "fichas", id), { classes: ficha.classes });
-  renderFicha();
-};
+window.confirmSelection = async (value) => {
+  if(currentSelectionType === 'unica') {
+    await salvarEscolhaClasse(currentSelectionKey, value);
+  } else {
+    // Multipla
+    // Value aqui pode ser a string completa ou o nome. No objeto DB usamos nome.
+    // Se for string pura do Especialista, é o texto todo.
+    // Se for objeto do Lutador, passamos o nome.
+    
+    // Hack: No onclick acima passei rawValue.
+    // Se for objeto (Lutador), rawValue é só o nome ("Ajuste").
+    // Se for string (Especialista), é "Nome: Desc".
+    
+    // Precisamos extrair o nome para salvar no array se for objeto no DB, 
+    // mas para o Especialista salvamos a string toda.
+    // O código anterior do DB usava string. O novo usa Objeto para Lutador.
+    
+    // Simplificação: Salva o valor que veio.
+    // O toggle verifica includes.
+    
+    let valToSave = value;
+    // Se for do Lutador, o value é só o nome.
+    
+    // Chama toggle passando checked=true simulado
+    await toggleEscolhaMultipla(currentSelectionKey, valToSave, currentSelectionMax, {checked:true});
+  }
+  document.getElementById('selectionModal').style.display = 'none';
+  renderFicha(); // Refresh
+}
 
-window.removerClasse = async (index) => {
-  if(!confirm("Remover esta classe? (Escolhas serão mantidas no banco mas ocultas)")) return;
-  ficha.classes.splice(index, 1);
-  await updateDoc(doc(db, "fichas", id), { classes: ficha.classes });
-  abrirClassManager();
-  renderFicha();
-};
 
-// FUNÇÕES AUXILIARES
 window.salvarEscolhaClasse = async (key, valor) => {
   const escolhas = ficha.escolhasClasse || {};
   escolhas[key] = valor;
@@ -732,9 +766,12 @@ window.toggleEscolhaMultipla = async (key, valorOpcao, max, checkbox) => {
   let listaAtual = escolhas[key] || [];
   
   if (checkbox.checked) {
-    if (listaAtual.length >= max) { alert(`Você só pode escolher ${max} opções.`); checkbox.checked = false; return; }
+    if (listaAtual.length >= max) return; // Should not happen via modal
     listaAtual.push(valorOpcao);
   } else {
+    // Remove
+    // Se o valor salvo for "Nome: Desc" e passarmos "Nome", pode dar erro.
+    // Mas aqui estamos removendo o que foi salvo.
     listaAtual = listaAtual.filter(item => item !== valorOpcao);
   }
   
@@ -742,7 +779,13 @@ window.toggleEscolhaMultipla = async (key, valorOpcao, max, checkbox) => {
   await updateDoc(doc(db, "fichas", id), { escolhasClasse: escolhas });
 };
 
-// ... (Resto das funções de edição, modal, etc mantidas iguais ao anterior) ...
+// ... (Resto das funções inalteradas) ...
+// ROLAGEM DE DADOS & WEBHOOK
+let rollData = {};
+window.prepararRolagem = (nome, mod) => { rollData = { nome, mod }; document.getElementById('diceTitle').innerText = `Rolar ${nome}`; document.getElementById('diceLog').innerText = `1d20 + ${mod}`; document.getElementById('diceResult').innerText = "--"; document.getElementById('diceModal').style.display = "flex"; };
+document.getElementById('btnRollConfirm').onclick = () => { const dado = Math.floor(Math.random() * 20) + 1; const total = dado + rollData.mod; const resDiv = document.getElementById('diceResult'); resDiv.innerText = total; resDiv.style.color = (dado === 20) ? "#00ff00" : (dado === 1 ? "#ff0000" : "var(--primary)"); const charName = document.getElementById("nomeDisplay").innerText; const avatarUrl = document.getElementById("charImg").src; const msg = `🎲 **${rollData.nome}**: \`${total}\` ⟵ [${dado}] 1d20 + ${rollData.mod}`; fetch(WEBHOOK_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: charName, avatar_url: avatarUrl, content: msg }) }).catch(console.error); };
+
+// MODALS GERAIS
 window.abrirModalOrigem = (index = -1) => { editingOriginIndex = index; const modal = document.getElementById('origemModal'); if (index > -1) { const h = ficha.habilidadesOrigem[index]; document.getElementById('origemNome').value = h.nome; document.getElementById('origemDesc').value = h.desc; document.getElementById('origemModalTitle').innerText = "Editar Origem"; } else { document.getElementById('origemNome').value = ""; document.getElementById('origemDesc').value = ""; document.getElementById('origemModalTitle').innerText = "Nova Habilidade de Origem"; } modal.style.display = 'flex'; };
 window.salvarOrigem = async () => { const nome = document.getElementById('origemNome').value; const desc = document.getElementById('origemDesc').value; if(!ficha.habilidadesOrigem) ficha.habilidadesOrigem = []; if(editingOriginIndex === -1) { ficha.habilidadesOrigem.push({ nome, desc }); } else { ficha.habilidadesOrigem[editingOriginIndex] = { nome, desc }; } await updateDoc(doc(db, "fichas", id), { habilidadesOrigem: ficha.habilidadesOrigem }); document.getElementById('origemModal').style.display = 'none'; };
 window.excluirOrigem = async (index) => { if(!confirm("Excluir?")) return; ficha.habilidadesOrigem.splice(index, 1); await updateDoc(doc(db, "fichas", id), { habilidadesOrigem: ficha.habilidadesOrigem }); };
@@ -776,6 +819,11 @@ window.irParaFeiticos = () => { window.location = `feiticos.html?id=${id}`; };
 window.abrirConfig = () => { document.getElementById('configModal').style.display = 'block'; document.getElementById('editImgUrl').value = ficha.imagem || ""; };
 window.salvarImg = async () => { await updateDoc(doc(db, "fichas", id), { imagem: document.getElementById('editImgUrl').value }); alert("Imagem atualizada!"); };
 window.excluirPersonagem = async () => { if(prompt("Digite DELETAR para confirmar:")==="DELETAR") { await deleteDoc(doc(db, "fichas", id)); window.location="index.html"; } };
+window.abrirClassManager = () => { const modal = document.getElementById('classManagerModal'); const listDiv = document.getElementById('currentClassesList'); const select = document.getElementById('newClassSelect'); listDiv.innerHTML = ""; ficha.classes.forEach((cls, idx) => { listDiv.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:8px; margin-bottom:5px; border-radius:4px;"><span style="font-weight:bold; color:white;">${cls.nome}</span><div style="display:flex; align-items:center; gap:5px;"><span style="color:#aaa; font-size:0.8rem;">Nvl:</span><input type="number" value="${cls.nivel}" style="width:40px; padding:2px; text-align:center;" onchange="atualizarNivelClasse(${idx}, this.value)"><button onclick="removerClasse(${idx})" style="background:transparent; border:none; color:#d00000; cursor:pointer; font-weight:bold;">×</button></div></div>`; }); select.innerHTML = `<option value="">-- Selecionar --</option>`; Object.keys(HABILIDADES_CLASSE).forEach(nome => { if(!ficha.classes.some(c => c.nome === nome)) { select.innerHTML += `<option value="${nome}">${nome}</option>`; } }); modal.style.display = 'flex'; };
+window.adicionarClasse = async () => { const nome = document.getElementById('newClassSelect').value; if(!nome) return; ficha.classes.push({ nome: nome, nivel: 1 }); await updateDoc(doc(db, "fichas", id), { classes: ficha.classes }); abrirClassManager(); renderFicha(); };
+window.atualizarNivelClasse = async (index, novoNivel) => { ficha.classes[index].nivel = Number(novoNivel); await updateDoc(doc(db, "fichas", id), { classes: ficha.classes }); renderFicha(); };
+window.removerClasse = async (index) => { if(!confirm("Remover esta classe?")) return; ficha.classes.splice(index, 1); await updateDoc(doc(db, "fichas", id), { classes: ficha.classes }); abrirClassManager(); renderFicha(); };
+
 </script>
 </body>
 </html>
