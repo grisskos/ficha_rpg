@@ -1,0 +1,57 @@
+export const ITENS_ESPECIAIS = [
+  // CUSTO 1
+  { custo: 1, nome: "Antídoto Simples", tipo: "Item", grau: "4", desc: "[Fármaco] Neutraliza venenos leves (Custo 1 ou Maldição Grau 4). Ação Bônus: cura condição Envenenado." },
+  { custo: 1, nome: "Brinco da Comunicação", tipo: "Item", grau: "4", desc: "[Acessório] Sintoniza com até 6 pessoas (30m). Comunicação mental. Sintonizar é Ação Completa. Brilha ao usar." },
+  { custo: 1, nome: "Chaveiro Canalizador", tipo: "Item", grau: "4", desc: "[Acessório] Aumenta a CD Amaldiçoada em +1." },
+  { custo: 1, nome: "Injeção Estimulante", tipo: "Item", grau: "4", desc: "[Fármaco] 1 Carga. Ação Bônus. +2 em perícias de um atributo por 10 min." },
+  { custo: 1, nome: "Mix Energético Pequeno", tipo: "Item", grau: "4", desc: "[Fármaco] Ação Bônus. Recupera 3 pontos de Estamina." },
+  { custo: 1, nome: "Óleo Amolador", tipo: "Item", grau: "4", desc: "[Mistura] Aplica em 2 armas. Recebe traço Mortal d6. Dura 1 dia." },
+  { custo: 1, nome: "Óleo Flamejante", tipo: "Item", grau: "4", desc: "[Mistura] Aplica em 2 armas. Recebe traço Modular Queimante. Dura 10 min." },
+  { custo: 1, nome: "Pérola Carregada", tipo: "Item", grau: "4", desc: "[Espiritual] Ação Bônus. Recupera 3 PE." },
+  { custo: 1, nome: "Remédio Simples", tipo: "Item", grau: "4", desc: "[Fármaco] Ação Comum. Gasta até 4 dados de vida para se curar." },
+  { custo: 1, nome: "Símbolo da Vida", tipo: "Item", grau: "4", desc: "[Talismã] Ação Bônus. Destruir para curar 10 PV." },
+  { custo: 1, nome: "Talismã de Barreira", tipo: "Item", grau: "4", desc: "[Talismã] Ação Bônus. Invoca 4 paredes (15 PV cada, 1.5m). Consumível." },
+  { custo: 1, nome: "Veneno Debilitante", tipo: "Item", grau: "4", desc: "[Mistura] Contato. Reduz deslocamento do alvo pela metade." },
+  { custo: 1, nome: "Veneno Intenso", tipo: "Item", grau: "4", desc: "[Mistura] Contato. Alvo fica Envenenado por 1 rodada." },
+
+  // CUSTO 2
+  { custo: 2, nome: "Amuleto do Vislumbre", tipo: "Item", grau: "3", desc: "[Acessório] Visão no escuro 9m. +2 Percepção. 1x/dia ver de olhos fechados (9m) por 1 min." },
+  { custo: 2, nome: "Antídoto Intermediário", tipo: "Item", grau: "3", desc: "[Fármaco] Neutraliza venenos médios (Custo 2 ou Maldição Grau 3). Ação Bônus." },
+  { custo: 2, nome: "Apanhador de Saúde", tipo: "Item", grau: "3", desc: "[Acessório] Ao ser curado, recebe +1 por dado (limite = metade do nível)." },
+  { custo: 2, nome: "Bracelete do Vigor", tipo: "Item", grau: "3", desc: "[Acessório] Aumenta PV Máximo em 10." },
+  { custo: 2, nome: "Conjunto de Pérolas", tipo: "Item", grau: "3", desc: "[Espiritual] Ação Bônus. Recupera 6 PE." },
+  { custo: 2, nome: "Faixa de Foco", tipo: "Item", grau: "3", desc: "[Acessório] +2 testes de concentração. 1x/dia não perde concentração." },
+  { custo: 2, nome: "Injeção de Adrenalina", tipo: "Item", grau: "3", desc: "[Fármaco] Ação Bônus. Reduz 1 nível de Exaustão até o fim da cena." },
+  { custo: 2, nome: "Mix Energético Médio", tipo: "Item", grau: "3", desc: "[Fármaco] Ação Bônus. Recupera 6 pontos de Estamina." },
+  { custo: 2, nome: "Pulseira Magistral", tipo: "Item", grau: "3", desc: "[Acessório] Torna-se treinado em uma perícia à escolha." },
+  { custo: 2, nome: "Remédio Intermediário", tipo: "Item", grau: "3", desc: "[Fármaco] Ação Comum. Gasta até 8 dados de vida para se curar." },
+  { custo: 2, nome: "Símbolo de Vida Florescente", tipo: "Item", grau: "3", desc: "[Talismã] Ação Bônus. Destruir para curar 25 PV." },
+  { custo: 2, nome: "Talismã de Barreira Superior", tipo: "Item", grau: "3", desc: "[Talismã] Ação Bônus/Reação. Invoca 4 paredes (25 PV cada, 1.5m). Consumível." },
+  { custo: 2, nome: "Veneno Desnorteante", tipo: "Item", grau: "3", desc: "[Mistura] Contato. Alvo fica Desprevenido por 1 rodada." },
+
+  // CUSTO 3
+  { custo: 3, nome: "Anéis do Conhecimento", tipo: "Item", grau: "2", desc: "[Acessório] +2 Sabedoria (pode superar limite até 30)." },
+  { custo: 3, nome: "Antídoto Superior", tipo: "Item", grau: "2", desc: "[Fármaco] Neutraliza venenos fortes (Custo 3 ou Maldição Grau 2)." },
+  { custo: 3, nome: "Bracelete da Força", tipo: "Item", grau: "2", desc: "[Acessório] +2 Força (pode superar limite até 30)." },
+  { custo: 3, nome: "Chaveiro Absorsor", tipo: "Item", grau: "2", desc: "[Acessório] Recupera 2 PE ao eliminar inimigo com energia." },
+  { custo: 3, nome: "Cinturão do Inabalável", tipo: "Item", grau: "2", desc: "[Acessório] +2 Constituição (pode superar limite até 30)." },
+  { custo: 3, nome: "Domínio Simples Contido", tipo: "Item", grau: "2", desc: "[Talismã] Ação Comum. Ergue Domínio Simples (2 rodadas) sem custo. Consumível." },
+  { custo: 3, nome: "Faixas Céleres", tipo: "Item", grau: "2", desc: "[Acessório] +2 Destreza (pode superar limite até 30)." },
+  { custo: 3, nome: "Mistura Profana", tipo: "Item", grau: "2", desc: "[Mistura] Ação Comum. Reduz custo de habilidades em 1 PE pela cena. Causa 1 Exaustão ao fim." },
+  { custo: 3, nome: "Mix Energético Grande", tipo: "Item", grau: "2", desc: "[Fármaco] Ação Bônus. Recupera 10 pontos de Estamina." },
+  { custo: 3, nome: "Ombreiras do Vigor Superior", tipo: "Item", grau: "2", desc: "[Acessório] Aumenta PV Máximo em 20." },
+  { custo: 3, nome: "Ornamento Fascinante", tipo: "Item", grau: "2", desc: "[Acessório] +2 Carisma (pode superar limite até 30)." },
+  { custo: 3, nome: "Pingente do Intelecto", tipo: "Item", grau: "2", desc: "[Acessório] +2 Inteligência (pode superar limite até 30)." },
+  { custo: 3, nome: "Pulseira Primacial", tipo: "Item", grau: "2", desc: "[Acessório] Torna-se Mestre em uma perícia treinada." },
+  { custo: 3, nome: "Remédio Complexo", tipo: "Item", grau: "2", desc: "[Fármaco] Ação Comum. Gasta até 12 dados de vida para se curar." },
+  { custo: 3, nome: "Terço de Pérolas", tipo: "Item", grau: "2", desc: "[Espiritual] Ação Bônus. Recupera 10 PE." },
+  { custo: 3, nome: "Veneno Maldito", tipo: "Item", grau: "2", desc: "[Mistura] Contato. Alvo fica Exposto (Envenenado) por 3 rodadas." },
+
+  // CUSTO 4
+  { custo: 4, nome: "Antídoto Absoluto", tipo: "Item", grau: "1", desc: "[Fármaco] Neutraliza qualquer veneno/toxina (Custo 4 ou Maldição Grau 1)." },
+  { custo: 4, nome: "Elixir da Vida", tipo: "Item", grau: "1", desc: "[Espiritual] Ação Bônus. Cura usando todos dados de vida (+2x CON em cada). Vantagem e +5 em Fortitude/Integridade pela cena." },
+  { custo: 4, nome: "Laço da Vida", tipo: "Item", grau: "1", desc: "[Acessório] Evita a morte 1 vez (cura metade do PV, ganha 1 Exaustão). Consumível." },
+  { custo: 4, nome: "Lágrima de Shinigami", tipo: "Item", grau: "1", desc: "[Mistura] Contato. Alvo perde 2d10 PV, -4 Defesa, gasta +2 PE em tudo até fim da cena." },
+  { custo: 4, nome: "Símbolo de Vida Absoluta", tipo: "Item", grau: "1", desc: "[Talismã] Ação Livre. Cura total de PV + PV Temp (3x Nível). Consumível." },
+  { custo: 4, nome: "Talismã do Ápice", tipo: "Item", grau: "1", desc: "[Talismã] Destruir: Um atributo vira 30 por 1 minuto (10 rodadas). Consumível." }
+];
