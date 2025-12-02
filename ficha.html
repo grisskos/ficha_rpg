@@ -10,7 +10,7 @@
     --primary: #e63946; --energy: #58E8DA; --vigor: #69E858; --integridade: #D073FA; 
     --apice: #f4d35e; --corpo: #9d4edd;
     --text: #f1f1f1; --dim: #888;
-    --inv-bg: #1a1a1a; --inv-hover: #222;
+    --inv-bg: #1e1e1e; --inv-hover: #2a2a2a;
   }
   
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
@@ -25,39 +25,48 @@
 
   /* HEADER */
   .char-header { text-align: center; }
+  .transf-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+  .transf-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #444; background: #222; color: #555; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+  .transf-btn.locked { opacity: 0.5; cursor: not-allowed; }
+  .transf-btn.unlocked { border-color: #fff; color: #fff; box-shadow: 0 0 5px rgba(255,255,255,0.2); }
+  .transf-btn.apice.unlocked { border-color: var(--apice); color: var(--apice); }
+  .transf-btn.apice.active { background: var(--apice); color: #000; box-shadow: 0 0 15px var(--apice); animation: pulse 2s infinite; }
+  .transf-btn.corpo.unlocked { border-color: var(--corpo); color: var(--corpo); }
+  .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+  
   .char-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px; }
   .char-name { font-size: 1.5rem; margin: 0; color: white; text-transform: uppercase; letter-spacing: 1px; }
   .badges { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
   .badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: #222; border: 1px solid #444; color: #ccc; }
+  .b-lvl { color: white; border-color: white; font-weight: bold; }
+  .b-cls { color: var(--primary); border-color: var(--primary); cursor: pointer; }
+  .sequela-tag { display: block; background: #300; color: #f55; border: 1px solid #f00; padding: 5px; font-size: 0.8rem; border-radius: 4px; margin-top: 5px; text-align: center; }
   
-  /* SOUL STATUS & TRANSF */
+  /* SOUL STATUS */
   .soul-badge { cursor: help; transition: 0.3s; font-weight: bold; border: 1px solid; }
   .soul-stable { border-color: var(--integridade); color: var(--integridade); }
   .soul-damaged { border-color: #f4d35e; color: #f4d35e; }
   .soul-unstable { border-color: #fb8500; color: #fb8500; border-width: 2px; }
   .soul-critical { border-color: #d00000; color: #d00000; border-width: 2px; animation: pulse-red 2s infinite; background: rgba(255,0,0,0.1); }
   .soul-dead { border-color: #555; color: #555; text-decoration: line-through; } 
-  .soul-badge:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 8px; border-radius: 5px; border: 1px solid #555; width: 200px; font-size: 0.75rem; font-weight: normal; z-index: 100; pointer-events: none; margin-bottom: 5px; }
-  
-  .transf-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
-  .transf-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #444; background: #222; color: #555; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-  .transf-btn.locked { opacity: 0.5; cursor: not-allowed; }
-  .transf-btn.unlocked { border-color: #fff; color: #fff; box-shadow: 0 0 5px rgba(255,255,255,0.2); }
-  .transf-btn.apice.active { background: var(--apice); color: #000; box-shadow: 0 0 15px var(--apice); }
-  .transf-btn.corpo.active { background: var(--corpo); color: #fff; box-shadow: 0 0 15px var(--corpo); }
+  .soul-badge:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 8px; border-radius: 5px; border: 1px solid #555; width: 200px; font-size: 0.75rem; font-weight: normal; text-align: center; white-space: normal; z-index: 100; pointer-events: none; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
   @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
-  /* TOKENS */
+  /* TOKENS & UTILS */
   .shiki-container { display: flex; justify-content: center; gap: 8px; margin-top: 15px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 15px; }
   .shiki-token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--energy); background: #000; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
-  .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; }
-
-  /* UTILS */
-  .editable { cursor: pointer; border-bottom: 1px dashed #555; display: inline-block; min-width: 20px; text-align: center; }
+  .shiki-token:hover { transform: scale(1.15); box-shadow: 0 0 10px var(--energy); }
+  .shiki-add { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #444; display: flex; align-items: center; justify-content: center; color: #555; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
+  .shiki-add:hover { border-color: var(--energy); color: var(--energy); }
+  .editable { cursor: pointer; border-bottom: 1px dashed #555; transition: 0.2s; display: inline-block; min-width: 20px; text-align: center; }
+  .editable:hover { color: var(--primary); border-color: var(--primary); background: rgba(255,255,255,0.05); }
   .inline-input { background: #000; color: white; border: 2px solid var(--primary); border-radius: 4px; padding: 4px; font-family: inherit; font-size: inherit; width: 80px; text-align: center; outline: none; }
   .math-input { width: 40px; background: #fff; color: #000; border: none; border-radius: 3px; text-align: center; font-weight: bold; outline: none; }
   .btn-mini { background: #222; border: 1px solid #444; color: #ccc; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; }
+  .btn-mini:hover { border-color: white; color: white; background: #333; }
+  .btn-calc { background: #222; border: 1px solid #555; color: #ccc; width: 50px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: auto; transition: 0.2s; }
+  .btn-calc:hover { border-color: var(--energy); color: var(--energy); }
 
   /* ATRIBUTOS & BARRAS */
   .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -72,10 +81,12 @@
   .stat-ctrl { display: flex; justify-content: flex-end; gap: 5px; margin-top: 4px; }
 
   /* COMBATE */
-  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+  .section-header { background: #111; color: var(--primary); padding: 8px; text-align: center; border: 1px solid #333; border-radius: 5px; margin: 0 0 10px 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition:0.2s; }
+  .section-header:hover { background: #222; }
   .combat-grid { display: grid; gap: 10px; margin-bottom: 20px; } .cols-3 { grid-template-columns: repeat(3, 1fr); } .cols-5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 600px) { .cols-3 { grid-template-columns: 1fr; } .cols-5 { display: flex; overflow-x: auto; padding-bottom: 10px; } .combat-card { min-width: 80px; } }
   .combat-card { background: #1a1a1a; border: 1px solid var(--primary); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; text-align: center; }
-  .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; }
+  .cc-header { background: var(--primary); color: white; padding: 5px; font-size: 0.75rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 35px; }
   .cc-body { padding: 10px 0; font-size: 1.8rem; font-weight: bold; color: white; flex-grow: 1; background: #1a1a1a; }
   .cc-footer { background: #000; padding: 5px; display: flex; justify-content: center; align-items: center; gap: 5px; border-top: 1px solid #333; }
   .btn-toggle-attr { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); color: white; font-size: 0.6rem; padding: 1px 4px; border-radius: 3px; cursor: pointer; margin-top: 2px; }
@@ -85,51 +96,6 @@
   select.mini-select { background: rgba(0,0,0,0.3); border: none; color: white; font-size: 0.6rem; max-width: 80px; margin-top: 2px; }
   select.mini-select option { background: #222; color: #fff; }
 
-  /* === INVENTÁRIO POLIDO === */
-  .inv-header-controls { display: flex; gap: 10px; margin-bottom: 10px; }
-  .inv-search { flex-grow: 1; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; }
-  .btn-add-inv { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
-  
-  .inv-load-display { text-align: right; font-size: 0.8rem; color: #aaa; margin-bottom: 5px; }
-  .load-num { background: #111; border: 1px solid #333; padding: 2px 6px; color: white; font-weight: bold; border-radius: 3px; margin: 0 2px; }
-  .load-bar-container { background: #111; border: 1px solid #333; border-radius: 5px; height: 10px; position: relative; margin-bottom: 15px; overflow: hidden; }
-  .load-fill { height: 100%; width: 0%; background: #444; transition: 0.3s; }
-  .load-fill.over { background: #e63946; }
-  
-  .inv-categories { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; scrollbar-width: none; }
-  .inv-cat-btn { background: #111; border: 1px solid #333; color: #888; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
-  .inv-cat-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(230, 57, 70, 0.1); }
-
-  .inv-list { display: flex; flex-direction: column; gap: 5px; }
-  .inv-row { background: var(--inv-bg); border-radius: 4px; overflow: hidden; border: 1px solid #333; transition: 0.2s; }
-  .inv-row:hover { border-color: #555; }
-  
-  .inv-summary { padding: 10px; display: flex; align-items: center; cursor: pointer; }
-  
-  .inv-check { width: 18px; height: 18px; border: 2px solid #444; border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-right: 10px; color: transparent; font-size: 0.8rem; }
-  .inv-check.equipped { border-color: var(--primary); background: rgba(230, 57, 70, 0.2); color: var(--primary); }
-  
-  .inv-main-info { flex-grow: 1; display: flex; flex-direction: column; }
-  .inv-name { font-weight: bold; color: white; font-size: 0.95rem; }
-  .inv-meta { font-size: 0.75rem; color: #888; margin-top: 2px; }
-  .inv-meta span { color: var(--primary); margin-right: 8px; }
-  
-  .inv-expand-icon { color: #555; font-size: 0.8rem; margin-left: 10px; transition: 0.3s; transform: rotate(0deg); }
-  .inv-row.expanded .inv-expand-icon { transform: rotate(180deg); }
-
-  .inv-details { display: none; padding: 15px; background: #151515; border-top: 1px solid #333; grid-template-columns: 1fr 80px; gap: 15px; }
-  .inv-row.expanded .inv-details { display: grid; }
-
-  .inv-stats-block { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: #ccc; }
-  .inv-stat-line { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 2px; }
-  .inv-stat-label { color: var(--primary); font-weight: bold; }
-  
-  .inv-img-preview { width: 80px; height: 80px; object-fit: cover; border: 1px solid #444; background: #000; border-radius: 4px; }
-  
-  .inv-actions { grid-column: span 2; display: flex; justify-content: space-between; margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
-  .btn-txt-del { color: #d00000; background: transparent; border: none; cursor: pointer; font-size: 0.8rem; }
-  .btn-txt-edit { color: #ccc; background: transparent; border: none; cursor: pointer; font-size: 0.8rem; }
-
   /* VALORES ADICIONAIS */
   .derived-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .derived-box { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 10px; text-align: center; }
@@ -137,27 +103,54 @@
   .derived-value { font-size: 1.6rem; font-weight: bold; color: #fff; }
   .derived-calc { display: flex; justify-content: center; margin-top: 5px; }
   .derived-calc input { background: #111; border: 1px solid #444; color: #aaa; width: 40px; text-align: center; border-radius: 3px; font-size: 0.8rem; }
+  .derived-calc input:focus { border-color: var(--energy); color: white; outline: none; }
 
-  /* HABILIDADES */
+  /* HABILIDADES DE CLASSE (ESTILOS) */
   .toggle-body { display: none; } .toggle-body.open { display: block; animation: slideDown 0.3s ease-out; }
   @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
   
   .ability-select-btn { background: #1a1a1a; color: #aaa; border: 2px dashed #444; width: 100%; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; transition: 0.2s; }
   .ability-select-btn:hover { background: #222; border-color: var(--primary); color: var(--primary); }
-  .ability-card-display { background: #151515; border-left: 4px solid var(--primary); border-radius: 4px; padding: 15px; margin-bottom: 10px; position: relative; }
+  
+  .ability-card-display { background: #151515; border-left: 4px solid var(--primary); border-radius: 4px; padding: 15px; margin-bottom: 10px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
   .ability-card-title { font-weight: bold; color: #fff; font-size: 1rem; margin-bottom: 5px; text-transform: uppercase; }
   .ability-card-desc { font-size: 0.9rem; color: #aaa; white-space: pre-wrap; line-height: 1.5; }
-  .btn-remove-ability { position: absolute; top: 5px; right: 5px; background: transparent; border: none; color: #666; cursor: pointer; font-size: 1rem; }
+  .btn-remove-ability { position: absolute; top: 5px; right: 5px; background: transparent; border: none; color: #666; cursor: pointer; font-size: 1rem; transition: 0.2s; }
   .btn-remove-ability:hover { color: #d00000; }
   
   .class-ability-box { border-left: 4px solid var(--vigor); padding: 10px; background: #151515; margin-bottom: 10px; border-radius: 4px; }
   .class-ability-name { font-weight: bold; color: #fff; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
   .class-ability-desc { font-size: 0.85rem; color: #aaa; margin-top: 5px; white-space: pre-wrap; line-height: 1.4; }
 
-  .btn-icon-tiny { background: transparent; border: none; color: #666; cursor: pointer; font-size: 1rem; margin-left: 10px; }
-  .btn-icon-tiny:hover { color: white; }
-  .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
-  .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
+  /* Botões Mestre */
+  .gm-controls { display: none; margin-left: auto; gap: 5px; } 
+  .gm-visible .gm-controls { display: flex; }
+  .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+  .btn-gm:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-edit-apt { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.9rem; margin-left: 10px; }
+  .btn-edit-apt:hover { color: var(--primary); }
+
+  /* PERÍCIAS & NAV */
+  .skills-card { padding: 0; overflow: hidden; height: 100%; }
+  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+  .skill-row { display: flex; align-items: center; padding: 4px 10px; border-bottom: 1px solid #222; font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
+  .skill-row:hover { background: #1b1b1b; }
+  .sk-name { flex-grow: 1; color: #999; font-weight: 500; }
+  .sk-attr { font-size: 0.65rem; color: #444; width: 30px; text-transform: uppercase; font-weight: bold; }
+  .sk-total { font-weight: bold; color: white; width: 30px; text-align: right; margin-right: 10px; font-size: 0.9rem; }
+  .sk-btn-group { display: flex; gap: 3px; align-items: center; }
+  .sk-btn { width: 20px; height: 20px; border-radius: 3px; border: 1px solid #333; background: #111; color: #555; font-size: 0.6rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+  .sk-btn:hover { border-color: #777; color: #aaa; }
+  .sk-btn.active-t { background: rgba(88, 232, 218, 0.1); border-color: var(--energy); color: var(--energy); }
+  .sk-btn.active-m { background: rgba(230, 57, 70, 0.1); border-color: var(--primary); color: var(--primary); }
+
+  .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
+  .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
+  .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
+
+  /* LISTAS */
+  .list-box ul { padding-left: 20px; margin: 0; color: #ccc; } .list-box li { margin-bottom: 5px; }
 
   /* MODALS */
   .fab-config { position: fixed; bottom: 20px; right: 20px; background: #222; color: white; border: 2px solid #555; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 100; transition: 0.2s; }
@@ -172,40 +165,66 @@
   .dynamic-list-item { background: #111; padding: 8px; margin-bottom: 5px; border-radius: 4px; display: flex; gap: 10px; align-items: flex-start; }
   .btn-del-item { background: transparent; border: none; color: #d00000; cursor: pointer; font-size: 1.2rem; line-height: 1; }
   .btn-add-item { background: #222; border: 1px solid #444; color: #ccc; width: 100%; padding: 5px; cursor: pointer; margin-top: 5px; }
+  .btn-icon-tiny { background: transparent; border: none; color: #666; cursor: pointer; font-size: 1rem; margin-left: 10px; }
+  .btn-icon-tiny:hover { color: white; }
+  .btn-icon-sm { background: transparent; border: 1px solid #444; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1; transition: 0.2s; }
+  .btn-icon-sm:hover { border-color: var(--primary); color: var(--primary); }
   
-  /* PERÍCIAS */
-  .skills-card { padding: 0; overflow: hidden; height: 100%; }
-  .skills-header { padding: 15px; background: #222; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-  .skills-header h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
-  .skill-row { display: flex; align-items: center; padding: 4px 10px; border-bottom: 1px solid #222; font-size: 0.8rem; cursor: pointer; }
-  .skill-row:hover { background: #1b1b1b; }
-  .sk-name { flex-grow: 1; color: #999; font-weight: 500; }
-  .sk-attr { font-size: 0.65rem; color: #444; width: 30px; text-transform: uppercase; font-weight: bold; }
-  .sk-total { font-weight: bold; color: white; width: 30px; text-align: right; margin-right: 10px; font-size: 0.9rem; }
-  .sk-btn-group { display: flex; gap: 3px; align-items: center; }
-  .sk-btn { width: 20px; height: 20px; border-radius: 3px; border: 1px solid #333; background: #111; color: #555; font-size: 0.6rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-  .sk-btn:hover { border-color: #777; color: #aaa; }
-  .sk-btn.active-t { background: rgba(88, 232, 218, 0.1); border-color: var(--energy); color: var(--energy); }
-  .sk-btn.active-m { background: rgba(230, 57, 70, 0.1); border-color: var(--primary); color: var(--primary); }
-  
-  /* Seleção de Habilidade */
+  /* SELEÇÃO DE HABILIDADES MODAL */
   .sel-option { background: #111; padding: 10px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.2s; }
   .sel-option:hover { background: #1a1a1a; border-left: 3px solid var(--primary); }
   .sel-title { font-weight: bold; color: white; font-size: 1rem; }
-  .sel-desc { color: #aaa; font-size: 0.85rem; margin-top: 2px; }
+  .sel-desc { color: #aaa; font-size: 0.85rem; margin-top: 2px; white-space: pre-wrap; }
   
-  /* Mestre */
-  .gm-controls { display: none; margin-left: auto; gap: 5px; } 
-  .gm-visible .gm-controls { display: flex; }
-  .btn-gm { background: #333; border: 1px solid #555; color: #fff; width: 20px; height: 20px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+  /* APTIDÕES */
+  .aptidao-box { margin-bottom: 10px; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
   .aptidao-header { background: #222; padding: 10px; font-weight: bold; color: var(--energy); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .aptidao-header:hover { background: #2a2a2a; }
   .aptidao-body { display: none; padding: 10px; background: #151515; }
   .aptidao-body.open { display: block; }
   
-  .btn-nav { background: transparent; width: 100%; padding: 10px; font-size: 1rem; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; border: 1px solid #444; color: #aaa; }
-  .btn-summon { border-color: var(--integridade); color: var(--integridade); } .btn-summon:hover { background: var(--integridade); color: #000; }
-  .btn-tech { border-color: var(--energy); color: var(--energy); } .btn-tech:hover { background: var(--energy); color: #000; }
+  /* === INVENTÁRIO NOVO (VERMELHO) === */
+  .inv-header-controls { display: flex; gap: 10px; margin-bottom: 10px; }
+  .inv-search { flex-grow: 1; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; outline: none; }
+  .btn-add-inv { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+  
+  .inv-load-display { text-align: right; font-size: 0.8rem; color: #aaa; margin-bottom: 5px; }
+  .load-num { background: #111; border: 1px solid #333; padding: 2px 6px; color: white; font-weight: bold; border-radius: 3px; margin: 0 2px; }
+  
+  .inv-categories { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; scrollbar-width: none; }
+  .inv-cat-btn { background: #111; border: 1px solid #333; color: #888; padding: 4px 10px; border-radius: 15px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
+  .inv-cat-btn.active { border-color: var(--primary); color: var(--primary); background: rgba(230, 57, 70, 0.1); }
 
+  .inv-list { display: flex; flex-direction: column; gap: 5px; }
+  .inv-row { background: var(--inv-bg); border-radius: 4px; overflow: hidden; border: 1px solid #333; transition: 0.2s; }
+  .inv-row:hover { border-color: #555; }
+  
+  .inv-summary { padding: 10px; display: flex; align-items: center; cursor: pointer; justify-content: space-between; }
+  .inv-summary:hover { background: var(--inv-hover); }
+  
+  .inv-check { width: 20px; height: 20px; border: 2px solid #444; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-right: 10px; cursor: pointer; color: transparent; font-size: 0.8rem; }
+  .inv-check.equipped { border-color: var(--primary); background: rgba(230, 57, 70, 0.2); color: var(--primary); }
+  
+  .inv-main-info { flex-grow: 1; display: flex; flex-direction: column; }
+  .inv-name { font-weight: bold; color: white; font-size: 0.95rem; }
+  .inv-mini-stats { font-size: 0.75rem; color: #999; display: flex; gap: 10px; }
+  .inv-mini-stats span b { color: var(--primary); }
+
+  .inv-expand-icon { color: #666; font-size: 0.8rem; margin-left: 10px; transition: 0.3s; transform: rotate(0deg); }
+  .inv-row.expanded .inv-expand-icon { transform: rotate(180deg); }
+
+  .inv-details { display: none; padding: 15px; background: #151515; border-top: 1px solid #333; grid-template-columns: 1fr 100px; gap: 15px; }
+  .inv-row.expanded .inv-details { display: grid; }
+
+  .inv-stat-block { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: #ccc; }
+  .inv-stat-line { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 2px; }
+  .inv-stat-label { color: var(--primary); font-weight: bold; }
+  
+  .inv-img-preview { width: 100px; height: 100px; object-fit: cover; border: 1px solid #444; background: #000; border-radius: 4px; }
+  
+  .inv-actions { grid-column: span 2; display: flex; justify-content: space-between; margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
+  .btn-txt-del { color: #d00000; background: transparent; border: none; cursor: pointer; font-size: 0.8rem; }
+  .btn-txt-edit { color: var(--primary); background: transparent; border: none; cursor: pointer; font-size: 0.8rem; }
 </style>
 </head>
 <body>
@@ -258,14 +277,11 @@
     </div>
 
     <div class="card">
-      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; background:#111;">
-        <span style="flex-grow:1; text-align:center;">Inventário</span>
+      <div class="inv-header-controls">
+        <input type="text" id="invSearch" class="inv-search" placeholder="Filtrar..." onkeyup="renderInventario()">
         <button class="btn-add-inv" onclick="abrirItemModal()" title="Adicionar Item">+</button>
       </div>
-      <div class="inv-header-controls">
-        <input type="text" id="invSearch" class="inv-search" placeholder="Filtrar item..." onkeyup="renderInventario()">
-      </div>
-      <div class="inv-load-display">CARGA <span id="loadVal" class="load-num">0</span> / <span id="loadMax" class="load-num">20</span></div>
+      <div class="inv-load-display">CARGA MÁX. <span id="loadVal" class="load-num">0</span> / <span id="loadMax" class="load-num">20</span></div>
       <div class="load-bar-container"><div id="loadFill" class="load-fill"></div></div>
       <div id="overburdenMsg" class="overburden-warning">⚠ SOBRECARREGADO</div>
       
@@ -298,10 +314,10 @@
     <div class="card">
       <h3 class="section-header" style="margin-bottom:10px;">Valores Adicionais</h3>
       <div class="derived-grid">
-        <div class="derived-box"><div class="derived-label">DEFESA</div><div class="derived-value" id="valDefesa">10</div><div class="derived-calc"><input id="bonusDef" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('defesa', this.value)"></div></div>
-        <div class="derived-box"><div class="derived-label">ATENÇÃO</div><div class="derived-value" id="valAtencao">10</div><div class="derived-calc"><input id="bonusAtencao" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('atencao', this.value)"></div></div>
-        <div class="derived-box"><div class="derived-label">INICIATIVA</div><div class="derived-value" id="valIniciativa">+0</div><div class="derived-calc"><input id="bonusIniciativa" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('iniciativa', this.value)"></div></div>
-        <div class="derived-box"><div class="derived-label">DESLOC.</div><div class="derived-value" id="valDesloc">9m</div><div class="derived-calc"><input id="bonusDesloc" class="bonus-input" placeholder="Bônus" onchange="setDerivadoBonus('deslocamento', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">DEFESA</div><div class="derived-value" id="valDefesa">10</div><div class="derived-calc"><input id="bonusDef" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('defesa', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">ATENÇÃO</div><div class="derived-value" id="valAtencao">10</div><div class="derived-calc"><input id="bonusAtencao" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('atencao', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">INICIATIVA</div><div class="derived-value" id="valIniciativa">+0</div><div class="derived-calc"><input id="bonusIniciativa" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('iniciativa', this.value)"></div></div>
+        <div class="derived-box"><div class="derived-label">DESLOC.</div><div class="derived-value" id="valDesloc">9m</div><div class="derived-calc"><input id="bonusDesloc" class="derived-calc input" placeholder="Bônus" onchange="setDerivadoBonus('deslocamento', this.value)"></div></div>
       </div>
     </div>
 
@@ -315,9 +331,7 @@
   </div>
 </div>
 
-<button class="fab-config" onclick="abrirConfig()">⚙️</button>
-
-<div id="selectionModal" class="modal"><div class="modal-content"><h2 id="selectTitle" style="color:var(--primary);">Escolha uma Habilidade</h2><div id="selectorFilters" style="margin-bottom:10px; display:flex; gap:5px; flex-wrap:wrap;"></div><div id="selectOptionsList" style="display:flex; flex-direction:column; gap:5px; max-height:60vh; overflow-y:auto;"></div><button onclick="document.getElementById('selectionModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer; margin-top:15px;">Cancelar</button></div></div>
+<div id="selectionModal" class="modal"><div class="modal-content"><h2 id="selectTitle" style="color:var(--primary);">Escolha</h2><div id="selectorFilters" style="margin-bottom:10px; display:flex; gap:5px; flex-wrap:wrap;"></div><div id="selectOptionsList" style="display:flex; flex-direction:column; gap:5px; max-height:60vh; overflow-y:auto;"></div><button onclick="document.getElementById('selectionModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer; margin-top:15px;">Cancelar</button></div></div>
 
 <div id="configModal" class="modal"><div class="modal-content"><h2 style="color:var(--primary);">Configurações</h2><label>Imagem (URL)</label><input id="editImgUrl" style="margin-bottom:15px;"><button onclick="salvarImg()" style="background:#333; color:white; border:none; padding:5px; width:100%;">Atualizar Imagem</button><br><br><button onclick="document.getElementById('configModal').style.display='none'" style="background:#333; width:100%; padding:10px; color:white; border:none; cursor:pointer;">Fechar</button><button onclick="excluirPersonagem()" style="background:transparent; color:#d00000; border:none; width:100%; margin-top:15px; cursor:pointer;">Excluir Personagem</button></div></div>
 
@@ -603,7 +617,7 @@ function renderFicha() {
     if (saved.m) total += 1;
     total += Number(saved.bonus || 0);
     if (f.transfUnlocked.apice && PHYS_ATTRS.includes(p.a)) total += bonusPhysSkill_Apice;
-    listaSkills.innerHTML += `<div class="skill-row"><span class="sk-name">${p.n}</span><span class="sk-attr">${ATR_SHORT[p.a]}</span><span class="sk-total">${total>=0?'+':''}${total}</span><div class="sk-btn-group"><input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)"><div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div><div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div></div></div>`;
+    listaSkills.innerHTML += `<div class="skill-row"><span class="sk-name">${p.n}</span><span class="sk-attr">${ATR_SHORT[p.a]}</span><span class="sk-total">${total>=0?'+':''}${total}</span><div class="sk-btn-group" onclick="event.stopPropagation()"><input class="bonus-input" placeholder="0" value="${saved.bonus || ''}" onchange="setSkillBonus('${p.n}', this.value)"><div class="sk-btn ${saved.t ? 'active-t' : ''}" onclick="togglePericia('${p.n}', 't')">T</div><div class="sk-btn ${saved.m ? 'active-m' : ''}" onclick="togglePericia('${p.n}', 'm')">M</div></div></div>`;
   });
 }
 
@@ -824,7 +838,7 @@ let currentSelectionKey = ""; let currentSelectionType = ""; let currentSelectio
 window.confirmSelection = async (value) => { if(currentSelectionType === 'unica') { await salvarEscolhaClasse(currentSelectionKey, value); } else { let valToSave = value; await toggleEscolhaMultipla(currentSelectionKey, valToSave, currentSelectionMax, {checked:true}); } document.getElementById('selectionModal').style.display = 'none'; renderFicha(); }
 window.salvarEscolhaClasse = async (key, valor) => { const escolhas = ficha.escolhasClasse || {}; escolhas[key] = valor; await updateDoc(doc(db, "fichas", id), { escolhasClasse: escolhas }); };
 window.toggleEscolhaMultipla = async (key, valorOpcao, max, checkbox) => { const escolhas = ficha.escolhasClasse || {}; let listaAtual = escolhas[key] || []; if (checkbox.checked) { if (listaAtual.length >= max) return; listaAtual.push(valorOpcao); } else { listaAtual = listaAtual.filter(item => item !== valorOpcao); } escolhas[key] = listaAtual; await updateDoc(doc(db, "fichas", id), { escolhasClasse: escolhas }); };
-window.abrirItemModal = (index = -1) => { editingItemIndex = index; document.getElementById('itemModal').style.display = 'block'; document.getElementById('propList').innerHTML = ""; document.getElementById('encantList').innerHTML = ""; document.getElementById('btnExcluirItem').style.display = index === -1 ? 'none' : 'block'; document.getElementById('itemModalTitle').innerText = index === -1 ? 'Novo Item' : 'Editar Item'; if (index > -1) { const item = ficha.inventario[index]; document.getElementById('itNome').value = item.nome; document.getElementById('itTipo').value = item.tipo; document.getElementById('itGrau').value = item.grau; document.getElementById('itEspacos').value = item.espacos; document.getElementById('itBonus').value = item.bonus || ""; document.getElementById('itImg').value = item.imagem; document.getElementById('itDesc').value = item.descricao; document.getElementById('itDano').value = item.dano || ""; document.getElementById('itCritico').value = item.critico || ""; document.getElementById('itAlcance').value = item.alcance || ""; document.getElementById('itTipoDano').value = item.tipoDano || ""; document.getElementById('itPericia').value = item.pericia || ""; document.getElementById('itAtributo').value = item.atributo || ""; document.getElementById('itAtkBonus').value = item.atkBonus || 0; document.getElementById('itTipoAtaque').value = item.tipoAtaque || ""; (item.propriedades || []).forEach(p => addPropField(p.nome, p.desc)); (item.encantamentos || []).forEach(e => addEncantField(e.nome, e.desc)); } else { document.getElementById('itNome').value = ""; document.getElementById('itEspacos').value = 1; document.getElementById('itBonus').value = ""; document.getElementById('itImg').value = ""; document.getElementById('itDesc').value = ""; document.getElementById('itDano').value = ""; document.getElementById('itCritico').value = ""; document.getElementById('itTipoAtaque').value = ""; } };
+window.abrirItemModal = (index = -1) => { editingItemIndex = index; document.getElementById('itemModal').style.display = 'block'; document.getElementById('propList').innerHTML = ""; document.getElementById('encantList').innerHTML = ""; document.getElementById('btnExcluirItem').style.display = index === -1 ? 'none' : 'block'; document.getElementById('itemModalTitle').innerText = index === -1 ? 'Novo Item' : 'Editar Item'; if (index > -1) { const item = ficha.inventario[index]; document.getElementById('itNome').value = item.nome; document.getElementById('itTipo').value = item.tipo; document.getElementById('itGrau').value = item.grau; document.getElementById('itEspacos').value = item.espacos; document.getElementById('itBonus').value = item.bonus || ""; document.getElementById('itImg').value = item.imagem; document.getElementById('itDesc').value = item.descricao; document.getElementById('itDano').value = item.dano || ""; document.getElementById('itCritico').value = item.critico || ""; document.getElementById('itAlcance').value = item.alcance || ""; document.getElementById('itTipoDano').value = item.tipoDano || ""; document.getElementById('itTipoAtaque').value = item.tipoAtaque || ""; document.getElementById('itAtributo').value = item.atributo || ""; document.getElementById('itAtkBonus').value = item.atkBonus || 0; (item.propriedades || []).forEach(p => addPropField(p.nome, p.desc)); (item.encantamentos || []).forEach(e => addEncantField(e.nome, e.desc)); } else { document.getElementById('itNome').value = ""; document.getElementById('itEspacos').value = 1; document.getElementById('itBonus').value = ""; document.getElementById('itImg').value = ""; document.getElementById('itDesc').value = ""; document.getElementById('itDano').value = ""; document.getElementById('itCritico').value = ""; document.getElementById('itTipoAtaque').value = ""; } };
 window.salvarItem = async () => { 
   const novoItem = { nome: document.getElementById('itNome').value || "Item", tipo: document.getElementById('itTipo').value, grau: document.getElementById('itGrau').value, espacos: Number(document.getElementById('itEspacos').value), bonus: document.getElementById('itBonus').value, imagem: document.getElementById('itImg').value, descricao: document.getElementById('itDesc').value, dano: document.getElementById('itDano').value, critico: document.getElementById('itCritico').value, alcance: document.getElementById('itAlcance').value, tipoDano: document.getElementById('itTipoDano').value, tipoAtaque: document.getElementById('itTipoAtaque').value, atributo: document.getElementById('itAtributo').value, atkBonus: Number(document.getElementById('itAtkBonus').value), propriedades: [], encantamentos: [] }; 
   document.querySelectorAll('#propList .dynamic-list-item').forEach(el => { novoItem.propriedades.push({ nome: el.querySelector('.prop-name').value, desc: el.querySelector('.prop-desc').value }); }); 
