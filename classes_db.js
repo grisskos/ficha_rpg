@@ -1,4 +1,4 @@
-export const HABILIDADES_CLASSE = {
+const HABILIDADES_CLASSE = {
   "Lutador": [
     { 
       nivel: 1, 
